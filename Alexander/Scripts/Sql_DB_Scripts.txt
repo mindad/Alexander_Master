@@ -1,0 +1,34 @@
+﻿
+
+**** Examples: ******
+
+CREATE TABLE Reservation_2020(
+	[email] nvarchar(255) NOT NULL,
+	[name] nvarchar(255) NOT NULL,
+	[from] nvarchar(255) NOT NULL,
+	[to] nvarchar(255) NOT NULL,
+	[price] real NOT NULL,
+	[arrival] nvarchar(255) NOT NULL,
+	[departure] nvarchar(255) NOT NULL,
+	[airlines] nvarchar(255) NOT NULL,
+	[routes] nvarchar(255) NOT NULL,
+	[flight_id] nvarchar(50) NOT NULL, 
+	Primary key ([email])
+)
+
+
+CREATE TABLE Discount_2020(
+	[index] smallint IDENTITY (1, 1) NOT NULL ,
+	[airlines] nvarchar(255) NOT NULL,
+	[from] nvarchar(255) NOT NULL,
+	[to] nvarchar(255) NOT NULL,
+	[startDate] DATE NOT NULL,
+	[endDate] DATE NOT NULL,
+	[discount] real NOT NULL,
+	Primary key ([index])
+)
+
+
+
+INSERT INTO Discount_2020 ([airlines], [from], [to], [startDate], [endDate], [discount])
+values ('ELAL', 'TEL AVIV', 'NYC', '2020-01-05', '2020-01-10', 10)
