@@ -15,8 +15,8 @@ namespace Alexander.Models
         public int waste_percent;
         //public Waste waste;
 
-        public Batch_Botteling()
-        {
-        }
+        public Batch_Botteling() { }
+
+        
     }
 }

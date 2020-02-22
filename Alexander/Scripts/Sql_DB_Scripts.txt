@@ -1,8 +1,30 @@
-﻿
+﻿CREATE TABLE BeerInStock_2020(
+	[beerType] nvarchar(50) NOT NULL,
+	[keg_20_amount] smallint,
+	[keg_30_amount] smallint,
+	[bottle_case_amount] smallint,
+	Primary key ([beerType])
+)
 
-**** Examples: ******
+CREATE TABLE Recipe_2020(
+	[beerType] nvarchar(50) NOT NULL,
+	[creationDate] datetime,
+	Primary key ([beerType])
+)
 
-CREATE TABLE Reservation_2020(
+CREATE TABLE Inventory_Product_2020(
+	[prodType] nvarchar(50) NOT NULL,
+	[prodID] int,
+	[amount] int,
+	[minimum_amount] int not null,
+	[last_supply_date] datetime,
+	Primary key ([prodType],[prodID])
+)
+
+
+********************* Examples: *********************
+
+CREATE TABLE Beer_2020(
 	[email] nvarchar(255) NOT NULL,
 	[name] nvarchar(255) NOT NULL,
 	[from] nvarchar(255) NOT NULL,
