@@ -7,8 +7,8 @@ namespace Alexander.Models
 {
     public class Order
     {
-        private int orderID;
-        private DateTime date;
+        public int orderID;
+        public DateTime date;
         public Beer [] beers_in_order;
 
         public Order() { }

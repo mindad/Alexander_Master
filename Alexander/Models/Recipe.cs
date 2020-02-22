@@ -9,15 +9,9 @@ namespace Alexander.Models
     {
         public string beerType;
         protected DateTime creationDate;
+        protected Product[] products_in_recipe;
 
-        public Recipe(string beerType, DateTime creationDate)
-        {
-            this.beerType = beerType;
-            this.creationDate = creationDate;
-        }
-
-        public string BeerType { get => beerType; set => beerType = value; }
-        protected DateTime CreationDate { get => creationDate; set => creationDate = value; }
+        
 
 
         public int CreateRecipe() // need to implement

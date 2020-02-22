@@ -29,7 +29,7 @@
 
             $('#add_new_cook').on('click', toggle_add_visibilty, GetBeerTypes);
 
-            //ajaxCall("GET", "../api/*****", "", GetCookSucess, GetCookError);
+            //ajaxCall("GET", "../api/Batch", "", GetBatchSucess, GetBatchError);
             
             let id = 0; // ID counter for Edit/Delete buttons
 
@@ -85,7 +85,10 @@
 
         });
 
-        function GetCookSucess(){
+        function GetBatchSucess(data) {
+
+            console.log('this is cooking date:', data);
+
             let id = 0; // ID counter for Edit/Delete buttons
 
             helpArr = [{ // client side checks
@@ -137,7 +140,7 @@
             }
         }
 
-        function GetCookError(err) {
+        function GetBatchError(err) {
             console.log(err);
         }
 

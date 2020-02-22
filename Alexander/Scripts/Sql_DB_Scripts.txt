@@ -21,6 +21,15 @@ CREATE TABLE Inventory_Product_2020(
 	Primary key ([prodType],[prodID])
 )
 
+CREATE TABLE Batch_2020(
+	[batch_id] nvarchar(50) int NOT NULL,
+	[date] int not null,
+	[tank] smallint not null,
+	[wort_volume] real not null,
+	[beer_type] nvarchar(50),
+	Primary key ([batch_id])
+)
+
 
 ********************* Examples: *********************
 

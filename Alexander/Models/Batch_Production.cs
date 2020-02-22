@@ -16,6 +16,7 @@ namespace Alexander.Models
         public float pitching_rate;
         public float tank_temp;
         public float set_temp;
+        
 
         public Batch_Production() { }
 
