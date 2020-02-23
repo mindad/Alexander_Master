@@ -20,6 +20,147 @@ CREATE TABLE Inventory_Product_2020(
 	[last_supply_date] datetime,
 	Primary key ([prodType],[prodID])
 )
+CREATE TABLE label_2020(
+	[prodType] nvarchar(50) NOT NULL,
+	[prodID] int,
+	Primary key ([prodType],[prodID])
+)
+CREATE TABLE box_2020(
+	[prodType] nvarchar(50) NOT NULL,
+	[prodID] int,
+	[boxSize] smallint,
+	[beerType] nvarchar(50) NOT NULL,
+	FOREIGN KEY (BeerType) REFERENCES BeerInStock_2020(BeerType),
+	Primary key ([prodType],[prodID])
+)
+
+
+CREATE TABLE User_2020(
+	[userName] nvarchar(50) NOT NULL,
+	[password] nvarchar(50) NOT NULL,
+	Primary key ([userName])
+)
+CREATE TABLE manager_2020(
+	[userName] nvarchar(50) NOT NULL,
+	[Perrmission]bit(4) NOT NULL,
+	Primary key ([userName])
+)
+
+CREATE TABLE brewmiester_2020(
+	[userName] nvarchar(50) NOT NULL,
+	[Perrmission]bit(4) NOT NULL,
+	Primary key ([userName])
+)
+CREATE TABLE Alert_2020(
+	[Alert_id] int NOT NULL,
+	[type] nvarchar(50) not null,
+	[date] datetime,
+	[description] nvarchar(255),
+	[notes] nvarchar(255),
+	Primary key ([Alert_id])
+)
+CREATE TABLE Order_2020(
+	[Order_id] int NOT NULL,
+	[SupplyDate] datetime,
+	[keg_20_amount] int,
+	[keg_30_amount] int,
+	[box_24] int,
+	[beerType] nvarchar(50) NOT NULL,
+	FOREIGN KEY (BeerType) REFERENCES BeerInStock_2020(BeerType),
+	Primary key ([Alert_id])
+)
+CREATE TABLE OrderSubmission_2020(
+	[Order_id] int NOT NULL,
+	[SupplyDate] datetime,
+	Primary key ([Alert_id],[SupplyDate])
+)
+
+CREATE TABLE Batch_2020(
+	[batch_id] int NOT NULL,
+	[date] int not null,
+	[tank] smallint not null,
+	[wort_volume] real not null,
+	[beer_type] nvarchar(50),
+	Primary key ([batch_id])
+)
+
+CREATE TABLE BatchAfterProd_2020(
+	[batch_id] int NOT NULL,
+	[keg_20_amount] int,
+	[keg_30_amount] int,
+	[total_production] int,
+	[bottles_qty] int,
+	[waste_litter] real,
+	[waste_precent] real,
+	[purge_amount] smallint,
+	[prod_waste] smallint,
+	[harvest_amount] smallint,
+	[beer_req_litter] real,
+	[filling_hose] smallint,
+	[tank_leftover] smallint,
+	Primary key ([batch_id])
+)
+
+CREATE TABLE BatchAtProd_2020(
+	[batch_id] int NOT NULL,
+	[cast_volume] real,
+	[yeast_cycle] int,
+	[co2_vol] real,
+	[pitch_time] time,
+	[OG] real,
+	[FG] real,
+	[Pitching_Rate] real,
+	[Temp_Tank] real,
+	[Set_Temp] real,
+	Primary key ([batch_id])
+)
+CREATE TABLE WasteAlert_2020(
+	[Alert_id] int NOT NULL,
+	[type] nvarchar(50) not null,
+	[date] datetime,
+	[description] nvarchar(255),
+	[notes] nvarchar(255),
+	Primary key ([Alert_id])
+)
+CREATE TABLE Fermantation_2020(
+	[BeerType] int NOT NULL,
+	[date] datetime,
+	[pressure_change] real,
+	[pressure_tank] real,
+	[tank_temperature] real,
+	Primary key ([BeerType])
+)
+CREATE TABLE Harvest_2020(
+	[BeerType] int NOT NULL,
+	[date] datetime,
+	[name] nvarchar(255),
+	[temperature] real,
+	[weight] real,
+	[Num_Of_Buckets] smallint,
+	[notes] nvarchar(255),
+	Primary key ([BeerType])
+)
+CREATE TABLE Purge_2020(
+	[BeerType] int NOT NULL,
+	[date] datetime,
+	[name] nvarchar(255),
+	[temperature] real,
+	[weight] real,
+	[Num_Of_Buckets] real,
+	[notes] nvarchar(255),
+	Primary key ([BeerType])
+)
+CREATE TABLE SampleDetails_2020(
+	[BeerType] int NOT NULL,
+	[date] datetime,
+	[Tank_temp] real,
+	[Sample_Temp] real,
+	[Rate] real,
+	[Gravity] real,
+	[ph] real,
+	[notes] nvarchar(255),
+	Primary key ([BeerType])
+)
 
 CREATE TABLE Batch_2020(
 	[batch_id] nvarchar(50) int NOT NULL,
