@@ -80,7 +80,7 @@ create table OrderSubmission_2020(
 
 create table Batch_2020(
 	[batch_id] int NOT NULL,
-	[date] int not null,
+	[date] date not null,
 	[tank] smallint not null,
 	[wort_volume] real not null,
 	[beer_type] nvarchar(50),

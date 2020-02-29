@@ -7,19 +7,21 @@
     <title>Brewmiester Production</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!--<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet"/>
-    <script src="../Scripts/ajaxCalls.js"></script>
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="../../Scripts/ajaxCalls.js"></script>
 
 
 
@@ -29,86 +31,86 @@
 
             $('#add_new_cook').on('click', toggle_add_visibilty, GetBeerTypes);
 
-            //ajaxCall("GET", "../api/Batch", "", GetBatchSucess, GetBatchError);
-            
-            let id = 0; // ID counter for Edit/Delete buttons
+            ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
 
-            helpArr = [{ // client side checks
-                "BeerType":'IPA', 
-                "Ingrediants":'Hops A, Malt C, Minerals B, Malt C, Hops A', 
-                "date_A":'25/1/2019',
-                "batch_id":'0'
-                },
-                {
-                "BeerType":'IPA', 
-                "Ingrediants":'Hops A, Malt C, Minerals B, Malt C, Hops A', 
-                "date_A":'25/1/2019',
-                "batch_id":'1'
-                }
-                ]
-            
-            console.log(helpArr);
+            //let id = 0; // ID counter for Edit/Delete buttons
 
-            try {
-                $('#tbl').DataTable({
+            //helpArr = [{ // client side checks
+            //    "BeerType":'IPA',
+            //    "Ingrediants":'Hops A, Malt C, Minerals B, Malt C, Hops A',
+            //    "date_A":'25/1/2019',
+            //    "batch_id":'0'
+            //    },
+            //    {
+            //    "BeerType":'IPA',
+            //    "Ingrediants":'Hops A, Malt C, Minerals B, Malt C, Hops A',
+            //    "date_A":'25/1/2019',
+            //    "batch_id":'1'
+            //    }
+            //    ]
 
-                    data: helpArr,
-                    pageLength: 10,
-                    columns: [              // Enters data to DataTable
-                        {
-                            render: function (data, type, row, meta) {
-                                id += 1;
-                                let data_for_tbl = "data-btnId='" + id + "'";
+            //console.log(helpArr);
 
-                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>"; 
-                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn + deleteBtn;
-                            }
-                        },
-                        { data: "BeerType" },  // same as data[i].anything
-                        { data: "Ingrediants" },
-                        { data: "date_A" },
-                        {
-                            data: "batch_id",
-                            render: function (data, type, row, meta) {
-                                // ADD HREF !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                return '<a href="#">'+data+'</a>'
-                            }
-                        }
-                        ]
-                });
-            }
+            //try {
+            //    $('#tbl').DataTable({
 
-            catch (err) {
-                alert(err);
-            }
+            //        data: helpArr,
+            //        pageLength: 10,
+            //        columns: [              // Enters data to DataTable
+            //            {
+            //                render: function (data, type, row, meta) {
+            //                    id += 1;
+            //                    let data_for_tbl = "data-btnId='" + id + "'";
+
+            //                    editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+            //                    deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+            //                    return editBtn + deleteBtn;
+            //                }
+            //            },
+            //            { data: "BeerType" },  // same as data[i].anything
+            //            { data: "Ingrediants" },
+            //            { data: "date_A" },
+            //            {
+            //                data: "batch_id",
+            //                render: function (data, type, row, meta) {
+            //                    // ADD HREF !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //                    return '<a href="#">'+data+'</a>'
+            //                }
+            //            }
+            //            ]
+            //    });
+            //}
+
+            //catch (err) {
+            //    alert(err);
+            //}
 
         });
 
-        function GetBatchSucess(data) {
+        // Batch API
+        function GetBatchSucess(Batchdata) {
 
-            console.log('this is cooking date:', data);
+            console.log('this is cooking date:', Batchdata);
 
             let id = 0; // ID counter for Edit/Delete buttons
 
-            helpArr = [{ // client side checks
-                "BeerType":'IPA', 
-                "Ingrediants":'Hops A, Malt C, Minerals B, Malt C, Hops A', 
-                "date_A":'25/1/2019',
-                "batch_id":'0'
-                },{
-                "BeerType":'IPA', 
-                "Ingrediants":'Hops A, Malt C, Minerals B, Malt C, Hops A', 
-                "date_A":'25/1/2019',
-                "batch_id":'1'}
-                ]
-
-            console.log(helpArr);
+            //helpArr = [{ // client side checks
+            //    "BeerType":'IPA',
+            //    "Ingrediants":'Hops A, Malt C, Minerals B, Malt C, Hops A',
+            //    "date_A":'25/1/2019',
+            //    "batch_id":'0'
+            //    },{
+            //    "BeerType":'IPA',
+            //    "Ingrediants":'Hops A, Malt C, Minerals B, Malt C, Hops A',
+            //    "date_A":'25/1/2019',
+            //    "batch_id":'1'}
+            //    ]
+            //console.log(helpArr);
 
             try {
                 $('#tbl').DataTable({
 
-                    data: helpArr,
+                    data: Batchdata,
                     pageLength: 5,
                     columns: [              // Enters data to DataTable
                         {
@@ -116,22 +118,22 @@
                                 id += 1;
                                 let data_for_tbl = "data-btnId='" + id + "'";
 
-                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>"; 
+                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
                                 return editBtn + deleteBtn;
                             }
                         },
                         { data: "BeerType" },  // same as data[i].anything
                         { data: "Ingrediants" },
-                        { data: "date_A" },
+                        { data: "Date" },
                         {
-                            data: "batch_id",
+                            data: "BatchID",
                             render: function (data, type, row, meta) {
                                 // ADD HREF !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                return '<a href="#">'+data+'</a>'
+                                return '<a href="#">' + data + '</a>'
                             }
                         }
-                        ]
+                    ]
                 });
             }
 
@@ -145,14 +147,25 @@
         function GetBatchError(err) {
             console.log(err);
         }
+        // ** Batch API
 
 
+        // Recipe API
+        function GetRecipeSucess(data) {
+            console.log('data from Recipe:', data);
+        }
 
-        function toggle_add_visibilty(){
+        function GetRecipeError(err) {
+            console.log(err);
+        }
+        // ** Recipe API
+
+
+        function toggle_add_visibilty() {
             $('.invisible').removeClass();
         }
 
-        function GetBeerTypes(){
+        function GetBeerTypes() {
             console.log('in Beer types');
             // implement here ajaxcall that gets all beer types from DB
         }

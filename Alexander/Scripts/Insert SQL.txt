@@ -1,0 +1,239 @@
+﻿*************INSERT  BeerInStock_2020 TABLE*******************
+
+INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
+VALUES ('Ambree', '150', '200','300');
+
+
+INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
+VALUES ('BLACK', '1500', '125','150');
+
+
+INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
+VALUES ('GREEN', '150', '200','158');
+
+INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
+VALUES ('BLONDE', '2000', '1000','2000');
+
+
+INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
+VALUES ('???? ???????', '140', '180','300');
+
+
+INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
+VALUES ('BLAZER', '150', '50','500');
+
+INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
+VALUES ('SHAPIRO SHLAGER', '150', '200','300');
+
+select * from BeerInStock_2020 
+
+###############################
+*************INSERT  Recipe_2020  TABLE*******************
+INSERT INTO Recipe_2020 (beerType, creationDate, prods_in_recipe)
+VALUES ('Ambree', 15/12/2020, 'kshut A 200,kshut B,200,Kshut c 100');
+
+
+INSERT INTO Recipe_2020 (beerType, creationDate, prods_in_recipe)
+VALUES ('Blonde', 12/01/2020, 'kshut A 200,kshut B,200,Kshut c 100');
+
+
+INSERT INTO Recipe_2020 (beerType, creationDate, prods_in_recipe)
+VALUES ('Black', 02/02/2020, 'kshut A 200,kshut B,200,Kshut c 100');
+
+
+select * from Recipe_2020
+
+###################################################
+*************INSERT  Inventory_Product_2020  TABLE*******************
+INSERT INTO Inventory_Product_2020 (beerType, creationDate, prods_in_recipe)
+VALUES ('Ambree', 15/12/2020, 'kshut A 200,kshut B,200,Kshut c 100');
+
+INSERT INTO Inventory_Product_2020 (prodType, prodID, amount,minimum_amount,last_supply_date)
+VALUES ('Kshut A','1','1000','100',10/02/2020);
+
+INSERT INTO Inventory_Product_2020 (prodType, prodID, amount,minimum_amount,last_supply_date)
+VALUES ('Kshut B','2','500','50',10/02/2020);
+
+INSERT INTO Inventory_Product_2020 (prodType, prodID, amount,minimum_amount,last_supply_date)
+VALUES ('Kshut C','3','300','100',10/02/2020);
+
+INSERT INTO Inventory_Product_2020 (prodType, prodID, amount,minimum_amount,last_supply_date)
+VALUES ('Kshut D','4','1000','100',10/02/2020);
+
+select * from Inventory_Product_2020
+##############################################
+*************INSERT  label_2020 TABLE*******************
+
+INSERT INTO label_2020 (prodType, prodID)
+VALUES ('Ambree','1');
+INSERT INTO label_2020 (prodType, prodID)
+VALUES ('Blonde','2');
+INSERT INTO label_2020 (prodType, prodID)
+VALUES ('Black','3');
+
+
+select * from label_2020
+
+#######################################################
+*************INSERT  box_2020 TABLE*******************
+
+INSERT INTO box_2020 (prodType, prodID,boxSize,beerType)
+VALUES ('Ambree','1','12','Ambree');
+INSERT INTO box_2020 (prodType, prodID,boxSize,beerType)
+VALUES ('Blonde','2','12','Blonde');
+INSERT INTO box_2020 (prodType, prodID,boxSize,beerType)
+VALUES ('Black','2','12','Black');
+
+select * from box_2020
+
+#######################################################
+*************INSERT  User_2020 TABLE*******************
+INSERT INTO User_2020 (userName, password)
+VALUES ('sahar','1');
+INSERT INTO User_2020 (userName, password)
+VALUES ('Eran','1');
+
+select * from User_2020
+
+
+#######################################################
+*************INSERT  manager_2020 TABLE*******************
+INSERT INTO manager_2020 (userName, Perrmission)
+VALUES ('sahar','1');
+INSERT INTO manager_2020 (userName, Perrmission)
+VALUES ('Eran','1');
+select * from manager_2020
+
+################################################
+*************INSERT  brewmiester_2020 TABLE*******************
+INSERT INTO brewmiester_2020 (userName, Perrmission)
+VALUES ('sahar','1');
+INSERT INTO brewmiester_2020 (userName, Perrmission)
+VALUES ('Eran','0');
+select * from brewmiester_2020
+
+
+################################################
+*************INSERT  Alert_2020 TABLE*******************
+
+INSERT INTO Alert_2020 (Alert_id, type,date,description,notes)
+VALUES ('1','Kshut B',02/02/2020,'minimum in stock','');
+INSERT INTO Alert_2020 (Alert_id, type,date,description,notes)
+VALUES ('2','kshut A',5/02/2020,'minimum in stock','');
+INSERT INTO Alert_2020 (Alert_id, type,date,description,notes)
+VALUES ('3','label Ambree',02/1/2020,'minimum in stock','');
+
+select * from Alert_2020
+
+################################################
+*************INSERT  Order_2020 TABLE*******************
+
+INSERT INTO Order_2020 (Order_id, Alert_id,SupplyDate,keg_20_amount,keg_30_amount,box_24,beerType)
+VALUES ('1','2',02/02/2020,'30','40','15','Ambree');
+INSERT INTO Order_2020 (Order_id, Alert_id,SupplyDate,keg_20_amount,keg_30_amount,box_24,beerType)
+VALUES ('2','3',02/02/2020,'30','40','15','Blonde');
+INSERT INTO Order_2020 (Order_id, Alert_id,SupplyDate,keg_20_amount,keg_30_amount,box_24,beerType)
+VALUES ('3','4',02/02/2020,'30','40','15','Black');
+
+select * from Order_2020
+
+################################################
+*************INSERT  OrderSubmission_2020 TABLE*******************
+
+INSERT INTO OrderSubmission_2020 (Order_id, Alert_id,SupplyDate)
+VALUES ('1','2',02/02/2020);
+INSERT INTO OrderSubmission_2020 (Order_id, Alert_id,SupplyDate)
+VALUES ('2','3',02/02/2020);
+INSERT INTO OrderSubmission_2020 (Order_id, Alert_id,SupplyDate)
+VALUES ('3','4',02/02/2020);
+
+select * from OrderSubmission_2020
+
+################################################
+*************INSERT  Batch_2020 TABLE*******************
+
+INSERT INTO Batch_2020 (batch_id, date,tank,wort_volume,beer_type)
+VALUES ('3','02-02-2020','41','14','Ambree');
+
+INSERT INTO Batch_2020 (batch_id, date,tank,wort_volume,beer_type)
+VALUES ('4','05-02-2020','61','14','Blonde');
+INSERT INTO Batch_2020 (batch_id, date,tank,wort_volume,beer_type)
+VALUES ('5','01-02-2020','62','10','Black');
+
+select * from Batch_2020
+
+################################################
+*************INSERT  BatchAfterProd_2020 TABLE*******************
+INSERT INTO BatchAfterProd_2020 (batch_id,keg_20_amount,keg_30_amount,total_production,bottles_qty,waste_litter,waste_precent,purge_amount,prod_waste,harvest_amount,beer_req_litter,filling_hose,tank_leftover)
+VALUES ('1883','1300','','1727','1296','272','14','10','5','10','30','20','50');
+INSERT INTO BatchAfterProd_2020 (batch_id,keg_20_amount,keg_30_amount,total_production,bottles_qty,waste_litter,waste_precent,purge_amount,prod_waste,harvest_amount,beer_req_litter,filling_hose,tank_leftover)
+VALUES ('1884','1300','','1727','1291','272','11','13','4','10','30','50','50');
+
+
+select * from BatchAfterProd_2020
+
+################################################
+*************INSERT  BatchAtProd_2020TABLE*******************
+
+INSERT INTO BatchAtProd_2020(batch_id,cast_volume,yeast_cycle,co2_vol,pitch_time,OG,FG,Pitching_Rate,Temp_Tank,Set_Temp)
+VALUES ('1884','1300','','1727','1291','272','11','13','4','10');
+
+INSERT INTO BatchAtProd_2020 (batch_id,cast_volume,yeast_cycle,co2_vol,pitch_time,OG,FG,Pitching_Rate,Temp_Tank,Set_Temp)
+VALUES ('1883','120','14','127','1291','272','11','13','4','10');
+
+select * from BatchAtProd_2020
+
+################################################
+*************INSERT  WasteAlert_2020 TABLE*******************
+
+
+INSERT INTO WasteAlert_2020 (Alert_id, type,date,description,notes)
+VALUES ('1','Ambree',02/01/2020,'waste up then ..','');
+INSERT INTO WasteAlert_2020 (Alert_id, type,date,description,notes)
+VALUES ('2','Black',5/02/2020,'waste up then ..','');
+INSERT INTO WasteAlert_2020 (Alert_id, type,date,description,notes)
+VALUES ('3','Blonde',02/1/2020,'waste up then ..','');
+
+select * from WasteAlert_2020
+
+################################################
+*************INSERT  Fermantation_2020 TABLE*******************
+
+INSERT INTO Fermantation_2020 (BeerType, date,pressure_change,pressure_tank,tank_temperature)
+VALUES ('1',02/1/2020,'13.2','12.1','10');
+
+INSERT INTO Fermantation_2020 (BeerType, date,pressure_change,pressure_tank,tank_temperature)
+VALUES ('2',05/2/2020,'13.2','12.1','10');
+
+INSERT INTO Fermantation_2020 (BeerType, date,pressure_change,pressure_tank,tank_temperature)
+VALUES ('3',02/1/2020,'13.2','12.1','10');
+
+select * from Fermantation_2020
+
+
+################################################
+*************INSERT  Harvest_2020  TABLE*******************
+
+INSERT INTO Harvest_2020 (BeerType, date,name,temperature,weight,Num_Of_Buckets,notes)
+VALUES ('3',02/1/2020,'bla','12.1','10','5','');
+INSERT INTO Harvest_2020 (BeerType, date,name,temperature,weight,Num_Of_Buckets,notes)
+VALUES ('2',02/2/2020,'bla','12.1','10','5','');
+
+select * from Harvest_2020
+
+################################################
+*************INSERT  Purge_2020 TABLE*******************
+INSERT INTO Purge_2020 (BeerType, date,name,temperature,weight,Num_Of_Buckets,notes)
+VALUES ('3',02/1/2020,'bla','12.1','10','5','');
+INSERT INTO Purge_2020 (BeerType, date,name,temperature,weight,Num_Of_Buckets,notes)
+VALUES ('2',02/2/2020,'bla','12.1','10','5','');
+
+select * from Purge_2020
+################################################
+*************INSERT  SampleDetails_2020 TABLE*******************
+
+INSERT INTO SampleDetails_2020 (BeerType, date,Tank_temp,Sample_Temp,Rate,Gravity,ph,notes)
+VALUES ('2',02/2/2020,'20','12.1','10','5','10','');
+INSERT INTO SampleDetails_2020 (BeerType, date,Tank_temp,Sample_Temp,Rate,Gravity,ph,notes)
+VALUES ('1',02/2/2020,'20','12.1','10','5','10','');
+select * from SampleDetails_2020

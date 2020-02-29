@@ -118,14 +118,14 @@ namespace Alexander.Models.DAL
 
                     Recipe recipe = new Recipe();
 
-                    //recipe.BatchID = (string)dr["beerType"];
-                    //recipe.Date = Convert.ToDateTime(dr["creationDate"]);
+                    recipe.BeerType = (string)dr["beerType"];
+                    recipe.CreationDate = Convert.ToDateTime(dr["creationDate"]);
                     
                     //recipe.Tank = (string)dr["prods_in_recipe"];    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
                     // parse here all prods in recipe
-                    // string [] parsed_items_in_recipe = ((string)dr["prods_in_recipe"]).Split(':');
+                    string [] parsed_items_in_recipe = ((string)dr["prods_in_recipe"]).Split(':');
 
 
                     recipe_List.Add(recipe); 
