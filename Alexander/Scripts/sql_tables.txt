@@ -1,4 +1,4 @@
-﻿CREATE TABLE BeerInStock_2020(
+create table BeerInStock_2020(
 	[beerType] nvarchar(50) NOT NULL,
 	[keg_20_amount] smallint,
 	[keg_30_amount] smallint,
@@ -6,14 +6,14 @@
 	Primary key ([beerType])
 )
 
-CREATE TABLE Recipe_2020(
+create table Recipe_2020(
 	[beerType] nvarchar(50) NOT NULL,
 	[creationDate] datetime,
 	[prods_in_recipe] nvarchar(256),
 	Primary key ([beerType])
 )
 
-CREATE TABLE Inventory_Product_2020(
+create table Inventory_Product_2020(
 	[prodType] nvarchar(50) NOT NULL,
 	[prodID] int,
 	[amount] int,
@@ -21,12 +21,12 @@ CREATE TABLE Inventory_Product_2020(
 	[last_supply_date] datetime,
 	Primary key ([prodType],[prodID])
 )
-CREATE TABLE label_2020(
+create table label_2020(
 	[prodType] nvarchar(50) NOT NULL,
 	[prodID] int,
 	Primary key ([prodType],[prodID])
 )
-CREATE TABLE box_2020(
+create table box_2020(
 	[prodType] nvarchar(50) NOT NULL,
 	[prodID] int,
 	[boxSize] smallint,
@@ -36,23 +36,23 @@ CREATE TABLE box_2020(
 )
 
 
-CREATE TABLE User_2020(
+create table User_2020(
 	[userName] nvarchar(50) NOT NULL,
 	[password] nvarchar(50) NOT NULL,
 	Primary key ([userName])
 )
-CREATE TABLE manager_2020(
+create table manager_2020(
 	[userName] nvarchar(50) NOT NULL,
-	[Perrmission]bit(4) NOT NULL,
+	[Perrmission] bit NOT NULL,
 	Primary key ([userName])
 )
 
-CREATE TABLE brewmiester_2020(
+create table brewmiester_2020(
 	[userName] nvarchar(50) NOT NULL,
-	[Perrmission]bit(4) NOT NULL,
+	[Perrmission]bit NOT NULL,
 	Primary key ([userName])
 )
-CREATE TABLE Alert_2020(
+create table Alert_2020(
 	[Alert_id] int NOT NULL,
 	[type] nvarchar(50) not null,
 	[date] datetime,
@@ -60,8 +60,9 @@ CREATE TABLE Alert_2020(
 	[notes] nvarchar(255),
 	Primary key ([Alert_id])
 )
-CREATE TABLE Order_2020(
+create table Order_2020(
 	[Order_id] int NOT NULL,
+	[Alert_id] int NOT NULL,
 	[SupplyDate] datetime,
 	[keg_20_amount] int,
 	[keg_30_amount] int,
@@ -70,13 +71,14 @@ CREATE TABLE Order_2020(
 	FOREIGN KEY (BeerType) REFERENCES BeerInStock_2020(BeerType),
 	Primary key ([Alert_id])
 )
-CREATE TABLE OrderSubmission_2020(
+create table OrderSubmission_2020(
 	[Order_id] int NOT NULL,
+[Alert_id] int NOT NULL,
 	[SupplyDate] datetime,
 	Primary key ([Alert_id],[SupplyDate])
 )
 
-CREATE TABLE Batch_2020(
+create table Batch_2020(
 	[batch_id] int NOT NULL,
 	[date] int not null,
 	[tank] smallint not null,
@@ -85,7 +87,7 @@ CREATE TABLE Batch_2020(
 	Primary key ([batch_id])
 )
 
-CREATE TABLE BatchAfterProd_2020(
+create table BatchAfterProd_2020(
 	[batch_id] int NOT NULL,
 	[keg_20_amount] int,
 	[keg_30_amount] int,
@@ -102,7 +104,7 @@ CREATE TABLE BatchAfterProd_2020(
 	Primary key ([batch_id])
 )
 
-CREATE TABLE BatchAtProd_2020(
+create table BatchAtProd_2020(
 	[batch_id] int NOT NULL,
 	[cast_volume] real,
 	[yeast_cycle] int,
@@ -115,7 +117,7 @@ CREATE TABLE BatchAtProd_2020(
 	[Set_Temp] real,
 	Primary key ([batch_id])
 )
-CREATE TABLE WasteAlert_2020(
+create table WasteAlert_2020(
 	[Alert_id] int NOT NULL,
 	[type] nvarchar(50) not null,
 	[date] datetime,
@@ -123,7 +125,7 @@ CREATE TABLE WasteAlert_2020(
 	[notes] nvarchar(255),
 	Primary key ([Alert_id])
 )
-CREATE TABLE Fermantation_2020(
+create table Fermantation_2020(
 	[BeerType] int NOT NULL,
 	[date] datetime,
 	[pressure_change] real,
@@ -131,7 +133,7 @@ CREATE TABLE Fermantation_2020(
 	[tank_temperature] real,
 	Primary key ([BeerType])
 )
-CREATE TABLE Harvest_2020(
+create table Harvest_2020(
 	[BeerType] int NOT NULL,
 	[date] datetime,
 	[name] nvarchar(255),
@@ -141,7 +143,7 @@ CREATE TABLE Harvest_2020(
 	[notes] nvarchar(255),
 	Primary key ([BeerType])
 )
-CREATE TABLE Purge_2020(
+create table Purge_2020(
 	[BeerType] int NOT NULL,
 	[date] datetime,
 	[name] nvarchar(255),
@@ -151,7 +153,7 @@ CREATE TABLE Purge_2020(
 	[notes] nvarchar(255),
 	Primary key ([BeerType])
 )
-CREATE TABLE SampleDetails_2020(
+create table SampleDetails_2020(
 	[BeerType] int NOT NULL,
 	[date] datetime,
 	[Tank_temp] real,
