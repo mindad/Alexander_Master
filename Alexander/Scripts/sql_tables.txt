@@ -9,6 +9,7 @@
 CREATE TABLE Recipe_2020(
 	[beerType] nvarchar(50) NOT NULL,
 	[creationDate] datetime,
+	[prods_in_recipe] nvarchar(256),
 	Primary key ([beerType])
 )
 

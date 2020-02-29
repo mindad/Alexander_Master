@@ -95,5 +95,55 @@ namespace Alexander.Models.DAL
         }
 
 
+        
+        /// 
+        /// GET all get_RecipesDB
+        /// 
+        public List<Recipe> get_RecipesDB()
+        {
+            List<Recipe> recipe_List = new List<Recipe>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [Recipe_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+
+                    Recipe recipe = new Recipe();
+
+                    //recipe.BatchID = (string)dr["beerType"];
+                    //recipe.Date = Convert.ToDateTime(dr["creationDate"]);
+                    
+                    //recipe.Tank = (string)dr["prods_in_recipe"];    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+                    // parse here all prods in recipe
+                    // string [] parsed_items_in_recipe = ((string)dr["prods_in_recipe"]).Split(':');
+
+
+                    recipe_List.Add(recipe); 
+                }
+
+                return recipe_List;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
     }
 }
