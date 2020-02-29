@@ -30,15 +30,15 @@ select * from BeerInStock_2020
 ###############################
 *************INSERT  Recipe_2020  TABLE*******************
 INSERT INTO Recipe_2020 (beerType, creationDate, prods_in_recipe)
-VALUES ('Ambree', 15/12/2020, 'kshut A 200,kshut B,200,Kshut c 100');
+VALUES ('Ambree', '2020-02-01', 'kshutA:200,kshutB:200,Kshutc:100');
 
 
 INSERT INTO Recipe_2020 (beerType, creationDate, prods_in_recipe)
-VALUES ('Blonde', 12/01/2020, 'kshut A 200,kshut B,200,Kshut c 100');
+VALUES ('Ambree', '2020-03-03', 'kshutA:200,kshutB:200,Kshutc:100');
 
 
 INSERT INTO Recipe_2020 (beerType, creationDate, prods_in_recipe)
-VALUES ('Black', 02/02/2020, 'kshut A 200,kshut B,200,Kshut c 100');
+VALUES ('Black', '2020-01-02', 'kshutA:200,kshutB:200,Kshutc:100');
 
 
 select * from Recipe_2020

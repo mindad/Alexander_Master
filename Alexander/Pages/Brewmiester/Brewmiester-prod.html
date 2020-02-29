@@ -27,63 +27,15 @@
 
     <script>
 
+        recipeArr = [];
+
         $(document).ready(function () {
 
             $('#add_new_cook').on('click', toggle_add_visibilty, GetBeerTypes);
 
+            ajaxCall("GET", "../../api/Recipe", "", GetRecipeSucess, GetRecipeError);
+
             ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
-
-            //let id = 0; // ID counter for Edit/Delete buttons
-
-            //helpArr = [{ // client side checks
-            //    "BeerType":'IPA',
-            //    "Ingrediants":'Hops A, Malt C, Minerals B, Malt C, Hops A',
-            //    "date_A":'25/1/2019',
-            //    "batch_id":'0'
-            //    },
-            //    {
-            //    "BeerType":'IPA',
-            //    "Ingrediants":'Hops A, Malt C, Minerals B, Malt C, Hops A',
-            //    "date_A":'25/1/2019',
-            //    "batch_id":'1'
-            //    }
-            //    ]
-
-            //console.log(helpArr);
-
-            //try {
-            //    $('#tbl').DataTable({
-
-            //        data: helpArr,
-            //        pageLength: 10,
-            //        columns: [              // Enters data to DataTable
-            //            {
-            //                render: function (data, type, row, meta) {
-            //                    id += 1;
-            //                    let data_for_tbl = "data-btnId='" + id + "'";
-
-            //                    editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
-            //                    deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-            //                    return editBtn + deleteBtn;
-            //                }
-            //            },
-            //            { data: "BeerType" },  // same as data[i].anything
-            //            { data: "Ingrediants" },
-            //            { data: "date_A" },
-            //            {
-            //                data: "batch_id",
-            //                render: function (data, type, row, meta) {
-            //                    // ADD HREF !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            //                    return '<a href="#">'+data+'</a>'
-            //                }
-            //            }
-            //            ]
-            //    });
-            //}
-
-            //catch (err) {
-            //    alert(err);
-            //}
 
         });
 
@@ -94,25 +46,12 @@
 
             let id = 0; // ID counter for Edit/Delete buttons
 
-            //helpArr = [{ // client side checks
-            //    "BeerType":'IPA',
-            //    "Ingrediants":'Hops A, Malt C, Minerals B, Malt C, Hops A',
-            //    "date_A":'25/1/2019',
-            //    "batch_id":'0'
-            //    },{
-            //    "BeerType":'IPA',
-            //    "Ingrediants":'Hops A, Malt C, Minerals B, Malt C, Hops A',
-            //    "date_A":'25/1/2019',
-            //    "batch_id":'1'}
-            //    ]
-            //console.log(helpArr);
-
             try {
                 $('#tbl').DataTable({
 
                     data: Batchdata,
                     pageLength: 5,
-                    columns: [              // Enters data to DataTable
+                    columns: [             
                         {
                             render: function (data, type, row, meta) {
                                 id += 1;
@@ -123,8 +62,29 @@
                                 return editBtn + deleteBtn;
                             }
                         },
-                        { data: "BeerType" },  // same as data[i].anything
-                        { data: "Ingrediants" },
+                        { data: "BeerType" },  
+                        {
+                            data: "BeerType",
+                            render: function (data, type, row, meta) {
+
+                                for (var i = 0; i < recipeArr.length; i++) { // sets the relavent recipe for each beer type
+                                    if (recipeArr[i].BeerType == data) {
+
+                                        let st = ''; // will hold 'prod:amount' key value pairs
+
+                                        for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) { 
+                                            if (j == recipeArr[i].Products_in_recipe.length -1) {
+                                                st += recipeArr[i].Products_in_recipe[j].ProductType + ':' + recipeArr[i].Products_in_recipe[j].Amount;
+                                                continue;
+                                            }
+                                            st += recipeArr[i].Products_in_recipe[j].ProductType + ':' + recipeArr[i].Products_in_recipe[j].Amount +', ';
+                                        }
+                                        return st;
+                                    }
+                                }
+                                return "no recipe for this beer";
+                            }
+                        }, 
                         { data: "Date" },
                         {
                             data: "BatchID",
@@ -141,7 +101,7 @@
                 alert(err);
             }
 
-            //ajaxCall("GET", "../api/Recipe", "", GetRecipeSucess, GetRecipeError);
+           
         }
 
         function GetBatchError(err) {
@@ -153,6 +113,8 @@
         // Recipe API
         function GetRecipeSucess(data) {
             console.log('data from Recipe:', data);
+
+            recipeArr = data;
         }
 
         function GetRecipeError(err) {
@@ -251,7 +213,7 @@
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
-                <img src="../Logo_alexander.jpeg" height="68" alt="alexander logo">
+                <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
             </a>
         </nav>
     </div>

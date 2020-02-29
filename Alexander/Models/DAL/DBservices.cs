@@ -120,13 +120,25 @@ namespace Alexander.Models.DAL
 
                     recipe.BeerType = (string)dr["beerType"];
                     recipe.CreationDate = Convert.ToDateTime(dr["creationDate"]);
-                    
-                    //recipe.Tank = (string)dr["prods_in_recipe"];    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 
                     // parse here all prods in recipe
-                    string [] parsed_items_in_recipe = ((string)dr["prods_in_recipe"]).Split(':');
+                    string [] parsed_items_in_recipe = ((string)dr["prods_in_recipe"]).Split(',');
+                    List<Product> prd_lst = new List<Product>();
 
+                    for (int i = 0; i < parsed_items_in_recipe.Length; i++) 
+                    {
+                        Product prod = new Product();
+
+                        prod.ProductType = parsed_items_in_recipe[i].Split(':')[0];
+                        prod.Amount = (float)Convert.ToDouble(parsed_items_in_recipe[i].Split(':')[1]);
+                        prod.Min_amount = 0;
+                        prod.Last_arrivalTime = new DateTime(); // not needed
+
+                        prd_lst.Add(prod);
+                        
+                    }
+
+                    recipe.Products_in_recipe = prd_lst;
 
                     recipe_List.Add(recipe); 
                 }

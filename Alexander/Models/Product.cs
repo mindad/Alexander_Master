@@ -22,9 +22,9 @@ namespace Alexander.Models
             this.Last_arrivalTime = last_arrivalTime;
         }
 
-        protected float Amount { get => amount; set => amount = value; }
-        protected int Min_amount { get => min_amount; set => min_amount = value; }
-        protected DateTime Last_arrivalTime { get => last_arrivalTime; set => last_arrivalTime = value; }
-        protected string ProductType { get => productType; set => productType = value; }
+        public float Amount { get => amount; set => amount = value; }
+        public int Min_amount { get => min_amount; set => min_amount = value; }
+        public DateTime Last_arrivalTime { get => last_arrivalTime; set => last_arrivalTime = value; }
+        public string ProductType { get => productType; set => productType = value; }
     }
 }

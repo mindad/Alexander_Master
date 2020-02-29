@@ -8,7 +8,7 @@ create table BeerInStock_2020(
 
 create table Recipe_2020(
 	[beerType] nvarchar(50) NOT NULL,
-	[creationDate] datetime,
+	[creationDate] date,
 	[prods_in_recipe] nvarchar(256),
 	Primary key ([beerType])
 )
