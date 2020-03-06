@@ -5,25 +5,25 @@ VALUES ('Ambree', '150', '200','300');
 
 
 INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
-VALUES ('BLACK', '1500', '125','150');
+VALUES ('Black', '1500', '125','150');
 
 
 INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
-VALUES ('GREEN', '150', '200','158');
+VALUES ('Green', '150', '200','158');
 
 INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
-VALUES ('BLONDE', '2000', '1000','2000');
-
-
-INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
-VALUES ('???? ???????', '140', '180','300');
+VALUES ('Blonde', '2000', '1000','2000');
 
 
 INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
-VALUES ('BLAZER', '150', '50','500');
+VALUES ('Israeli Wheet', '140', '180','300');
+
 
 INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
-VALUES ('SHAPIRO SHLAGER', '150', '200','300');
+VALUES ('Blazer', '150', '50','500');
+
+INSERT INTO BeerInStock_2020 (beerType, keg_20_amount, keg_30_amount, bottle_case_amount)
+VALUES ('Shapiro Lager', '150', '200','300');
 
 select * from BeerInStock_2020 
 

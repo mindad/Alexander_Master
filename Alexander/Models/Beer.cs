@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Alexander.Models.DAL;
+
 
 namespace Alexander.Models
 {
@@ -23,10 +25,24 @@ namespace Alexander.Models
             this.Waste_AVG = waste_AVG;
         }
 
-        protected string BeerType { get => beerType; set => beerType = value; }
-        protected int Keg20_amount { get => keg20_amount; set => keg20_amount = value; }
-        protected int Keg30_amount { get => keg30_amount; set => keg30_amount = value; }
-        protected int BottleCase_amount { get => bottleCase_amount; set => bottleCase_amount = value; }
-        protected float Waste_AVG { get => waste_AVG; set => waste_AVG = value; }
+        public Beer()
+        {
+        }
+
+        public string BeerType { get => beerType; set => beerType = value; }
+        public int Keg20_amount { get => keg20_amount; set => keg20_amount = value; }
+        public int Keg30_amount { get => keg30_amount; set => keg30_amount = value; }
+        public int BottleCase_amount { get => bottleCase_amount; set => bottleCase_amount = value; }
+        public float Waste_AVG { get => waste_AVG; set => waste_AVG = value; }
+
+
+        public List<Beer> get_Beers()
+        {
+            DBservices dbs = new DBservices();
+
+            List<Beer> beer_arr = dbs.get_BeersDB();
+
+            return beer_arr;
+        }
     }
 }

@@ -28,21 +28,70 @@
     <script>
 
         recipeArr = [];
+        batchArr = [];
 
         $(document).ready(function () {
 
-            $('#add_new_cook').on('click', toggle_add_visibilty, GetBeerTypes);
+            $('#add_new_cook').on('click', toggle_add_visibilty); //GetBeerTypes
 
-            ajaxCall("GET", "../../api/Recipe", "", GetRecipeSucess, GetRecipeError);
+            ajaxCall("GET", "../../api/Recipe", "", GetRecipeSucess, GetRecipeError); // get all recipes
 
-            ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
+            $("#beerSelect").on('change', SetFormValues); // set form values when add batch to table
+
+            $("#addToBatch").on("click", PostNewBatch);
+
+            // Form Validation
+            $('input').on('blur', checkValidation);
+
+            //ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
 
         });
+
+        function checkValidation() {
+
+            let checkInt = $(this).val();
+
+            console.log('this is checkint:', checkInt);
+
+            if (type(checkInt) != Number) {
+                this.validity.valid = false;
+                this.setCustomValidity("from date must be greater than today");
+                return false;
+            }
+            else {
+                this.validity.valid = true;
+                this.setCustomValidity('');
+            }
+        }
+
+        function PostNewBatch() {
+
+            //get max batchID
+            let ID_arr = [];
+            for (var i = 0; i < batchArr.length; i++) {
+                ID_arr.push(batchArr[i].BatchID);
+            }
+
+            batch = {
+                batch_id: Math.max.apply(null, ID_arr) + 1,
+                date: addDate.val(), // need to parse dates
+                beer_type: $('#beerSelect').val(),
+                tank:0,
+                wort_volume:0
+            }
+
+
+
+            //// TODO
+            //// add ajaxCall
+            //// check form validation + make form return false so page wont be rendered
+        }
 
         // Batch API
         function GetBatchSucess(Batchdata) {
 
             console.log('this is cooking date:', Batchdata);
+            batchArr = Batchdata;
 
             let id = 0; // ID counter for Edit/Delete buttons
 
@@ -90,7 +139,7 @@
                             data: "BatchID",
                             render: function (data, type, row, meta) {
                                 // ADD HREF !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                return '<a href="#">' + data + '</a>'
+                                return `<a href="#" id="${data}">${data}</a>`
                             }
                         }
                     ]
@@ -115,6 +164,9 @@
             console.log('data from Recipe:', data);
 
             recipeArr = data;
+
+            // GET batch details
+            ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
         }
 
         function GetRecipeError(err) {
@@ -123,14 +175,59 @@
         // ** Recipe API
 
 
+        
+
+
         function toggle_add_visibilty() {
             $('.invisible').removeClass();
+
+            ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
+
+
+            // toggle class and remove the form
         }
 
-        function GetBeerTypes() {
-            console.log('in Beer types');
-            // implement here ajaxcall that gets all beer types from DB
+        // Beer API
+        function GetBeerSucess(data) {
+            console.log('data from Beer_2020:', data);
+
+            // insert values to beerType Select     
+            BeerTypesOptions = "<option>Select Beer Type</option>`";
+            for (var i = 0; i < data.length; i++) {
+                BeerTypesOptions += `<option>${data[i].BeerType}</option>`;
+            }
+
+            document.getElementById("beerSelect").innerHTML = BeerTypesOptions;
         }
+
+        function GetBeerError(err) {
+            console.log(err);
+        }
+        // ** Beer API
+
+
+        function SetFormValues(){
+
+                var selectedBeer = $(this).children("option:selected").val();
+
+                $("#inForm").html(''); // clear inForm div
+
+                let st = '';
+
+                for (var i = 0; i < recipeArr.length; i++) {
+
+                    if ((recipeArr[i].BeerType).toLowerCase() == selectedBeer.toLowerCase()) {
+
+                        for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) {
+
+                            st += `<label>${recipeArr[i].Products_in_recipe[j].ProductType} </label><input type="text" value="${recipeArr[i].Products_in_recipe[j].Amount}" class="text-center" /><br><br>`
+                        }
+                        break;
+                    }
+                }
+                $("#inForm").append(st); 
+            }
+        
 
 
     </script>
@@ -194,28 +291,28 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Production</a>
-                    </li>
-                    <li class="nav-item active px-2">
-                        <a class="nav-link" href="#">Inventory</a>
-                    </li>
-                    <li class="nav-item active px-2">
-                        <a class="nav-link" href="#">Waste</a>
-                    </li>
-                    <li class="nav-item active px-2">
-                        <a class="nav-link" href="#">Alerts</a>
-                    </li>
-                    <!-- <li class="nav-item">
-                  <a class="nav-link disabled" href="#">Disabled</a>
-                </li> -->
-                </ul>
-            </div>
-            <a class="navbar-brand" href="#">
-                <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
-            </a>
-        </nav>
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Production</a>
+                        </li>
+                        <li class="nav-item active px-2">
+                            <a class="nav-link" href="#">Inventory</a>
+                        </li>
+                        <li class="nav-item active px-2">
+                            <a class="nav-link" href="#">Waste</a>
+                        </li>
+                        <li class="nav-item active px-2">
+                            <a class="nav-link" href="#">Alerts</a>
+                        </li>
+                        <!-- <li class="nav-item">
+              <a class="nav-link disabled" href="#">Disabled</a>
+            </li> -->
+                    </ul>
+                </div>
+                <a class="navbar-brand" href="#">
+                    <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
+                </a>
+</nav>
     </div>
     <br><br>
     <!-- NavBar Template -->
@@ -247,35 +344,18 @@
     <!-- Add Product --> 
     <div class="container collapse" id="addprodContainer">
         <div id="addprod">
-            <br />
-            <form action="/action_page.php">
-                <select name="Beer">
-                    <option value="">Beer Type</option>
-                    <option value="">Blonde</option>
-                    <option value="">Ambree</option>
-                    <option value="">Green</option>
-                    <option value="">Black</option>
-                </select>
-                <br /><br />
+            <br/>
+            <form id="ourForm">
+                <select name="Beer" id="beerSelect"></select>
+                <br><br>
                 <label>Choose date</label>
-                <input type="date" name="bday">
+                <input type="date" name="date" id="addDate">
                 <br><br>
-                <label>US Malt 1</label>
-                <input type="text" value="200" />
-                <br><br>
-                <label>EU Malt 2</label>
-                <input type="text" value="400" />
-                <br><br>
-                <label>Hops A</label>
-                <input type="text" value="80" />
-                <br><br>
-                <label>Yeast B</label>
-                <input type="text" value="70" />
-                <br />
-                <br />
-                <input type="submit">
-                <br />
-                <br />
+
+                <div id="inForm"></div>
+               
+                <button id="addToBatch">Submit</button>
+                <br /><br />
             </form>
 
         </div>

@@ -157,5 +157,53 @@ namespace Alexander.Models.DAL
                 }
             }
         }
+
+        
+        /// 
+        /// GET all Beers
+        /// 
+        public List<Beer> get_BeersDB()
+        {
+            List<Beer> beer_list = new List<Beer>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [BeerInStock_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {   
+
+                    Beer beer = new Beer();
+
+                    beer.BeerType = (string)dr["beerType"];
+                    beer.Keg20_amount = Convert.ToInt32(dr["keg_20_amount"]);
+                    beer.Keg30_amount = Convert.ToInt32(dr["keg_30_amount"]);
+                    beer.BottleCase_amount = Convert.ToInt32(dr["bottle_case_amount"]);
+
+                    beer_list.Add(beer);
+                }
+
+                return beer_list;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+
     }
 }
