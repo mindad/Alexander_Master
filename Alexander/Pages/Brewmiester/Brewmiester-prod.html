@@ -52,7 +52,7 @@
 
             $("#addToBatch").on("click", PostNewBatch);
 
-            
+            $('#submit_edit').on("click", edit_Batch_table);
 
         });
 
@@ -269,13 +269,11 @@
 
             $(document).on("click", ".deleteBtn", function () {
 
-                var discount_id = this.getAttribute('data-btnId');
-              
+                var batch_id = this.getAttribute('data-btnId');
 
                 if (confirm("Are You Sure You Want To Delete This Row?")) {
 
-                    ajaxCall("Delete", "../../api/Batch", JSON.stringify(discount_id - 1), DeleteBatchSucess, DeleteBatchError); 
-
+                    ajaxCall("Delete", "../../api/Batch", JSON.stringify(batch_id), DeleteBatchSucess, DeleteBatchError); 
                 }
                 else {
                     console.log("You pressed Cancel!");
@@ -284,30 +282,31 @@
             });
         }
 
-        function edit_discount_table() {
+        function edit_Batch_table() {
 
-            dis = {
-                "airlines": $('#airline').val() + ';',
-                "from": $('#from').val(),
-                "to": $('#to').val(),
-                "startDate": $('#fromDate').val(),
-                "endDate": $('#toDate').val(),
-                "discount": $('#discount_amount').val()
+            let id_in_batchArr = $('#ph').val();
+
+            let batch = {
+                batchID: batchArr[id_in_batchArr].BatchID,
+                date: $("#batchDateInput").val(), 
+                beerType: $('#beerTypeInput').val(),
+                tank:0,
+                wort_volume:0
             }
+
+            console.log('this is batch that will send to PUT', batch);
           
-            parms = [dis, $('#ph').val()]; // ph.val() will hold the row number
-
-            ajaxCall("POST", "../api/Discount/edit", JSON.stringify(parms), editDiscountSucess, editDiscountError);
-
+            ajaxCall("PUT", "../../api/Batch", JSON.stringify(batch), editBatchSucess, editBatchError);
         }
 
         //////// editBatch
-        function editDiscountSucess(data) {
-            console.log(data);
+        function editBatchSucess(data) {
+            console.log(data, 'record changed succefully');
 
-            ajaxCall("GET", "../api/Discount", "", GetDiscountSucess, GetDiscountError);
+            refresh_table();
+
         }
-        function editDiscountError(err) {
+        function editBatchError(err) {
             console.log(err);
         }
         //****** editBatch
@@ -316,19 +315,18 @@
         function DeleteBatchSucess(data) {
             console.log(data, "Record Deleted");
 
-            //// TODO
-            //// rebuild dataTable
+            refresh_table();
             
-            //ajaxCall("GET", "../api/Discount", "", GetDiscountSucess, GetDiscountError);
         }
+
         function DeleteBatchError(err) {
             console.log(err);
         }
         //****** DeleteBatch
 
 
-        function populateFields(btnID) {
-
+        function populateFields(btnID) { // set values in edit DIV
+             
             let id_in_arr = 0;
             // get row in batchArr
             for (i in batchArr) { 
@@ -337,12 +335,21 @@
                     break;
                 }
             }
+
+            $('#ph').val(id_in_arr); // saves id for later use
             
             $("#editDiv").show();
             $("#beerTypeInput").val(batchArr[id_in_arr].BeerType);
             $("#batchDateInput").val(batchArr[id_in_arr].Date.substr(0,10));
         }
 
+        function refresh_table() {
+
+            $('#tbl').DataTable().destroy(); // destory table so it could be refreshed
+            $("#editDiv").hide();
+
+            ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
+        }
     </script>
 
 
@@ -461,6 +468,7 @@
     </div>
     <!-- Add Product -->
 
+    <!--Edit Row In  Table-->
     <div class="container" id="editDiv">
         <form id="editForm">
             <div class="form-group">
@@ -473,7 +481,9 @@
             <button id="submit_edit">Submit</button>
         </form>
     </div>
+    <!--Edit Row In  Table-->
 
+    <div id="ph"></div>
 </body>
 
 </html>

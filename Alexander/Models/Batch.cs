@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using Alexander.Models.DAL;
@@ -40,6 +41,48 @@ namespace Alexander.Models
             DBservices dbs = new DBservices();
             int numEffected = dbs.insert(this);
             return numEffected;
+        }
+
+
+        public int Update()
+        {
+            int effected = 0;
+            DBservices dbs = new DBservices();
+            dbs = dbs.read_batches();
+
+            dbs.dt = edit(dbs.dt, this.batchID);
+
+            effected = dbs.update(); // update DB
+
+            return effected;
+        }
+
+        public DataTable edit(DataTable dt, int batchid)
+        {
+            DataRow dr = dt.Select("batch_id=" + batchid).First(); // gets the row where id == batchid
+
+            dr["date"] = this.date;
+            dr["beer_type"] = this.beerType;
+
+            return dt;
+        }
+
+        public int delete_line(int row)
+        {
+            DBservices dbs = new DBservices();
+            dbs = dbs.read_batches();
+
+            try
+            {
+                dbs.dt.Select("batch_id=" + row).First().Delete(); // Delete a line in DataTable
+                dbs.update(); // update the DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return 1;
         }
     }
 }
