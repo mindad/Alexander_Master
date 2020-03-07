@@ -255,6 +255,53 @@ namespace Alexander.Models.DAL
             }
         }
 
+        /// 
+        /// GET all Products
+        /// 
+        public List<Product> get_ProductsDB()
+        {
+            List<Product> prod_list = new List<Product>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [Inventory_Product_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+
+                    Product prod = new Product();
+
+                    prod.ProductName = (string)dr["prodName"];
+                    prod.ProductType = (string)dr["prodType"];
+                    prod.ProductID = Convert.ToInt32(dr["prodID"]);
+                    prod.Amount = Convert.ToInt32(dr["amount"]);
+                    prod.Min_amount = Convert.ToInt32(dr["minimum_amount"]);
+                    prod.Last_arrivalTime = Convert.ToDateTime(dr["last_supply_date"]);
+
+                    prod_list.Add(prod);
+                }
+
+                return prod_list;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
 
 
         /// Edit batch_2020 tbl

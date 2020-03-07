@@ -1,0 +1,444 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Brewmiester Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!--<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <script src="../../Scripts/ajaxCalls.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            //let ctx_leftTop = document.getElementById('myChart').getContext('2d');
+            //let ctx_rightTop = document.getElementById('myChartSecond').getContext('2d');
+            //let ctx_leftBottom = document.getElementById('myChartBottom').getContext('2d'); 
+            //let ctx_rightBottom = document.getElementById('myChartSecondBottom').getContext('2d');
+
+            ajaxCall("GET", "../../api/Product", "", GetProductSucess, GetProductError); 
+
+
+            //let chartData = {
+            //    labels: ['A', 'B', 'C', 'D', 'E'],
+            //    datasets: [{
+            //        label: 'Minimum',
+            //        backgroundColor: 'rgba(255, 26, 26, 0.6)',
+            //        data: [
+            //            2,
+            //            1,
+            //            1,
+            //            3,
+            //            5,
+            //        ]
+            //    },
+            //    {
+            //        label: 'In stock',
+            //        backgroundColor: 'rgba(0, 204, 68, 0.6)',
+            //        data: [
+            //            3,
+            //            2,
+            //            6,
+            //            1,
+            //            1,
+            //        ]
+            //    }
+            //    ]
+            //};
+
+
+            //// Malt
+            //var crt_leftBottom = new Chart(ctx_leftTop, {
+            //    type: 'bar',
+            //    data: chartData,
+            //    options: {
+            //        title: {
+            //            display: true,
+            //            text: 'Malt'
+            //        },
+            //        tooltips: {
+            //            mode: 'index',
+            //            intersect: false
+            //        },
+            //        responsive: true,
+            //        scales: {
+            //            xAxes: [{
+            //                stacked: true,
+            //            }],
+            //            yAxes: [{
+            //                stacked: true
+            //            }]
+            //        }
+            //    }
+            //});
+
+            //shuffleData(chartData.datasets[0].data); // shuffle the array
+
+            //// Hops
+            //var crt_rightBottom = new Chart(ctx_rightTop, {
+            //    type: 'bar',
+            //    data: chartData,
+            //    options: {
+            //        title: {
+            //            display: true,
+            //            text: 'Hops'
+            //        },
+            //        tooltips: {
+            //            mode: 'index',
+            //            intersect: false
+            //        },
+            //        responsive: true,
+            //        scales: {
+            //            xAxes: [{
+            //                stacked: true,
+            //            }],
+            //            yAxes: [{
+            //                stacked: true
+            //            }]
+            //        }
+            //    }
+            //});
+
+            //shuffleData(chartData.datasets[0].data); // shuffle the array
+
+            //// Yeast
+            //var crt_leftTop = new Chart(ctx_leftBottom, {
+            //    type: 'bar',
+            //    data: chartData,
+            //    options: {
+            //        title: {
+            //            display: true,
+            //            text: 'Yeast'
+            //        },
+            //        tooltips: {
+            //            mode: 'index',
+            //            intersect: false
+            //        },
+            //        responsive: true,
+            //        scales: {
+            //            xAxes: [{
+            //                stacked: true,
+            //            }],
+            //            yAxes: [{
+            //                stacked: true
+            //            }]
+            //        }
+            //    }
+            //});
+
+            //shuffleData(chartData.datasets[0].data); // shuffle the array
+
+            //// Minerals
+            //var crt_rightTop = new Chart(ctx_rightBottom, {
+            //    type: 'bar',
+            //    data: chartData,
+            //    options: {
+            //        title: {
+            //            display: true,
+            //            text: 'Minerals'
+            //        },
+            //        tooltips: {
+            //            mode: 'index',
+            //            intersect: false
+            //        },
+            //        responsive: true,
+            //        scales: {
+            //            xAxes: [{
+            //                stacked: true,
+            //            }],
+            //            yAxes: [{
+            //                stacked: true
+            //            }]
+            //        }
+            //    }
+            //});
+
+
+
+
+
+            $('.toast').toast('show'); // Shows toast without event!!! very important!!
+
+            $('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
+                if (confirm('are you sure yow want to delete this alert?')) {
+
+                }
+            });
+
+
+        });
+
+        function shuffleData(arr) {
+            arr = arr.sort(() => Math.random() - 0.5); // shuffle the array
+            console.log(arr);
+        }
+
+        // Products API
+        function GetProductSucess(data) {
+            console.log(data);
+
+            let ctx_leftTop = document.getElementById('myChart').getContext('2d');
+            let ctx_rightTop = document.getElementById('myChartSecond').getContext('2d');
+            let ctx_leftBottom = document.getElementById('myChartBottom').getContext('2d'); 
+            let ctx_rightBottom = document.getElementById('myChartSecondBottom').getContext('2d');
+
+            let Hops_arr = [],  Malt_arr = [], Minerals_arr = [], Yeast_arr = [];
+
+            Init_arrays(data, Hops_arr, Malt_arr, Minerals_arr, Yeast_arr); // set arrays based on product types
+
+
+            let prodTypesNames = ['Hops', 'Malt', 'Minerals', 'Yeast'];
+            let locationArr = [ctx_leftTop, ctx_rightTop, ctx_leftBottom, ctx_rightBottom];
+            let arrayNames = [Hops_arr, Malt_arr, Minerals_arr, Yeast_arr]
+
+            // Build all charts
+            for (var i = 0; i < 4; i++) { 
+                let chartData = build_chartData(arrayNames[i]);
+                createChart(locationArr[i], prodTypesNames[i], chartData);
+            }
+
+        }
+
+        function GetProductError(err) {
+            console.log(err);
+        }
+        // END Products API
+
+        function Init_arrays(data, Hops_arr, Malt_arr, Minerals_arr, Yeast_arr) { // set arrays based on product types
+
+            for (var i = 0; i < data.length; i++) { 
+
+                if (data[i].ProductType == 'Hops') {
+                    Hops_arr.push(data[i]);
+                }
+                else if (data[i].ProductType == 'Minerals') {
+                    Minerals_arr.push(data[i]);
+                }
+                else if (data[i].ProductType == 'yeast') {
+                    Yeast_arr.push(data[i]);
+                }
+                else {
+                    Malt_arr.push(data[i]);
+                }
+            }
+
+        }
+
+        function build_chartData(arrToMap) { // builds chart data based on array given
+
+            let chartData = {
+                labels: arrToMap.map(item => item.ProductName),
+                datasets: [{
+                    label: 'Minimum',
+                    backgroundColor: 'rgba(255, 26, 26, 0.6)',
+                    data: arrToMap.map(item => item.Min_amount)
+                },
+                {
+                    label: 'In stock',
+                    backgroundColor: 'rgba(0, 204, 68, 0.6)',
+                    data: arrToMap.map(item => item.Amount)
+                }
+                ]
+            };
+
+            return chartData;
+        }
+
+        function createChart(location, mainLabel, chartData) { // create chart
+
+            new Chart(location, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    title: {
+                        display: true,
+                        text: mainLabel
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    responsive: true,
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    }
+                }
+            });
+
+        }
+
+    </script>
+
+    <style>
+        body {
+            background-color: #f7f6f6;
+            padding-bottom: 1%;
+        }
+
+        h4 {
+            padding-bottom: 5%;
+        }
+
+        .navbar {
+            height: 70px;
+        }
+
+        #selectRow {
+            padding-top: 2%;
+        }
+
+        #headerRow {
+            height: 180px;
+        }
+
+        .toast {
+            height: 80px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- NavBar Template -->
+    <div class="header text-center">
+        <!-- <h2>Manager Dashboard</h2> -->
+        <nav class="navbar navbar-expand-lg navbar-light border-bottom" style="background-color: #f7f6f6;">
+            <a class="navbar-brand" href="#">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Production</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="#">Inventory</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="#">Waste</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="#">Alerts</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                  <a class="nav-link disabled" href="#">Disabled</a>
+                </li> -->
+                </ul>
+            </div>
+            <a class="navbar-brand" href="#">
+                <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
+            </a>
+        </nav>
+    </div>
+    <br>
+    <!-- NavBar Template -->
+
+
+    <div class="container">
+        <!-- toast Div -->
+        <div class="row" id="headerRow">
+            <div class="col-4" id="toastdiv">
+                <!-- <div class="alert alert-secondary" role="alert">This is a secondary alert—check it out!</div>
+                <div class="alert alert-danger" role="alert">This is a danger alert—check it out!</div>
+                <div class="alert alert-secondary" role="alert">This is a secondary alert—check it out!</div> -->
+
+                <div class="toast" data-autohide="false">
+                    <div class="toast-header">
+                        <strong class="mr-auto text-primary">Waste Alert</strong>
+                        <small class="text-muted">1 hr ago</small>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+                    </div>
+                    <div class="toast-body">Waste Alert -> batch #1322</div>
+                </div>
+
+                <div class="toast" data-autohide="false">
+                    <div class="toast-header">
+                        <strong class="mr-auto text-primary">Minimum Alert</strong>
+                        <small class="text-muted">5 mins ago</small>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+                    </div>
+                    <div class="toast-body">US Malt reached Minimum amount</div>
+                </div>
+
+            </div>
+
+            <div class="col-5"></div>
+
+            <div class="col-3">
+
+                <h4 class="text-center">Time Till Next Supply:</h4>
+
+                <div class="progress">
+                    <div class="progress-bar w-75" role="progressbar" style="width: 25%;" aria-valuenow="50"
+                        aria-valuemin="0" aria-valuemax="100">5 days</div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <!-- toast Div -->
+
+    </div><br>
+
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-6">
+                <canvas id="myChart" class="border border-secondary"></canvas>
+            </div>
+            <div class="col-6">
+                <canvas id="myChartSecond" class="border border-secondary"></canvas>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-6">
+                <canvas id="myChartBottom" class="border border-secondary"></canvas>
+            </div>
+            <div class="col-6">
+                <canvas id="myChartSecondBottom" class="border border-secondary"></canvas>
+                <!-- <div class="row" id="selectRow">
+                    <div class="col-4"></div>
+                    <div class="col-4">
+                        <select class="custom-select bg-primary text-dark">
+                            <option selected>Beer Type</option>
+                            <option value="1">Ambree</option>
+                            <option value="2">Blonde</option>
+                            <option value="3">Green</option>
+                        </select>
+                    </div>
+                    <div class="col-4"></div>
+                </div> -->
+
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -45,20 +45,36 @@ select * from Recipe_2020
 
 ###################################################
 *************INSERT  Inventory_Product_2020  TABLE*******************
-INSERT INTO Inventory_Product_2020 (beerType, creationDate, prods_in_recipe)
-VALUES ('Ambree', 15/12/2020, 'kshut A 200,kshut B,200,Kshut c 100');
 
-INSERT INTO Inventory_Product_2020 (prodType, prodID, amount,minimum_amount,last_supply_date)
-VALUES ('Kshut A','1','1000','100',10/02/2020);
 
-INSERT INTO Inventory_Product_2020 (prodType, prodID, amount,minimum_amount,last_supply_date)
-VALUES ('Kshut B','2','500','50',10/02/2020);
+INSERT INTO Inventory_Product_2020 (prodName, prodType, prodID, amount, minimum_amount, last_supply_date)
+VALUES ('Kshut C','Hops','1','1000','100','2020-02-01');
 
-INSERT INTO Inventory_Product_2020 (prodType, prodID, amount,minimum_amount,last_supply_date)
-VALUES ('Kshut C','3','300','100',10/02/2020);
+INSERT INTO Inventory_Product_2020 (prodName, prodType, prodID, amount, minimum_amount, last_supply_date)
+VALUES ('abra kadabra','Malt','1','1000','200','2020-02-01');
 
-INSERT INTO Inventory_Product_2020 (prodType, prodID, amount,minimum_amount,last_supply_date)
-VALUES ('Kshut D','4','1000','100',10/02/2020);
+INSERT INTO Inventory_Product_2020 (prodName, prodType, prodID, amount, minimum_amount, last_supply_date)
+VALUES ('ab','Malt','1','1000','100','2020-02-01');
+
+INSERT INTO Inventory_Product_2020 (prodName, prodType, prodID, amount, minimum_amount, last_supply_date)
+VALUES ('cd A','Malt','1','1000','100','2020-02-02');
+
+INSERT INTO Inventory_Product_2020 (prodName, prodType, prodID, amount, minimum_amount, last_supply_date)
+VALUES ('A','yeast','1','1000','100','2020-02-02');
+
+INSERT INTO Inventory_Product_2020 (prodName, prodType, prodID, amount, minimum_amount, last_supply_date)
+VALUES ('B','yeast','1','1000','100','2020-02-02');
+
+INSERT INTO Inventory_Product_2020 (prodName, prodType, prodID, amount, minimum_amount, last_supply_date)
+VALUES ('C','yeast','1','1000','100','2020-02-02');
+
+INSERT INTO Inventory_Product_2020 (prodName, prodType, prodID, amount, minimum_amount, last_supply_date)
+VALUES ('aa','Minerals','1','1000','100','2020-02-02');
+
+INSERT INTO Inventory_Product_2020 (prodName, prodType, prodID, amount, minimum_amount, last_supply_date)
+VALUES ('bb','Minerals','1','1000','100','2020-02-02');
+
+
 
 select * from Inventory_Product_2020
 ##############################################
