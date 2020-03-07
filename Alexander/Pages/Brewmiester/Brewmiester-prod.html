@@ -32,7 +32,19 @@
 
         $(document).ready(function () {
 
-            $('#add_new_cook').on('click', toggle_add_visibilty); //GetBeerTypes
+            //// TODO
+            //// check form validation + make form return false so page wont be rendered
+
+            // Form Validation
+            //$('input[type=number]').on('blur', checkValidation);
+
+            $('#editDiv').hide();
+
+            $("#ourForm, #editForm").on('submit', f1);
+
+            buttonEvents();
+
+            $('#add_new_cook').on('click', toggle_add_visibilty); 
 
             ajaxCall("GET", "../../api/Recipe", "", GetRecipeSucess, GetRecipeError); // get all recipes
 
@@ -40,10 +52,7 @@
 
             $("#addToBatch").on("click", PostNewBatch);
 
-            // Form Validation
-            $('input').on('blur', checkValidation);
-
-            //ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
+            
 
         });
 
@@ -53,14 +62,15 @@
 
             console.log('this is checkint:', checkInt);
 
-            if (type(checkInt) != Number) {
+            if ( /^[1-9]\d*$/g.test(checkInt) == false ) {
                 this.validity.valid = false;
-                this.setCustomValidity("from date must be greater than today");
+                this.setCustomValidity("Please enter a valid positive number");
                 return false;
             }
             else {
                 this.validity.valid = true;
                 this.setCustomValidity('');
+                return false;
             }
         }
 
@@ -73,18 +83,17 @@
             }
 
             batch = {
-                batch_id: Math.max.apply(null, ID_arr) + 1,
-                date: addDate.val(), // need to parse dates
-                beer_type: $('#beerSelect').val(),
+                batchID: Math.max.apply(null, ID_arr) + 1,
+                date: $('#addDate').val(), 
+                beerType: $('#beerSelect').val(),
                 tank:0,
                 wort_volume:0
             }
 
+            console.log('this is batch to post:', batch);
 
 
-            //// TODO
-            //// add ajaxCall
-            //// check form validation + make form return false so page wont be rendered
+            ajaxCall('POST', "../../api/Batch", JSON.stringify(batch), PostBatchSucess, PostBatchError);
         }
 
         // Batch API
@@ -93,7 +102,6 @@
             console.log('this is cooking date:', Batchdata);
             batchArr = Batchdata;
 
-            let id = 0; // ID counter for Edit/Delete buttons
 
             try {
                 $('#tbl').DataTable({
@@ -102,9 +110,10 @@
                     pageLength: 5,
                     columns: [             
                         {
+                            data:"BatchID",
                             render: function (data, type, row, meta) {
-                                id += 1;
-                                let data_for_tbl = "data-btnId='" + id + "'";
+
+                                let data_for_tbl = "data-btnId='" + data + "'";
 
                                 editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
@@ -156,6 +165,18 @@
         function GetBatchError(err) {
             console.log(err);
         }
+
+        function PostBatchSucess(data) {
+            console.log(data);
+
+            $('.collapse').collapse('hide'); // collapse addprodContainer
+
+            alert('Batch Added Succefully');
+        }
+
+        function PostBatchError(err) {
+            console.log(err);
+        }
         // ** Batch API
 
 
@@ -179,7 +200,7 @@
 
 
         function toggle_add_visibilty() {
-            $('.invisible').removeClass();
+            //$('.invisible').removeClass();
 
             ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
 
@@ -220,7 +241,7 @@
 
                         for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) {
 
-                            st += `<label>${recipeArr[i].Products_in_recipe[j].ProductType} </label><input type="text" value="${recipeArr[i].Products_in_recipe[j].Amount}" class="text-center" /><br><br>`
+                            st += `<label>${recipeArr[i].Products_in_recipe[j].ProductType} </label><input type="number" min="0" value="${recipeArr[i].Products_in_recipe[j].Amount}" class="text-center" /><br><br>`
                         }
                         break;
                     }
@@ -229,6 +250,98 @@
             }
         
 
+        function f1() {
+            return false;
+        }
+
+        //////// edit + delete
+        function buttonEvents() {
+
+            $(document).on("click", ".editBtn", function () {
+
+                //$('#addDiscount_btn').hide();
+                //$('#submit_edit').show();
+
+                console.log('batch id is:' ,this.getAttribute('data-btnId'));
+
+                populateFields(this.getAttribute('data-btnId')); // fill the form fields according to the selected row
+            });
+
+            $(document).on("click", ".deleteBtn", function () {
+
+                var discount_id = this.getAttribute('data-btnId');
+              
+
+                if (confirm("Are You Sure You Want To Delete This Row?")) {
+
+                    ajaxCall("Delete", "../../api/Batch", JSON.stringify(discount_id - 1), DeleteBatchSucess, DeleteBatchError); 
+
+                }
+                else {
+                    console.log("You pressed Cancel!");
+                }
+
+            });
+        }
+
+        function edit_discount_table() {
+
+            dis = {
+                "airlines": $('#airline').val() + ';',
+                "from": $('#from').val(),
+                "to": $('#to').val(),
+                "startDate": $('#fromDate').val(),
+                "endDate": $('#toDate').val(),
+                "discount": $('#discount_amount').val()
+            }
+          
+            parms = [dis, $('#ph').val()]; // ph.val() will hold the row number
+
+            ajaxCall("POST", "../api/Discount/edit", JSON.stringify(parms), editDiscountSucess, editDiscountError);
+
+        }
+
+        //////// editBatch
+        function editDiscountSucess(data) {
+            console.log(data);
+
+            ajaxCall("GET", "../api/Discount", "", GetDiscountSucess, GetDiscountError);
+        }
+        function editDiscountError(err) {
+            console.log(err);
+        }
+        //****** editBatch
+        
+        //////// DeleteBatch
+        function DeleteBatchSucess(data) {
+            console.log(data, "Record Deleted");
+
+            //// TODO
+            //// rebuild dataTable
+            
+            //ajaxCall("GET", "../api/Discount", "", GetDiscountSucess, GetDiscountError);
+        }
+        function DeleteBatchError(err) {
+            console.log(err);
+        }
+        //****** DeleteBatch
+
+
+        function populateFields(btnID) {
+
+            let id_in_arr = 0;
+            // get row in batchArr
+            for (i in batchArr) { 
+                if (batchArr[i].BatchID == btnID) {
+                    id_in_arr = i;
+                    break;
+                }
+            }
+            
+            $("#editDiv").show();
+            $("#beerTypeInput").val(batchArr[id_in_arr].BeerType);
+            $("#batchDateInput").val(batchArr[id_in_arr].Date.substr(0,10));
+        }
 
     </script>
 
@@ -236,8 +349,6 @@
 
     <style>
         body {
-            /* margin: 0; */
-            /* padding: 0; */
             background-color: #f7f6f6;
             padding-bottom: 1%;
         }
@@ -259,14 +370,6 @@
             margin-top: 100px;
         }
 
-        /* table.dataTable {
-            width: 100%;
-            margin: 0 auto;
-            clear: both;
-            border-collapse: separate;
-            border-spacing: 0
-        } */
-
         #addprod {
             margin: auto;
             width: 60%;
@@ -287,36 +390,35 @@
         <nav class="navbar navbar-expand-lg navbar-light border-bottom" style="background-color: #f7f6f6;">
             <a class="navbar-brand" href="#">Home</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Production</a>
-                        </li>
-                        <li class="nav-item active px-2">
-                            <a class="nav-link" href="#">Inventory</a>
-                        </li>
-                        <li class="nav-item active px-2">
-                            <a class="nav-link" href="#">Waste</a>
-                        </li>
-                        <li class="nav-item active px-2">
-                            <a class="nav-link" href="#">Alerts</a>
-                        </li>
-                        <!-- <li class="nav-item">
-              <a class="nav-link disabled" href="#">Disabled</a>
-            </li> -->
-                    </ul>
-                </div>
-                <a class="navbar-brand" href="#">
-                    <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
-                </a>
-</nav>
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Production</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="#">Inventory</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="#">Waste</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="#">Alerts</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                      <a class="nav-link disabled" href="#">Disabled</a>
+                    </li> -->
+                </ul>
+            </div>
+            <a class="navbar-brand" href="#">
+                <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
+            </a>
+        </nav>
     </div>
     <br><br>
     <!-- NavBar Template -->
-
     <!-- table -->
     <div class="container">
         <table id="tbl" class="display" border="1" style="width:100%">
@@ -331,20 +433,18 @@
             </thead>
             <tbody>
             </tbody>
-            
-        </table> 
 
-        <button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button> 
+        </table>
+
+        <button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>
         <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
-    
+
     </div>
     <!-- table -->
-
-
-    <!-- Add Product --> 
+    <!-- Add Product -->
     <div class="container collapse" id="addprodContainer">
         <div id="addprod">
-            <br/>
+            <br />
             <form id="ourForm">
                 <select name="Beer" id="beerSelect"></select>
                 <br><br>
@@ -353,15 +453,26 @@
                 <br><br>
 
                 <div id="inForm"></div>
-               
-                <button id="addToBatch">Submit</button>
+
+                <button id="addToBatch" type="submit">Submit</button>
                 <br /><br />
             </form>
-
         </div>
     </div>
     <!-- Add Product -->
 
+    <div class="container" id="editDiv">
+        <form id="editForm">
+            <div class="form-group">
+                <label for="">Beer Type</label>
+                <input type="text" class="form-control" id="beerTypeInput" required />
+                <br />
+                <label for="fromDate">Date</label>
+                <input type="date" class="form-control" id="batchDateInput" required />
+            </div>
+            <button id="submit_edit">Submit</button>
+        </form>
+    </div>
 
 </body>
 

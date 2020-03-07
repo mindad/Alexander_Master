@@ -34,5 +34,12 @@ namespace Alexander.Models
 
             return Batch_arr;
         }
+
+        public int insert()
+        {
+            DBservices dbs = new DBservices();
+            int numEffected = dbs.insert(this);
+            return numEffected;
+        }
     }
 }

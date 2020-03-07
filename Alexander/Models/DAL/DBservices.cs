@@ -5,6 +5,7 @@ using System.Web;
 using System.Data.SqlClient;
 using System.Data;
 using System.Web.Configuration;
+using System.Text;
 
 namespace Alexander.Models.DAL
 {
@@ -94,8 +95,58 @@ namespace Alexander.Models.DAL
             }
         }
 
+        public int insert(Batch batch)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            int numEffected = 0;
 
-        
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            try
+            {
+                String cStr = BuildInsertCommand(batch);      // helper method to build the insert string
+                cmd = CreateCommand(cStr, con);             // create the command
+                numEffected += cmd.ExecuteNonQuery();       // Execute command
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            return numEffected;
+        }
+
+        private String BuildInsertCommand(Batch batch)
+        {
+            String command;
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("Values({0}, '{1}', {2}, {3}, '{4}')", batch.BatchID, batch.Date.ToString("yyyy-MM-dd"), batch.Tank, batch.Wort_volume, batch.BeerType);
+            String prefix = "INSERT INTO Batch_2020 " + "([batch_id], [date], [tank], [wort_volume], [beer_type]) ";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        // Batches END
+
+
+
         /// 
         /// GET all get_RecipesDB
         /// 

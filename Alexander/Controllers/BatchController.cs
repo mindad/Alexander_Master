@@ -15,5 +15,10 @@ namespace Alexander.Controllers
             Batch batch = new Batch();
             return batch.get_Batches();
         }
+
+        public int Post([FromBody]Batch batch)
+        {
+            return batch.insert();
+        }
     }
 }
