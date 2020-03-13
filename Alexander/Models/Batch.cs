@@ -48,7 +48,7 @@ namespace Alexander.Models
         {
             int effected = 0;
             DBservices dbs = new DBservices();
-            dbs = dbs.read_batches();
+            dbs = dbs.read("[Batch_2020]");
 
             dbs.dt = edit(dbs.dt, this.batchID);
 
@@ -70,7 +70,7 @@ namespace Alexander.Models
         public int delete_line(int row)
         {
             DBservices dbs = new DBservices();
-            dbs = dbs.read_batches();
+            dbs = dbs.read("[Batch_2020]");
 
             try
             {

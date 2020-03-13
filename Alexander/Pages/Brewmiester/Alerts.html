@@ -27,32 +27,26 @@
 
     <script>
 
-        recipeArr = [];
-        batchArr = [];
-
         $(document).ready(function () {
+
+            // TODO
+            //Add form validation
 
             $('#editDiv').hide();
 
-            //$("#ourForm, #editForm").on('submit', f1);
-
-            buttonEvents();
+            $("#submit_edit", "#editForm").submit(f1);
 
             ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError); // get all recipes
 
-            //$("#beerSelect").on('change', SetFormValues); // set form values when add batch to table
-
-            //$("#addToBatch").on("click", PostNewBatch);
-
             $('#submit_edit').on("click", edit_Alert_table);
 
+            buttonEvents();
         });
 
         // Alert API
         function GetAlertSucess(Alertdata) {
 
             console.log('this is Alert data:', Alertdata);
-
 
             try {
                 $('#tbl').DataTable({
@@ -102,9 +96,7 @@
         // ** Alert API
 
 
-        function f1() {
-            return false;
-        }
+
 
         //////// edit + delete
         function buttonEvents() {
@@ -128,18 +120,17 @@
                 else {
                     console.log("You pressed Cancel!");
                 }
-
             });
         }
 
         function edit_Alert_table() {
 
-            let alert_id_and_notes = {
-                id: $('#ph').val(),
-                notes: $("#batchDateInput").val()
-            }
+            let alert_id_and_notes = [
+                $('#ph').val(),
+                $('#notes_input').val()
+            ]
                
-            ajaxCall("PUT", "../../api/Alert", JSON.stringify(alert_id_and_notes), editAlertSucess, editAlertError);
+            ajaxCall("PUT", "../../api/Alert", JSON.stringify(alert_id_and_notes), editAlertSucess, editAlertError); // JSON.stringify(alert_id_and_notes)
         }
 
         //////// editAlert
@@ -168,24 +159,6 @@
         //****** Delete Alert
 
 
-        //function populateFields(btnID) { // set values in edit DIV
-
-        //    let id_in_arr = 0;
-        //    // get row in batchArr
-        //    for (i in batchArr) {
-        //        if (batchArr[i].BatchID == btnID) {
-        //            id_in_arr = i;
-        //            break;
-        //        }
-        //    }
-
-        //    //$('#ph').val(id_in_arr); // saves id for later use
-
-        //    $("#editDiv").show();
-        //    $("#beerTypeInput").val(batchArr[id_in_arr].BeerType);
-        //    $("#batchDateInput").val(batchArr[id_in_arr].Date.substr(0,10));
-        //}
-
         function refresh_table() {
 
             $('#tbl').DataTable().destroy(); // destory table so it could be refreshed
@@ -194,26 +167,9 @@
             ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError); // get all Alerts
         }
 
-        function PostNewBatch() {
-
-            //get max batchID
-            let ID_arr = [];
-            for (var i = 0; i < batchArr.length; i++) {
-                ID_arr.push(batchArr[i].BatchID);
-            }
-
-            batch = {
-                batchID: Math.max.apply(null, ID_arr) + 1,
-                date: $('#addDate').val(),
-                beerType: $('#beerSelect').val(),
-                tank:0,
-                wort_volume:0
-            }
-
-            console.log('this is batch to post:', batch);
-
-
-            ajaxCall('POST', "../../api/Alert", JSON.stringify(batch), PostBatchSucess, PostBatchError);
+        function f1(e) {
+            e.preventDefault();
+            return false;
         }
 
     </script>
@@ -313,7 +269,7 @@
         </form>
     </div>
     <!--Edit Row In  Table-->
-    <div id="ph"></div>
+    <div id="ph" hidden></div>
 </body>
 
 </html>

@@ -42,8 +42,6 @@
 
             $("#ourForm, #editForm").on('submit', f1);
 
-            buttonEvents();
-
             $('#add_new_cook').on('click', toggle_add_visibilty); 
 
             ajaxCall("GET", "../../api/Recipe", "", GetRecipeSucess, GetRecipeError); // get all recipes
@@ -53,6 +51,8 @@
             $("#addToBatch").on("click", PostNewBatch);
 
             $('#submit_edit').on("click", edit_Batch_table);
+
+            buttonEvents();
 
         });
 
@@ -250,7 +250,8 @@
             }
         
 
-        function f1() {
+        function f1(e) {
+            e.preventDefault();
             return false;
         }
 

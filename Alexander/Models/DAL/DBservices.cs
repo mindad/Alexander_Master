@@ -348,17 +348,48 @@ namespace Alexander.Models.DAL
             }
         }
 
+        
+
 
         ///
         /// Edit batch_2020 tbl
         /// 
-        public DBservices read_batches()
+        //public DBservices read_batches()
+        //{
+        //    SqlConnection con = null;
+        //    try
+        //    {
+        //        con = connect("DBConnectionString");
+        //        da = new SqlDataAdapter("select * from Batch_2020", con);
+        //        SqlCommandBuilder builder = new SqlCommandBuilder(da);
+        //        DataSet ds = new DataSet();
+        //        da.Fill(ds);
+        //        dt = ds.Tables[0];
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+
+        //    finally
+        //    {
+        //        if (con != null)
+        //        {
+        //            con.Close();
+        //        }
+        //    }
+        //    return this;
+        //}
+
+        // read DT based on string parameter
+        public DBservices read(string tbl_name)
         {
             SqlConnection con = null;
             try
             {
                 con = connect("DBConnectionString");
-                da = new SqlDataAdapter("select * from Batch_2020", con);
+                da = new SqlDataAdapter("select * from "+ tbl_name, con);
                 SqlCommandBuilder builder = new SqlCommandBuilder(da);
                 DataSet ds = new DataSet();
                 da.Fill(ds);

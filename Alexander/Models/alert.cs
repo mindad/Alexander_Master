@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using Alexander.Models.DAL;
+
 
 
 namespace Alexander.Models
@@ -42,17 +44,39 @@ namespace Alexander.Models
             return alert_arr;
         }
 
-        public int Update()
+        public int Update(int Alert_id, string alert_notes )
         {
             int effected = 0;
             DBservices dbs = new DBservices();
-            //dbs = dbs.read_batches();
+
+            dbs = dbs.read("[Alert_2020]");
+
+            DataRow dr = dbs.dt.Select("Alert_id=" + Alert_id).First(); // gets the row where id == batchid
 
             //dbs.dt = edit(dbs.dt, this.batchID);
+            dr["notes"] = alert_notes;
 
             effected = dbs.update(); // update DB
 
             return effected;
+        }
+
+        public int delete_line(int row)
+        {
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[Alert_2020]");
+
+            try
+            {
+                dbs.dt.Select("Alert_id=" + row).First().Delete(); // Delete a line in DataTable
+                dbs.update(); // update the DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return 1;
         }
 
     }
