@@ -29,18 +29,16 @@
 
         $(document).ready(function () {
 
-            // TODO
-            //Add form validation
-
             $('#editDiv').hide();
-
-            $("#submit_edit", "#editForm").submit(f1);
 
             ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError); // get all recipes
 
             $('#submit_edit').on("click", edit_Alert_table);
 
             buttonEvents();
+
+            $("#submit_edit", "#editForm").submit(f1);
+
         });
 
         // Alert API
@@ -82,20 +80,6 @@
             console.log(err);
         }
 
-        function PostBatchSucess(data) {
-            console.log(data);
-
-            $('.collapse').collapse('hide'); // collapse addprodContainer
-
-            alert('Batch Added Succefully');
-        }
-
-        function PostBatchError(err) {
-            console.log(err);
-        }
-        // ** Alert API
-
-
 
 
         //////// edit + delete
@@ -125,8 +109,14 @@
 
         function edit_Alert_table() {
 
+            console.log('this is notes_input value:', $('notes_input').val());
+
+            if ($('#notes_input').val() == '') {
+                return;
+            }
+
             let alert_id_and_notes = [
-                $('#ph').val(),
+                $('#ph').val(), // holds Alert ID 
                 $('#notes_input').val()
             ]
                
@@ -162,13 +152,14 @@
         function refresh_table() {
 
             $('#tbl').DataTable().destroy(); // destory table so it could be refreshed
+            $('#notes_input').val('');
+
             $("#editDiv").hide();
 
             ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError); // get all Alerts
         }
 
         function f1(e) {
-            e.preventDefault();
             return false;
         }
 
@@ -261,11 +252,12 @@
     <!--Edit Row In  Table-->
     <div class="container" id="editDiv">
         <form id="editForm">
-            <!--<div class="form-group">-->
-            <label for="">Add Notes Here:</label>
-            <textarea id="notes_input"> </textarea>
-            <!--</div>-->
-            <button id="submit_edit">Submit</button>
+            <div class="form-group">
+                <label for="">Add Notes Here:</label>
+                <textarea id="notes_input" class="form-control" required></textarea>
+
+                <button id="submit_edit">Submit</button>
+            </div>
         </form>
     </div>
     <!--Edit Row In  Table-->
