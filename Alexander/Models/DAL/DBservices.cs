@@ -302,8 +302,54 @@ namespace Alexander.Models.DAL
             }
         }
 
+        /// 
+        /// GET all Alerts [Alert_2020]
+        /// 
+        public List<alert> get_AlertsDB()
+        {
+            List<alert> alert_list = new List<alert>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [Alert_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+
+                    alert alert_to_add = new alert();
+
+                    alert_to_add.AlertID = Convert.ToInt32(dr["Alert_id"]);
+                    alert_to_add.Type = (string)dr["type"];
+                    alert_to_add.Date = Convert.ToDateTime(dr["date"]);
+                    alert_to_add.Description = (string)dr["description"];
+                    alert_to_add.Notes = (string)dr["notes"];
+
+                    alert_list.Add(alert_to_add);
+                }
+
+                return alert_list;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
 
 
+        ///
         /// Edit batch_2020 tbl
         /// 
         public DBservices read_batches()
@@ -334,7 +380,8 @@ namespace Alexander.Models.DAL
             return this;
         }
 
-        public int update() // update table
+        // Global update for any dt
+        public int update() 
         {
             try
             {

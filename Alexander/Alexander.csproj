@@ -155,6 +155,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AlertController.cs" />
     <Compile Include="Controllers\BatchController.cs" />
     <Compile Include="Controllers\BeerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -192,6 +193,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Pages\Brewmiester\Alerts.html" />
     <Content Include="Pages\Brewmiester\Brewmiester-dashboard.html" />
     <Content Include="Pages\Brewmiester\Brewmiester-prod.html" />
     <Content Include="Pages\Images\Logo_alexander.jpeg" />
