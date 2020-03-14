@@ -12,16 +12,23 @@ create table Recipe_2020(
 	[prods_in_recipe] nvarchar(256),
 	Primary key ([beerType])
 )
-
+********************
+create table Product_2020(
+	[prodName] nvarchar(65) NOT NULL,
+	[prodType] nvarchar(50) NOT NULL,
+	[prodID] int,
+	[minimum_amount] int not null,
+	Primary key ([prodName],[prodID])
+)
 create table Inventory_Product_2020(
 	[prodName] nvarchar(65) NOT NULL,
 	[prodType] nvarchar(50) NOT NULL,
 	[prodID] int,
 	[amount] int,
-	[minimum_amount] int not null,
 	[last_supply_date] datetime,
-	Primary key ([prodName],[prodID])
+	FOREIGN KEY ([prodName],[prodID]) REFERENCES Product_2020([prodName],[prodID])
 )
+**********************
 create table label_2020(
 	[prodType] nvarchar(50) NOT NULL,
 	[prodID] int,

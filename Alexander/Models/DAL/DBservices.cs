@@ -181,9 +181,11 @@ namespace Alexander.Models.DAL
                         Product prod = new Product();
 
                         prod.ProductType = parsed_items_in_recipe[i].Split(':')[0];
-                        prod.Amount = (float)Convert.ToDouble(parsed_items_in_recipe[i].Split(':')[1]);
+                        //prod.Amount = (float)Convert.ToDouble(parsed_items_in_recipe[i].Split(':')[1]);
                         prod.Min_amount = 0;
-                        prod.Last_arrivalTime = new DateTime(); // not needed
+                        //prod.Last_arrivalTime = new DateTime(); // not needed
+
+                        //TODO make sure what ever happns here works
 
                         prd_lst.Add(prod);
                         
@@ -256,7 +258,7 @@ namespace Alexander.Models.DAL
         }
 
         /// 
-        /// GET all Products
+        /// GET all Products from Product_2020
         /// 
         public List<Product> get_ProductsDB()
         {
@@ -267,7 +269,7 @@ namespace Alexander.Models.DAL
             {
                 con = connect("DBConnectionString");
 
-                String query = "SELECT * FROM [Inventory_Product_2020]";
+                String query = "SELECT * FROM [Product_2020]";
                 SqlCommand cmd = new SqlCommand(query, con);
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
@@ -280,9 +282,7 @@ namespace Alexander.Models.DAL
                     prod.ProductName = (string)dr["prodName"];
                     prod.ProductType = (string)dr["prodType"];
                     prod.ProductID = Convert.ToInt32(dr["prodID"]);
-                    prod.Amount = Convert.ToInt32(dr["amount"]);
                     prod.Min_amount = Convert.ToInt32(dr["minimum_amount"]);
-                    prod.Last_arrivalTime = Convert.ToDateTime(dr["last_supply_date"]);
 
                     prod_list.Add(prod);
                 }
@@ -301,6 +301,54 @@ namespace Alexander.Models.DAL
                 }
             }
         }
+
+        ///// 
+        ///// GET all Products from inventory
+        ///// 
+        //public List<Product> get_Products_InventoryDB()
+        //{
+        //    List<Product> prod_list = new List<Product>();
+        //    SqlConnection con = null;
+
+        //    try
+        //    {
+        //        con = connect("DBConnectionString");
+
+        //        String query = "SELECT * FROM [Inventory_Product_2020]";
+        //        SqlCommand cmd = new SqlCommand(query, con);
+
+        //        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+        //        while (dr.Read())
+        //        {
+
+        //            Product prod = new Product();
+
+        //            prod.ProductName = (string)dr["prodName"];
+        //            prod.ProductType = (string)dr["prodType"];
+        //            prod.ProductID = Convert.ToInt32(dr["prodID"]);
+        //            prod.Amount = Convert.ToInt32(dr["amount"]);
+        //            prod.Last_arrivalTime = Convert.ToDateTime(dr["last_supply_date"]);
+
+        //            prod_list.Add(prod);
+        //        }
+
+        //        return prod_list;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw (ex);
+        //    }
+        //    finally
+        //    {
+        //        if (con != null)
+        //        {
+        //            con.Close();
+        //        }
+        //    }
+        //}
+
+
 
         /// 
         /// GET all Alerts [Alert_2020]

@@ -15,5 +15,13 @@ namespace Alexander.Controllers
             Product prod = new Product();
             return prod.get_Products();
         }
+
+        //[HttpGet]
+        //[Route("api/Product/Inventory")]
+        //public List<Product> Get_Inventory()
+        //{
+        //    Product prod = new Product();
+        //    return prod.get_Products_Inventory();
+        //}
     }
 }

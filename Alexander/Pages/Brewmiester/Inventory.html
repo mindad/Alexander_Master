@@ -27,11 +27,97 @@
 
     <script>
 
+        // TODO
+        // need to change fromat() function, so it will render to a row the data from Invenory that relates to that row
+
         $(document).ready(function () {
 
-            
+            ajaxCall("GET", "../../api/Product", "", GetProductSucess, GetProductError); // get all products
 
+
+            // DT events for Plus btn
+            $('#tbl').on('click', 'td.details-control', function () {
+
+                var tr = $(this).closest('tr');
+                var row = $('#tbl').DataTable().row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    // Open this row
+                    row.child(format(row.data())).show();
+
+                    //$(row.child()).DataTable();
+
+                    tr.addClass('shown');
+                }
+            });
+            // ** DT events for Plus btn
         });
+
+        function format(d) {
+            // `d` is the original data object for the row
+            return `<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' 
+                <tr>
+                <td>Full name:</td>
+                <td> blabla </td>
+                </tr>
+                <tr>
+                <td>Extension number:</td>
+                <td>blabla</td>
+                </tr>
+                <tr>
+                <td>Extra info:</td>
+                <td>And any further details here (images etc)...</td>
+                </tr>
+                </table>`;
+        }
+
+
+        // Invenotry API
+        function GetProductSucess(Product_data) {
+
+            console.log('this is product data:', Product_data);
+
+
+            try {
+                $('#tbl').DataTable({
+
+                    data: Product_data,
+                    pageLength: 5,
+                    columns: [             
+                        {
+                            "className": 'details-control',
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": ''
+                        },
+                        { data: "ProductName" },  
+                        {
+                            data: "Amount"
+                        }, 
+                        { data: "Last_arrivalTime" },
+                        {
+                            data: "Min_amount"
+                        }
+                    ]
+                });
+            }
+
+            catch (err) {
+                alert(err);
+            }
+
+           
+        }
+
+        function GetProductError(err) {
+            console.log(err);
+        }
+        // ** Product API
 
         
     </script>
@@ -67,6 +153,15 @@
         .container {
             padding-bottom: 4%;
         }
+
+        td.details-control {
+            background: url('../Images/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+
+        tr.shown td.details-control {
+            background: url('../Images/details_close.png') no-repeat center center;
+        }
     </style>
 
 </head>
@@ -86,7 +181,7 @@
                         <a class="nav-link" href="Brewmiester-prod.html">Production</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="#">Inventory</a>
+                        <a class="nav-link" href="Inventory.html">Inventory</a>
                     </li>
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="#">Waste</a>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using Alexander.Models.DAL;
@@ -35,15 +36,50 @@ namespace Alexander.Models
         public int ProductID { get => productID; set => productID = value; }
 
 
-    public List<Product> get_Products()
+        public List<Product> get_Products()
         {
             DBservices dbs = new DBservices();
-
+            DBservices dbs_second = new DBservices();
+            
             List<Product> prod_list = dbs.get_ProductsDB();
+
+            dbs_second = dbs_second.read("[Inventory_Product_2020]");
+
+            try
+            {
+                foreach (var prod in prod_list)
+                {
+                    float am = 0;
+                    DateTime dt = new DateTime(2008, 3, 1);
+
+                    foreach (DataRow item in dbs_second.dt.Rows) // might need ProductName // .Select("prodName=" + prod.productName)
+                    {
+                        if ((string)item["prodName"] == prod.productName)
+                        {
+                            DateTime last_arrival_time = Convert.ToDateTime(item["last_supply_date"]);
+
+                            if (DateTime.Compare(dt, last_arrival_time) < 0) // dt is smaller than last_arrival
+                            {
+                                dt = last_arrival_time;
+                            }
+
+                            am += Convert.ToInt32(item["amount"]);
+                        }
+                    }
+
+                    prod.Last_arrivalTime = dt;
+                    prod.Amount = am;
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
 
             return prod_list;
         }
-
 
     }
 }
