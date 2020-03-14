@@ -34,6 +34,7 @@
 
             ajaxCall("GET", "../../api/Product", "", GetProductSucess, GetProductError); // get all products
 
+            ajaxCall("GET", "../../api/Product/Inventory", "", GetInventorySucess, GetInventoryError); // get all products
 
             // DT events for Plus btn
             $('#tbl').on('click', 'td.details-control', function () {
@@ -60,6 +61,7 @@
 
         function format(d) {
             // `d` is the original data object for the row
+            console.log(d);
             return `<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' 
                 <tr>
                 <td>Full name:</td>
@@ -99,7 +101,12 @@
                         {
                             data: "Amount"
                         }, 
-                        { data: "Last_arrivalTime" },
+                        {
+                            data: "Last_arrivalTime",
+                            render: function (data, type, row, meta) {
+                                return data.substr(0,10);
+                            }
+                        },
                         {
                             data: "Min_amount"
                         }
@@ -117,8 +124,19 @@
         function GetProductError(err) {
             console.log(err);
         }
-        // ** Product API
 
+        function GetInventorySucess(data) {
+            console.log('this is inventory data:',data);
+
+            //for (item of data) {
+                  //TODO  
+            //    // need to add a DT and make edit + add buttons
+            //}
+        }
+        function GetInventoryError(err) {
+            console.log(err);
+        }
+        // ** Product API
         
     </script>
 
@@ -207,7 +225,7 @@
             <thead style="background-color:cornflowerblue">
                 <tr>
                     <th></th> <!--edit/delete buttons-->
-                    <th>Type</th>
+                    <th>Product Name</th>
                     <th>Amount</th>
                     <th>Last Arrival Date</th>
                     <th>Minimum Amount</th>

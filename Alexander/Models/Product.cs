@@ -81,5 +81,16 @@ namespace Alexander.Models
             return prod_list;
         }
 
+
+
+        public List<Product> get_Inventory_Products()
+        {
+            DBservices dbs = new DBservices();
+
+            List<Product> prod_list = dbs.get_Inventory_ProductsDB();
+
+            return prod_list;
+        }
+
     }
 }

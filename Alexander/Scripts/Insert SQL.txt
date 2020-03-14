@@ -112,6 +112,10 @@ VALUES ('aa','Minerals','9','630','2020-02-02');
 INSERT INTO Inventory_Product_2020 (prodName, prodType, prodID, amount, last_supply_date)
 VALUES ('bb','Minerals','10','1000','2020-02-02');
 
+INSERT INTO Inventory_Product_2020 (prodName, prodType, prodID, amount, last_supply_date)
+VALUES ('A','yeast','6','550','2020-02-12');
+
+
 select * from Inventory_Product_2020
 
 ##############################################
