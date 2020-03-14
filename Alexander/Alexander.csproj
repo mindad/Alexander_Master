@@ -196,6 +196,7 @@
     <Content Include="Pages\Brewmiester\Alerts.html" />
     <Content Include="Pages\Brewmiester\Brewmiester-dashboard.html" />
     <Content Include="Pages\Brewmiester\Brewmiester-prod.html" />
+    <Content Include="Pages\Brewmiester\Inventory.html" />
     <Content Include="Pages\Images\Logo_alexander.jpeg" />
     <Content Include="Scripts\ajaxCalls.js" />
     <Content Include="Scripts\bootstrap.js" />
