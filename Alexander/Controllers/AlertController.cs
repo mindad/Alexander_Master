@@ -41,7 +41,7 @@ namespace Alexander.Controllers
 
 
         [HttpDelete]
-        public HttpResponseMessage Delete([FromBody]string alert_id) // row = row number in DB
+        public HttpResponseMessage Delete([FromBody]string alert_id) // delete from tbl ased on alert_id
         {
             int numEffected = 0;
             alert al = new alert();

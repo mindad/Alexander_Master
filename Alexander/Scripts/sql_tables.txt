@@ -59,8 +59,15 @@ create table Alert_2020(
 	[date] datetime,
 	[description] nvarchar(255),
 	[notes] nvarchar(255),
+	FOREIGN KEY ([type]) REFERENCES Alert_Types_2020([type]),
 	Primary key ([Alert_id])
 )
+
+create table Alert_Types_2020(
+	[type] nvarchar(50),
+	Primary key ([type])
+)
+
 create table Order_2020(
 	[Order_id] int NOT NULL,
 	[Alert_id] int NOT NULL,

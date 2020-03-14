@@ -133,13 +133,27 @@ select * from brewmiester_2020
 *************INSERT  Alert_2020 TABLE*******************
 
 INSERT INTO Alert_2020 (Alert_id, type,date,description,notes)
-VALUES ('1','Kshut B',02/02/2020,'minimum in stock','');
+VALUES ('1','Boxes Stock','2020-02-01','minimum in stock','');
 INSERT INTO Alert_2020 (Alert_id, type,date,description,notes)
-VALUES ('2','kshut A',5/02/2020,'minimum in stock','');
+VALUES ('2','Product Stock','2019-01-02','minimum in stock','');
 INSERT INTO Alert_2020 (Alert_id, type,date,description,notes)
-VALUES ('3','label Ambree',02/1/2020,'minimum in stock','');
+VALUES ('3','Product Stock','2019-01-02','minimum in stock','');
+INSERT INTO Alert_2020 (Alert_id, type,date,description,notes)
+VALUES ('4','Product Stock','2019-09-02','minimum in stock','');
 
 select * from Alert_2020
+
+################################################
+*************INSERT  Alert_Types_2020 TABLE*******************
+
+INSERT INTO Alert_Types_2020 ([type])
+VALUES ('Product Stock');
+INSERT INTO Alert_Types_2020 ([type])
+VALUES ('Boxes Stock');
+
+
+
+select * from Alert_Types_2020
 
 ################################################
 *************INSERT  Order_2020 TABLE*******************
