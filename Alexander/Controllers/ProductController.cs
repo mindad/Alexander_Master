@@ -23,5 +23,52 @@ namespace Alexander.Controllers
             Product prod = new Product();
             return prod.get_Inventory_Products();
         }
+
+
+        [HttpPut] // edit batch DATE OR BeerType
+        [Route("api/Product/Inventory")]
+        public HttpResponseMessage Put([FromBody]Product prod) // 
+        {
+            int numEffected = 0;
+
+            try
+            {
+                numEffected = prod.Update();
+
+                if (numEffected > 0)
+                    return Request.CreateResponse(HttpStatusCode.OK, numEffected);
+                else
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not Found");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+        }
+
+
+        [HttpDelete]
+        [Route("api/Product/Inventory")]
+        public HttpResponseMessage Delete([FromBody]Product prod) // row = row number in DB
+        {
+            int numEffected = 0;
+            //Product prod= new Product();
+
+            try
+            {
+                numEffected = prod.delete_line();
+
+                if (numEffected > 0)
+                    return Request.CreateResponse(HttpStatusCode.OK, numEffected);
+                else
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not Found");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+        }
     }
 }

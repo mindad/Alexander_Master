@@ -34,9 +34,11 @@ namespace Alexander.Models
         public string ProductType { get => productType; set => productType = value; }
         public string ProductName { get => productName; set => productName = value; }
         public int ProductID { get => productID; set => productID = value; }
+        
 
 
-        public List<Product> get_Products()
+        // returns products with sum amount + latest inventory date
+        public List<Product> get_Products() 
         {
             DBservices dbs = new DBservices();
             DBservices dbs_second = new DBservices();
@@ -52,7 +54,7 @@ namespace Alexander.Models
                     float am = 0;
                     DateTime dt = new DateTime(2008, 3, 1);
 
-                    foreach (DataRow item in dbs_second.dt.Rows) // might need ProductName // .Select("prodName=" + prod.productName)
+                    foreach (DataRow item in dbs_second.dt.Rows) // 
                     {
                         if ((string)item["prodName"] == prod.productName)
                         {
@@ -90,6 +92,57 @@ namespace Alexander.Models
             List<Product> prod_list = dbs.get_Inventory_ProductsDB();
 
             return prod_list;
+        }
+
+
+        // delete line from Inventory_Product_2020
+        public int delete_line() //int row
+        {
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[Inventory_Product_2020]");
+
+            try
+            {
+                dbs.dt.Select("prodName='" + ProductName.ToString() + "'" + " AND last_supply_date='" + Last_arrivalTime.ToString("yyyy-MM-dd") + "'").First().Delete(); // 
+                dbs.update(); // update the DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return 1;
+        }
+
+
+
+        public int Update()
+        {
+            int effected = 0;
+            DBservices dbs = new DBservices();
+
+            dbs = dbs.read("[Inventory_Product_2020]");
+
+            try
+            {
+                DataRow dr = dbs.dt.Select("prodName='" + ProductName + " AND last_supply_date='" + ProductType + "'").First();
+
+                dr["amount"] = amount;
+                dr["last_supply_date"] = Last_arrivalTime;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            
+
+            
+
+            effected = dbs.update(); // update DB
+
+            return effected;
         }
 
     }

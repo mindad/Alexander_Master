@@ -27,10 +27,17 @@
 
     <script>
 
+        inventoryArr = [];
+        productArr = [];
         // TODO
-        // need to change fromat() function, so it will render to a row the data from Invenory that relates to that row
-
+        // make sure editform is not rendered 'return false'
+        // check the Edit button something doesnt work
+        //
         $(document).ready(function () {
+
+            $('#editDiv').hide();
+            $('#submit_edit').on("click", edit_Inventory_table);
+            $("#submit_edit", "#editForm").submit(f1);
 
             ajaxCall("GET", "../../api/Product", "", GetProductSucess, GetProductError); // get all products
 
@@ -50,39 +57,98 @@
                 else {
                     // Open this row
                     row.child(format(row.data())).show();
-
-                    //$(row.child()).DataTable();
-
                     tr.addClass('shown');
+
+                    let newArr = [];
+
+                    for (prod of inventoryArr) {
+                        if (prod.ProductID == row.data().ProductID) {
+                            newArr.push(prod);
+                        }
+                    }
+
+                    createDT(newArr); // create DT based on product name
+
+                    
                 }
             });
             // ** DT events for Plus btn
+
+            buttonEvents(); // initialize DT buttons activity
         });
+
+        function createDT(DT_data) {
+
+            try {
+                $(`#tbl-${DT_data[0].ProductName}`).DataTable({
+                        "paging": false,
+                        "ordering": false,
+                        "info": false,
+                        "searching": false,
+                        data: DT_data,
+                        pageLength: 3,
+                        columns: [
+                            {
+                                data: {  },
+                                render: function (data, type, row, meta) {
+
+                                    //console.log(data);
+
+                                    let data_for_tbl = "data-btnId='" + data.ProductName + "'" + "data-Date='" + data.Last_arrivalTime + "'";
+
+                                    editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+                                    deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+                                    return editBtn + deleteBtn;
+                                }
+                            },
+                            { data: "Amount" },
+                            {
+                                data: "Last_arrivalTime",
+                                render: function (data) {
+                                    return data.substr(0, 10);
+                                }
+
+                            },
+                        ]
+               });
+            }
+               
+
+            catch (err) {
+                alert(err);
+            }
+
+        }
+
+ 
+        // adds table with all inventory inputs
 
         function format(d) {
             // `d` is the original data object for the row
             console.log(d);
-            return `<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' 
-                <tr>
-                <td>Full name:</td>
-                <td> blabla </td>
-                </tr>
-                <tr>
-                <td>Extension number:</td>
-                <td>blabla</td>
-                </tr>
-                <tr>
-                <td>Extra info:</td>
-                <td>And any further details here (images etc)...</td>
-                </tr>
-                </table>`;
+
+            return (
+                `<table id="tbl-${d.ProductName}" class="display" border="1" style="width:100%">
+                    <thead style="background-color:cornflowerblue">
+                        <tr>
+                            <th></th>
+                            <th>Amount</th>
+                            <th>Last Arrival Date</th>
+                        </tr>
+                     </thead>
+                    <tbody>
+                    </tbody>
+                 </table>`
+            );
         }
 
 
-        // Invenotry API
+        // Product API
         function GetProductSucess(Product_data) {
 
             console.log('this is product data:', Product_data);
+
+            productArr = Product_data;
 
 
             try {
@@ -98,17 +164,23 @@
                             "defaultContent": ''
                         },
                         { data: "ProductName" },  
-                        {
-                            data: "Amount"
-                        }, 
+                        { data: "Amount" }, 
                         {
                             data: "Last_arrivalTime",
                             render: function (data, type, row, meta) {
                                 return data.substr(0,10);
                             }
                         },
+                        { data: "Min_amount" },
                         {
-                            data: "Min_amount"
+                            data:"ProductID",
+                            render: function (data, type, row, meta) {
+
+                                let data_for_tbl = "data-btnId='" + data + "'";
+
+                                addBtn = "<button type='button' class = 'addBtn btn btn-success'" + data_for_tbl + "> Add </button>";
+                                return addBtn;
+                            }
                         }
                     ]
                 });
@@ -117,27 +189,141 @@
             catch (err) {
                 alert(err);
             }
-
-           
         }
 
         function GetProductError(err) {
             console.log(err);
         }
+        // ** Product API
 
+        // Invenotry API
         function GetInventorySucess(data) {
-            console.log('this is inventory data:',data);
+            console.log('this is inventory data:',data); // yeast A is the common one
 
-            //for (item of data) {
-                  //TODO  
-            //    // need to add a DT and make edit + add buttons
-            //}
+            inventoryArr = data;
         }
         function GetInventoryError(err) {
             console.log(err);
         }
-        // ** Product API
+        // ** Invenotry API
+
+
+        // Button Events
+            
+        function buttonEvents() {
+
+            $(document).on("click", ".editBtn", function () {
+
+                populateFields(this.getAttribute('data-btnId'), this.getAttribute('data-Date').substr(0,10)); // fill the form fields according to the selected row
+
+
+            });
+
+            $(document).on("click", ".deleteBtn", function () {
+
+                prod_TO_delete = {
+                     productType: '',
+                     amount: 0,
+                     min_amount: 0,
+                     last_arrivalTime: this.getAttribute('data-Date'),
+                     productName: this.getAttribute('data-btnid'),
+                     productID: 0
+                }
+
+                //console.log('this is DELETE prod_id:', prod_TO_delete);
+
+                if (confirm("Are You Sure You Want To Delete This Row?")) {
+
+                    ajaxCall("Delete", "../../api/Product/Inventory", JSON.stringify(prod_TO_delete), DeleteInventorySucess, DeleteInventoryError); 
+                }
+                else {
+                    console.log("You pressed Cancel!");
+                }
+            });
+        }
+
+        function edit_Inventory_table() {
+
+            //let id_in_batchArr = $('#ph').val();
+
+            let prod = {
+               productType:$('#ph1').val(),
+               amount: $("#amountTypeInput").val(),
+               min_amount:0,
+               last_arrivalTime:$("#DateInput").val(),
+               productName:$('#ph').val(),
+               productID:0
+            }
+
+            console.log('this is prod that will send to PUT', prod);
+          
+            ajaxCall("PUT", "../../api/Product/Inventory", JSON.stringify(prod), edit_InventorySucess, edit_InventoryError);
+        }
+
+        //////// edit inventory item
+        function edit_InventorySucess(data) {
+            console.log(data, 'record changed succefully');
+
+            //refresh_table();
+
+        }
+        function edit_InventoryError(err) {
+            console.log(err);
+        }
+        //****** edit inventory item
         
+        //////// add invenotry item
+        function DeleteInventorySucess(data) {
+            console.log(data, "Record Deleted");
+
+            //refresh_table();
+            
+        }
+
+        function DeleteInventoryError(err) {
+            console.log(err);
+        }
+        //****** add invenotry item
+
+        // ** Button Events
+
+
+        function populateFields(product_name, product_date) { // set values in edit DIV
+
+            console.log('populate fileds:', product_name, product_date);
+            $("#editDiv").show();
+
+            for (prod of inventoryArr) {
+
+                console.log(prod.ProductName);
+                console.log(prod.Last_arrivalTime.substr(0, 10));
+
+                
+
+                if (prod.ProductName == product_name && prod.Last_arrivalTime.substr(0,10) == product_date) {
+                    $("#amountTypeInput").val(prod.Amount);
+                    $("#DateInput").val(prod.Last_arrivalTime.substr(0, 10)); 
+
+                    $("#ph").val(product_name); // holds productName to edit
+                    $("#ph1").val(product_date); // holds last_arrival_Date to edit
+                }
+            }
+
+        }
+
+        function refresh_table(tbl_name) {
+
+            $(`#${tbl_name}`).DataTable().destroy(); // destory table so it could be refreshed
+
+            $("#editDiv").hide();
+
+            //ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
+        }
+
+           function f1(e) {
+            return false;
+        }
+
     </script>
 
 
@@ -224,11 +410,12 @@
         <table id="tbl" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
-                    <th></th> <!--edit/delete buttons-->
+                    <th></th> <!--Plus sign-->
                     <th>Product Name</th>
                     <th>Amount</th>
                     <th>Last Arrival Date</th>
                     <th>Minimum Amount</th>
+                    <th></th> <!--Edit + Add-->
                 </tr>
             </thead>
             <tbody>
@@ -236,7 +423,7 @@
 
         </table>
 
-        <button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>
+        <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
         <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
 
     </div>
@@ -260,15 +447,15 @@
         </div>
     </div>
     <!-- Add Product -->
-    <!--Edit Row In  Table-->
+    <!--Edit Row In Table-->
     <div class="container" id="editDiv">
         <form id="editForm">
             <div class="form-group">
-                <label for="">Beer Type</label>
-                <input type="text" class="form-control" id="beerTypeInput" required />
+                <label for="">Amount</label>
+                <input type="text" class="form-control" id="amountTypeInput" required />
                 <br />
                 <label for="fromDate">Date</label>
-                <input type="date" class="form-control" id="batchDateInput" required />
+                <input type="date" class="form-control" id="DateInput" required />
             </div>
             <button id="submit_edit">Submit</button>
         </form>
@@ -276,6 +463,7 @@
     <!--Edit Row In  Table-->
 
     <div id="ph"></div>
+    <div id="ph1"></div>
 </body>
 
 </html>
