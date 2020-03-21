@@ -34,6 +34,49 @@ namespace Alexander.Models
         public string ProductType { get => productType; set => productType = value; }
         public string ProductName { get => productName; set => productName = value; }
         public int ProductID { get => productID; set => productID = value; }
+
+
+        public int insert() // insert new row into Product_2020
+        {
+            int numEffected = 0;
+            DBservices dbs = new DBservices();
+
+            try
+            {
+                dbs = dbs.read("[Product_2020]");
+
+                dbs.dt.Rows.Add(ProductName, ProductType, ProductID, Min_amount);
+                numEffected = dbs.update(); 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
+            return numEffected;
+        }
+
+
+
+        public int insert_inventory() // insert new row into Inventory_Product_2020
+        {
+            int numEffected = 0;
+            DBservices dbs = new DBservices();
+
+            try
+            {
+                dbs = dbs.read("[Inventory_Product_2020]");
+
+                dbs.dt.Rows.Add(null, ProductName, ProductType, ProductID, Amount, Last_arrivalTime);
+                numEffected = dbs.update();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return numEffected;
+        }
         
 
 
@@ -125,23 +168,18 @@ namespace Alexander.Models
 
             try
             {
-                DataRow dr = dbs.dt.Select("prodName='" + ProductName + " AND last_supply_date='" + ProductType + "'").First();
+                DataRow dr = dbs.dt.Select("prodName='" + ProductName + "' AND last_supply_date='" + ProductType + "'").First(); // ProductType Holds the original date to look in table
 
                 dr["amount"] = amount;
                 dr["last_supply_date"] = Last_arrivalTime;
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
 
             
-
-            
-
             effected = dbs.update(); // update DB
-
             return effected;
         }
 

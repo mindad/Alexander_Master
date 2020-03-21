@@ -28,20 +28,23 @@
     <script>
 
         inventoryArr = [];
-        productArr = [];
+        //productArr = [];
         // TODO
-        // make sure editform is not rendered 'return false'
-        // check the Edit button something doesnt work
-        //
+        // form rendering when submitted
+        // Add new product type (new product to the Product_2020)
+        // create a select that holds prodType options
+
         $(document).ready(function () {
 
+            $("#addDiv").hide();
             $('#editDiv').hide();
             $('#submit_edit').on("click", edit_Inventory_table);
+            $('#submit_add').on("click", submit_Inventory_item);
             $("#editForm").on('submit', f1);
 
             ajaxCall("GET", "../../api/Product", "", GetProductSucess, GetProductError); // get all products
 
-            ajaxCall("GET", "../../api/Product/Inventory", "", GetInventorySucess, GetInventoryError); // get all products
+            ajaxCall("GET", "../../api/Product/Inventory", "", GetInventorySucess, GetInventoryError); // get all inventory products
 
             // DT events for Plus btn
             $('#tbl').on('click', 'td.details-control', function () {
@@ -69,7 +72,6 @@
 
                     createDT(newArr); // create DT based on product name
 
-                    
                 }
             });
             // ** DT events for Plus btn
@@ -148,7 +150,7 @@
 
             console.log('this is product data:', Product_data);
 
-            productArr = Product_data;
+            //productArr = Product_data;
 
 
             try {
@@ -173,10 +175,10 @@
                         },
                         { data: "Min_amount" },
                         {
-                            data:"ProductID",
+                            data: {},
                             render: function (data, type, row, meta) {
 
-                                let data_for_tbl = "data-btnId='" + data + "'";
+                                let data_for_tbl = "data-prod_Id='" + data.ProductID + "'" + "data-prod_Name='" + data.ProductName + "'";
 
                                 addBtn = "<button type='button' class = 'addBtn btn btn-success'" + data_for_tbl + "> Add </button>";
                                 return addBtn;
@@ -209,15 +211,13 @@
 
 
         // Button Events
-            
         function buttonEvents() {
 
             $(document).on("click", ".editBtn", function () {
 
                 populateFields(this.getAttribute('data-btnId'), this.getAttribute('data-Date').substr(0,10)); // fill the form fields according to the selected row
-
-
             });
+
 
             $(document).on("click", ".deleteBtn", function () {
 
@@ -240,11 +240,64 @@
                     console.log("You pressed Cancel!");
                 }
             });
+
+
+            $(document).on("click", ".addBtn", function () { // add existing product to inventory
+                
+
+                $("#ph").val(this.getAttribute('data-prod_Id'));
+                $("#ph1").val(this.getAttribute('data-prod_Name'));
+
+                let UniqueNames= $.unique(inventoryArr.map(function (d) {return d.ProductType;})); // get unique product types
+
+                // insert values to beerType Select     
+                prodTypesOptions = "<option>Select Product Type</option>`";
+                for (name of UniqueNames) {
+                    prodTypesOptions += `<option>${name}</option>`;
+                }
+
+                $("#addDiv").show();
+                document.getElementById("prod_type_select").innerHTML = prodTypesOptions;
+
+                
+            });
         }
 
-        function edit_Inventory_table() {
 
-            //let id_in_batchArr = $('#ph').val();
+        // add inventory item
+        function submit_Inventory_item() {
+
+            let prod = {
+               productType:$("#prod_type_select").val(),
+               amount: $("#amountTypeInput_add").val(),
+               min_amount:0,
+               last_arrivalTime:$("#DateInput_add").val(),
+               productName:$('#ph1').val(),
+               productID:$('#ph').val()
+            }
+
+            console.log('this is prod that will send to POST', prod);
+          
+            ajaxCall("POST", "../../api/Product/Inventory", JSON.stringify(prod), add_InventorySucess, add_InventoryError);
+
+            $("#addDiv").hide();
+
+            return false; // form submit
+        }
+
+        function add_InventorySucess(data) {
+            console.log(data, 'record changed succefully');
+
+            refresh_table();
+
+        }
+        function add_InventoryError(err) {
+            console.log(err);
+        }
+        // ** add inventory item
+
+        //////// edit inventory item
+        function edit_Inventory_table() {
 
             let prod = {
                productType:$('#ph1').val(),
@@ -259,14 +312,13 @@
           
             ajaxCall("PUT", "../../api/Product/Inventory", JSON.stringify(prod), edit_InventorySucess, edit_InventoryError);
 
-            return false;
+            return false; // form submit
         }
 
-        //////// edit inventory item
         function edit_InventorySucess(data) {
             console.log(data, 'record changed succefully');
 
-            //refresh_table();
+            refresh_table();
 
         }
         function edit_InventoryError(err) {
@@ -278,7 +330,7 @@
         function DeleteInventorySucess(data) {
             console.log(data, "Record Deleted");
 
-            //refresh_table();
+            refresh_table();
             
         }
 
@@ -297,11 +349,10 @@
 
             for (prod of inventoryArr) {
 
-                console.log(prod.ProductName);
-                console.log(prod.Last_arrivalTime.substr(0, 10));
+                //console.log(prod.ProductName);
+                //console.log(prod.Last_arrivalTime.substr(0, 10));
 
                 
-
                 if (prod.ProductName == product_name && prod.Last_arrivalTime.substr(0,10) == product_date) {
                     $("#amountTypeInput").val(prod.Amount);
                     $("#DateInput").val(prod.Last_arrivalTime.substr(0, 10)); 
@@ -313,17 +364,13 @@
 
         }
 
-        function refresh_table(tbl_name) {
+        function refresh_table() {
 
-            $(`#${tbl_name}`).DataTable().destroy(); // destory table so it could be refreshed
-
-            $("#editDiv").hide();
-
-            //ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
+            location.reload();
         }
 
            function f1(e) {
-            return false;
+            return false; // form submit
         }
 
     </script>
@@ -458,12 +505,30 @@
                 <br />
                 <label for="fromDate">Date</label>
                 <input type="date" class="form-control" id="DateInput" required />
+                <br />
             </div>
             <button id="submit_edit">Submit</button>
         </form>
     </div>
     <!--Edit Row In  Table-->
-
+    <!--ADD Row In Table-->
+    <div class="container" id="addDiv">
+        <form id="addForm">
+            <div class="form-group">
+                <!-- TODO create a select that holds prodType options-->
+                <select name="Beer" id="prod_type_select"></select>
+                <br />
+                <label for="">Amount</label>
+                <input type="text" class="form-control" id="amountTypeInput_add" required />
+                <br />
+                <label for="fromDate">Date</label>
+                <input type="date" class="form-control" id="DateInput_add" required />
+                <br />
+            </div>
+            <button id="submit_add">Submit</button>
+        </form>
+    </div>
+    <!--ADD Row In Table-->
     <div id="ph"></div>
     <div id="ph1"></div>
 </body>

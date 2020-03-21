@@ -16,6 +16,18 @@ namespace Alexander.Controllers
             return prod.get_Products();
         }
 
+        public int Post([FromBody]Product prod)
+        {
+            return prod.insert();
+        }
+
+
+
+
+        /// 
+        /// Inventory API from here
+        /// 
+        /// 
         [HttpGet]
         [Route("api/Product/Inventory")]
         public List<Product> Get_Inventory()
@@ -24,6 +36,12 @@ namespace Alexander.Controllers
             return prod.get_Inventory_Products();
         }
 
+        [HttpPost]
+        [Route("api/Product/Inventory")]
+        public int Post_Inventory([FromBody]Product prod)
+        {
+            return prod.insert_inventory();
+        }
 
         [HttpPut] // edit batch DATE OR BeerType
         [Route("api/Product/Inventory")]

@@ -21,11 +21,13 @@ create table Product_2020(
 	Primary key ([prodName],[prodID])
 )
 create table Inventory_Product_2020(
+	[tbl_index] smallint IDENTITY (1, 1) NOT NULL,
 	[prodName] nvarchar(65) NOT NULL,
 	[prodType] nvarchar(50) NOT NULL,
 	[prodID] int,
 	[amount] int,
 	[last_supply_date] datetime,
+	Primary key ([tbl_index]),
 	FOREIGN KEY ([prodName],[prodID]) REFERENCES Product_2020([prodName],[prodID])
 )
 **********************
