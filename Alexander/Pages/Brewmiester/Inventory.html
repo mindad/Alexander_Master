@@ -42,7 +42,7 @@
             $('#submit_edit').on("click", edit_Inventory_table);
             $('#submit_add').on("click", submit_Inventory_item);
             $("#editForm").on('submit', f1); // return false -> form control
-            $('#BTN_submit').on("click", submit_new_Inventory_item);
+            $('#BTN_submit').on("click", submit_new_product);
 
             ajaxCall("GET", "../../api/Product/Inventory", "", GetInventorySucess, GetInventoryError); // get all inventory products
 
@@ -62,7 +62,6 @@
                 else {
                     // Open this row
                     if (format(row.data()) == "EXIT") { // product is not in inentoryArr == not in Inventory DB
-                        console.log('thinks that format is null');
                         return;
                     }
                     row.child(format(row.data())).show();
@@ -78,7 +77,6 @@
                     }
 
                     createDT(newArr); // create DT based on product name
-
                 }
             });
             // ** DT events for Plus btn
@@ -89,7 +87,7 @@
         function createDT(DT_data) {
 
             try {
-                $(`#tbl-${DT_data[0].ProductName}`).DataTable({
+                $(`#tbl-${DT_data[0].ProductID}`).DataTable({
                         "paging": false,
                         "ordering": false,
                         "info": false,
@@ -132,21 +130,18 @@
 
         function format(d) {
             // `d` is the original data object for the row
-            console.log(d);
+            console.log('this is d:',d);
 
             let UniqueInventoryNames = $.unique(inventoryArr.map(function (item) { return item.ProductName; })); // get unique product names
 
-            console.log('this is DT_data', d);
-
             for (i in d) {
-                if (!UniqueInventoryNames.includes(d[i].ProductName)) { // item is new and doesn't hold any entries
-                    console.log('firmat returns null');
+                if (!UniqueInventoryNames.includes(d.ProductName)) { // item is new and doesn't hold any entries
                     return "EXIT";
                 }
             }
 
             return (
-                `<table id="tbl-${d.ProductName}" class="display" border="1" style="width:100%">
+                `<table id="tbl-${d.ProductID}" class="display" border="1" style="width:100%">
                     <thead style="background-color:cornflowerblue">
                         <tr>
                             <th></th>
@@ -210,7 +205,7 @@
             console.log(err);
         }
 
-        function submit_new_Inventory_item() {
+        function submit_new_product() {
 
             let prod = {
                 productType: $('#TB_type').val(),
@@ -218,7 +213,7 @@
                 min_amount:$('#TB_minAmount').val(),
                 last_arrivalTime:null,
                 productName:$('#TB_name').val(),
-                productID:$('TB_id').val(),
+                productID:$('#TB_id').val(),
             }
 
             ajaxCall('POST', '../../api/Product', JSON.stringify(prod), post_new_inventory_success, post_new_inventory_error);
@@ -592,7 +587,7 @@
     <div id="ph"></div>
     <div id="ph1"></div>
     <div class="container">
-        <button id="BTN_inventory">Add New Inventory Product</button>
+        <button id="BTN_inventory">Add New Product</button>
     </div>
 </body>
 
