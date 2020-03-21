@@ -37,7 +37,7 @@
 
             $('#editDiv').hide();
             $('#submit_edit').on("click", edit_Inventory_table);
-            $("#submit_edit", "#editForm").submit(f1);
+            $("#editForm").on('submit', f1);
 
             ajaxCall("GET", "../../api/Product", "", GetProductSucess, GetProductError); // get all products
 
@@ -258,6 +258,8 @@
             console.log('this is prod that will send to PUT', prod);
           
             ajaxCall("PUT", "../../api/Product/Inventory", JSON.stringify(prod), edit_InventorySucess, edit_InventoryError);
+
+            return false;
         }
 
         //////// edit inventory item
