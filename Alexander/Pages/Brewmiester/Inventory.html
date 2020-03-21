@@ -30,21 +30,23 @@
         inventoryArr = [];
         //productArr = [];
         // TODO
-        // form rendering when submitted
+        // form control - validation and return false
         // Add new product type (new product to the Product_2020)
-        // create a select that holds prodType options
 
         $(document).ready(function () {
 
             $("#addDiv").hide();
             $('#editDiv').hide();
+            $('#add_prod_Div').hide();
+            $('#BTN_inventory').on('click', function () { $('#add_prod_Div').show() }); // show add new inventory item DIV
             $('#submit_edit').on("click", edit_Inventory_table);
             $('#submit_add').on("click", submit_Inventory_item);
-            $("#editForm").on('submit', f1);
-
-            ajaxCall("GET", "../../api/Product", "", GetProductSucess, GetProductError); // get all products
+            $("#editForm").on('submit', f1); // return false -> form control
+            $('#BTN_submit').on("click", submit_new_Inventory_item);
 
             ajaxCall("GET", "../../api/Product/Inventory", "", GetInventorySucess, GetInventoryError); // get all inventory products
+
+            ajaxCall("GET", "../../api/Product", "", GetProductSucess, GetProductError); // get all products
 
             // DT events for Plus btn
             $('#tbl').on('click', 'td.details-control', function () {
@@ -59,13 +61,18 @@
                 }
                 else {
                     // Open this row
+                    if (format(row.data()) == "EXIT") { // product is not in inentoryArr == not in Inventory DB
+                        console.log('thinks that format is null');
+                        return;
+                    }
                     row.child(format(row.data())).show();
                     tr.addClass('shown');
 
                     let newArr = [];
-
+               
                     for (prod of inventoryArr) {
-                        if (prod.ProductID == row.data().ProductID) {
+
+                        if (prod.ProductID == row.data().ProductID) { // evade dynamic DT creation error
                             newArr.push(prod);
                         }
                     }
@@ -88,13 +95,11 @@
                         "info": false,
                         "searching": false,
                         data: DT_data,
-                        pageLength: 3,
+                        pageLength: 10,
                         columns: [
                             {
                                 data: {  },
                                 render: function (data, type, row, meta) {
-
-                                    //console.log(data);
 
                                     let data_for_tbl = "data-btnId='" + data.ProductName + "'" + "data-Date='" + data.Last_arrivalTime + "'";
 
@@ -129,6 +134,17 @@
             // `d` is the original data object for the row
             console.log(d);
 
+            let UniqueInventoryNames = $.unique(inventoryArr.map(function (item) { return item.ProductName; })); // get unique product names
+
+            console.log('this is DT_data', d);
+
+            for (i in d) {
+                if (!UniqueInventoryNames.includes(d[i].ProductName)) { // item is new and doesn't hold any entries
+                    console.log('firmat returns null');
+                    return "EXIT";
+                }
+            }
+
             return (
                 `<table id="tbl-${d.ProductName}" class="display" border="1" style="width:100%">
                     <thead style="background-color:cornflowerblue">
@@ -150,14 +166,11 @@
 
             console.log('this is product data:', Product_data);
 
-            //productArr = Product_data;
-
-
             try {
                 $('#tbl').DataTable({
 
                     data: Product_data,
-                    pageLength: 5,
+                    pageLength: 10,
                     columns: [             
                         {
                             "className": 'details-control',
@@ -194,6 +207,31 @@
         }
 
         function GetProductError(err) {
+            console.log(err);
+        }
+
+        function submit_new_Inventory_item() {
+
+            let prod = {
+                productType: $('#TB_type').val(),
+                amount:0,
+                min_amount:$('#TB_minAmount').val(),
+                last_arrivalTime:null,
+                productName:$('#TB_name').val(),
+                productID:$('TB_id').val(),
+            }
+
+            ajaxCall('POST', '../../api/Product', JSON.stringify(prod), post_new_inventory_success, post_new_inventory_error);
+
+            return false;
+        }
+
+        function post_new_inventory_success(data) {
+            console.log(data);
+
+            refresh_table();
+        }
+        function post_new_inventory_error(err) {
             console.log(err);
         }
         // ** Product API
@@ -529,8 +567,33 @@
         </form>
     </div>
     <!--ADD Row In Table-->
+    <!--ADD Row -- Product In Table-->
+    <div class="container" id="add_prod_Div">
+        <form id="add_prod_Form">
+            <div class="form-group">
+                <!-- TODO create a select that holds prodType options-->
+                <label for="">Product Name</label>
+                <input type="text" class="form-control" id="TB_name" required />
+                <br />
+                <label for="">Product ID</label>
+                <input type="text" class="form-control" id="TB_id" required />
+                <br />
+                <label for="">Product Type</label>
+                <input type="text" class="form-control" id="TB_type" required />
+                <br />
+                <label for="">Minimum Amount</label>
+                <input type="text" class="form-control" id="TB_minAmount" required />
+                <br />
+            </div>
+            <button id="BTN_submit">Submit</button>
+        </form>
+    </div>
+    <!--ADD Row -- Product In Table-->
     <div id="ph"></div>
     <div id="ph1"></div>
+    <div class="container">
+        <button id="BTN_inventory">Add New Inventory Product</button>
+    </div>
 </body>
 
 </html>
