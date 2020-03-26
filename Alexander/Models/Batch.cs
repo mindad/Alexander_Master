@@ -25,7 +25,15 @@ namespace Alexander.Models
 
         public Batch() { }
 
-        
+        public Batch(int batchID, DateTime date, int tank, float wort_volume, string beerType, Recipe recipe_for_this_batch)
+        {
+            BatchID = batchID;
+            Date = date;
+            Tank = tank;
+            Wort_volume = wort_volume;
+            BeerType = beerType;
+            Recipe_for_this_batch = recipe_for_this_batch;
+        }
 
         public List<Batch> get_Batches()
         {
