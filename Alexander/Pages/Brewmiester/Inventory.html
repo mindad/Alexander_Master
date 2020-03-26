@@ -28,7 +28,7 @@
     <script>
 
         inventoryArr = [];
-        //productArr = [];
+        
         // TODO
         // form control - validation and return false
         // Add delete button to delete a product - NOT A Inventory! just prod
@@ -44,7 +44,7 @@
             $("#editForm").on('submit', f1); // return false -> form control
             $('#BTN_submit').on("click", submit_new_product);
 
-            ajaxCall("GET", "../../api/Product/Inventory", "", GetInventorySucess, GetInventoryError); // get all inventory products
+            ajaxCall("GET", "../../api/Inventory", "", GetInventorySucess, GetInventoryError); // get all inventory products
 
             ajaxCall("GET", "../../api/Product", "", GetProductSucess, GetProductError); // get all products
 
@@ -189,7 +189,8 @@
                                 let data_for_tbl = "data-prod_Id='" + data.ProductID + "'" + "data-prod_Name='" + data.ProductName + "'";
 
                                 addBtn = "<button type='button' class = 'addBtn btn btn-success'" + data_for_tbl + "> Add </button>";
-                                return addBtn;
+                                deleteBtn = "<button type='button' class = 'delete_prod_Btn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+                                return addBtn + deleteBtn;
                             }
                         }
                     ]
@@ -254,7 +255,7 @@
 
             $(document).on("click", ".deleteBtn", function () {
 
-                prod_TO_delete = {
+                let prod_TO_delete = {
                      productType: '',
                      amount: 0,
                      min_amount: 0,
@@ -267,7 +268,7 @@
 
                 if (confirm("Are You Sure You Want To Delete This Row?")) {
 
-                    ajaxCall("Delete", "../../api/Product/Inventory", JSON.stringify(prod_TO_delete), DeleteInventorySucess, DeleteInventoryError); 
+                    ajaxCall("Delete", "../../api/Inventory", JSON.stringify(prod_TO_delete), DeleteInventorySucess, DeleteInventoryError); 
                 }
                 else {
                     console.log("You pressed Cancel!");
@@ -294,6 +295,29 @@
 
                 
             });
+
+            // Delete a product from DB   delete_prod_Btn
+             $(document).on("click", ".delete_prod_Btn", function () {
+
+                let prod_TO_delete = {
+                     productType: '',
+                     amount: 0,
+                     min_amount: 0,
+                     last_arrivalTime: '',
+                     productName: '',
+                     productID: this.getAttribute('data-prod_Id')
+                }
+
+                console.log('this is DELETE prod_id:', prod_TO_delete);
+
+                if (confirm("Are You Sure You Want To Delete This Product From Systems?")) {
+
+                    ajaxCall("Delete", "../../api/Product", JSON.stringify(prod_TO_delete), DeleteInventorySucess, DeleteInventoryError); 
+                }
+                else {
+                    console.log("You pressed Cancel!");
+                }
+            });
         }
 
 
@@ -311,7 +335,7 @@
 
             console.log('this is prod that will send to POST', prod);
           
-            ajaxCall("POST", "../../api/Product/Inventory", JSON.stringify(prod), add_InventorySucess, add_InventoryError);
+            ajaxCall("POST", "../../api/Inventory", JSON.stringify(prod), add_InventorySucess, add_InventoryError);
 
             $("#addDiv").hide();
 
@@ -343,7 +367,7 @@
 
             console.log('this is prod that will send to PUT', prod);
           
-            ajaxCall("PUT", "../../api/Product/Inventory", JSON.stringify(prod), edit_InventorySucess, edit_InventoryError);
+            ajaxCall("PUT", "../../api/Inventory", JSON.stringify(prod), edit_InventorySucess, edit_InventoryError);
 
             return false; // form submit
         }

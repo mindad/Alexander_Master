@@ -157,6 +157,42 @@ namespace Alexander.Models
             return 1;
         }
 
+        public int delete_prod()
+        {
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[Inventory_Product_2020]");
+            
+            
+
+            try // Delete from inventory
+            {
+                foreach (DataRow row in dbs.dt.Select("prodID=" + ProductID))
+                {
+                    row.Delete();
+                }
+                dbs.update();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            dbs = dbs.read("[Product_2020]");
+
+            try // Delete from product
+            {
+                dbs.dt.Select("prodID=" + ProductID).First().Delete(); // deletes product from product_2020
+                dbs.update(); // update the DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return 1;
+        }
+
 
 
         public int Update()
