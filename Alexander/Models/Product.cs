@@ -76,7 +76,6 @@ namespace Alexander.Models
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
 

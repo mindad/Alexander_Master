@@ -24,7 +24,7 @@ namespace Alexander.Controllers
         }
 
 
-        [HttpPut] // edit batch DATE OR BeerType
+        [HttpPut] // edit 
         public HttpResponseMessage Put(Batch_Botteling batch_bt) 
         {
             int numEffected = 0;
