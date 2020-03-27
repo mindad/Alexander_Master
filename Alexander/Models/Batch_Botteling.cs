@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using Alexander.Models.DAL;
@@ -54,9 +55,30 @@ namespace Alexander.Models
             return numEffected;
         }
 
+        // changed it to 'new' so it will override 'batch.Update()' function ////// TODO
+        //edit batch_botteling
+        new public int Update()
+        {
+            int effected = 0;
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[BatchAfterProd_2020]");
+
+            DataRow dr = dbs.dt.Select("batch_id=" + BatchID).First(); // gets the row where id == batchid
+
+            dr["keg_20_amount"] = this.keg20_amount;
+            dr["keg_30_amount"] = this.keg30_amount;
+            dr["bottles_qty"] = this.bottels_qty;
+            dr["waste_litter"] = this.waste_litter;
+
+            effected = dbs.update(); // update DB
+
+            return effected;
+        }
+
 
         //delete batch botteling
-        public int delete_line(int row)
+        // changed it to 'new' so it will override 'batch.delete_line()' function ////// TODO
+        new public int delete_line(int row)
         {
             DBservices dbs = new DBservices();
             dbs = dbs.read("[BatchAfterProd_2020]");

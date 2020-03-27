@@ -24,6 +24,29 @@ namespace Alexander.Controllers
         }
 
 
+        [HttpPut] // edit batch DATE OR BeerType
+        public HttpResponseMessage Put(Batch_Botteling batch_bt) 
+        {
+            int numEffected = 0;
+
+            try
+            {
+                numEffected = batch_bt.Update();
+
+                if (numEffected > 0)
+                    return Request.CreateResponse(HttpStatusCode.OK, numEffected);
+                else
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not Found");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+        }
+
+
+
         //delete
         [HttpDelete]
         public HttpResponseMessage Delete([FromBody]string batch_id) // row = row number in DB

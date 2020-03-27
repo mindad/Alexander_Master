@@ -20,12 +20,13 @@
     <script src="../../Scripts/ajaxCalls.js"></script>
 
     <script>
-        recipeArr = [];
         Batch_BottelingArr = [];
+
         $(document).ready(function () {
 
-           
-
+            $('#editDiv').hide();
+            $('#submit_edit').on('click', submitEdit);
+            $('#editDiv').on('submit', f1);
             //ajaxCall("GET", "../../api/Recipe", "", GetRecipeSucess, GetRecipeError);
             ajaxCall("GET", "../../api/Batch_Botteling", "", GetBatch_BottelingSucess, GetBatch_BottelingError);
 
@@ -38,19 +39,18 @@
         });
         //Batch_Botteling  API
      
-        function GetBatch_BottelingSucess(Batch_BottelingArr) {
+        function GetBatch_BottelingSucess(Batch_Botteling_data) {
 
-       
-            console.log('this is prod manager data:', Batch_BottelingArr);
+            console.log('this is Batch_Botteling_data:', Batch_Botteling_data);
+
+            Batch_BottelingArr = Batch_Botteling_data;
      
-            let id = 0; // ID counter for Edit/Delete buttons
-
             try {
                 $('#tbl').DataTable({
 
-                    data: Batch_BottelingArr,
+                    data: Batch_Botteling_data,
 
-                    pageLength: 4,
+                    pageLength: 7,
                     columns: [
                        
                
@@ -74,7 +74,12 @@
                             }
                         },
 
-                        { data: "Date" },
+                        {
+                            data: "Date",
+                            render: function (data) {
+                                return data.substr(0, 10);
+                            }
+                        },
                         { data: "Tank" },
                         
                         {
@@ -225,12 +230,12 @@
 
             $(document).on("click", ".editBtn", function () {
 
-                //$('#addDiscount_btn').hide();
-                //$('#submit_edit').show();
-
                 console.log('batch id is:', this.getAttribute('data-btnId'));
 
+                $('#editDiv').show();
+
                 populateFields(this.getAttribute('data-btnId')); // fill the form fields according to the selected row
+
             });
 
             $(document).on("click", ".deleteBtn", function () {
@@ -258,6 +263,69 @@
         function DeleteBatch_BottelingError(err) {
             console.log(err);
         }
+
+        // Edit Batch
+        function Put_success(data) {
+            console.log(data);
+
+            return false;
+        }
+
+         function Put_Error(err) {
+            console.log(err);
+        }
+
+        function populateFields(batch_id) {
+
+            let batch;
+
+            for (let item of Batch_BottelingArr) { // find batch_id clicked on in 'Batch_BottelingArr'
+                if (item.BatchID == batch_id) {
+                    batch = item;
+                    break;
+                }
+            }
+
+            console.log('this is batch', batch);
+
+            $('#batchID_header_edit').html('Batch ID: ' + batch_id);
+            $('#Keg20_amountInput_edit').val(batch.Keg20_amount);
+            $('#Keg30_amountInput_edit').val(batch.Keg30_amount);
+            $('#Bottles_qtyInput_edit').val(batch.Bottels_qty);
+            $('#WasteInput_edit').val(batch.Waste_litter);
+        }
+
+        function submitEdit() {
+
+
+            let batch = {
+                batchID: $('#batchID_header_edit').html().replace(/[^0-9]/g, ''), // gets batch id from <h1>
+                tank: 0,
+                wort_volume: 0,
+                beerType: '',
+                keg20_amount: $('#Keg20_amountInput_edit').val(),
+                keg30_amount: $('#Keg30_amountInput_edit').val(),
+                bottels_qty: $('#Bottles_qtyInput_edit').val(),
+                waste_litter: $('#WasteInput_edit').val(),
+                waste_percent: 0,
+            }
+
+            console.log('batch to PUT:', batch);
+
+            ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(batch), Put_success, Put_Error);
+
+           // refresh_table();
+
+        }
+        // ** Edit Batch
+
+        function f1() {
+            return false;
+        }
+        function refresh_table() {
+            location.reload();
+        }
+
     </script>
 
     <style>
@@ -343,7 +411,7 @@
             </div>
             <a class="navbar-brand" href="#">
                 <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
-            
+
             </a>
         </nav>
     </div>
@@ -402,8 +470,6 @@
                     <th>Boxes qty</th>
                     <th>Waste Litter</th>
                     <th>Waste Precent</th>
-
-
                 </tr>
             </thead>
             <tbody></tbody>
@@ -418,41 +484,18 @@
     <div class="container collapse" id="addprodContainer">
         <div id="addprod">
             <br />
-            <form action="/action_page.php">
-
-
-                <br /><br />
-            
-                <!--<select name="Tank" id="TankNum">
-                    <option value="">select tank number</option>
-                    <option value="">21</option>
-                    <option value="">22</option>
-                    <option value="">41</option>
-                    <option value="">42</option>
-                    <option value="">61</option>
-                    <option value="">62</option>
-                    <option value="">63</option>
-                    <option value="">64</option>
-                    <option value="">65</option>
-                    <option value="">66</option>
-                    <option value="">67</option>
-                </select>-->
-                <br><br>
-
-
-        
-              
+            <form>
                 <label>Keg20_amount</label>
-                <input type="text" value="" id="Keg20_amountInput"/>
+                <input type="text" value="" id="Keg20_amountInput" />
                 <br><br>
                 <label>Keg30_amount</label>
-                <input type="text" value="" id="Keg30_amountInput"/>
+                <input type="text" value="" id="Keg30_amountInput" />
                 <br><br>
                 <label>Bottles_qty</label>
-                <input type="text" value="" id="Bottles_qtyInput"/>
+                <input type="text" value="" id="Bottles_qtyInput" />
                 <br><br>
                 <label>Waste_Litter</label>
-                <input type="text" value="" id="WasteInput"/>
+                <input type="text" value="" id="WasteInput" />
                 <br />
                 <br />
                 <input id="addToBatchBottling" type="submit">
@@ -462,5 +505,26 @@
         </div>
     </div>
     <!-- Add Production -->
+    <!--Edit Row In  Table-->
+    <div class="container" id="editDiv">
+        <form id="editForm">
+            <div class="form-group">
+                <h2 id="batchID_header_edit"></h2><br />
+                <label>Keg20_amount</label>
+                <input type="text" value="" id="Keg20_amountInput_edit" />
+                <br>
+                <label>Keg30_amount</label>
+                <input type="text" value="" id="Keg30_amountInput_edit" />
+                <br>
+                <label>Bottles_qty</label>
+                <input type="text" value="" id="Bottles_qtyInput_edit" />
+                <br>
+                <label>Waste_Litter</label>
+                <input type="text" value="" id="WasteInput_edit" />
+            </div>
+            <button id="submit_edit">Submit</button>
+        </form>
+    </div>
+    <!--Edit Row In  Table-->
 </body>
 </html>
