@@ -108,7 +108,6 @@ create table BatchAfterProd_2020(
 	[batch_id] int NOT NULL,
 	[keg_20_amount] int,
 	[keg_30_amount] int,
-	[total_production] int,
 	[bottles_qty] int,
 	[waste_litter] real,
 	[waste_precent] real,

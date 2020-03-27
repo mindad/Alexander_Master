@@ -235,10 +235,15 @@ select * from Batch_2020
 
 ################################################
 *************INSERT  BatchAfterProd_2020 TABLE*******************
-INSERT INTO BatchAfterProd_2020 (batch_id,keg_20_amount,keg_30_amount,total_production,bottles_qty,waste_litter,waste_precent,purge_amount,prod_waste,harvest_amount,beer_req_litter,filling_hose,tank_leftover)
-VALUES ('1883','1300','','1727','1296','272','14','10','5','10','30','20','50');
-INSERT INTO BatchAfterProd_2020 (batch_id,keg_20_amount,keg_30_amount,total_production,bottles_qty,waste_litter,waste_precent,purge_amount,prod_waste,harvest_amount,beer_req_litter,filling_hose,tank_leftover)
-VALUES ('1884','1300','','1727','1291','272','11','13','4','10','30','50','50');
+INSERT INTO BatchAfterProd_2020 (batch_id,keg_20_amount,keg_30_amount,bottles_qty,waste_litter,waste_precent,purge_amount,prod_waste,harvest_amount,beer_req_litter,filling_hose,tank_leftover)
+VALUES ('1883','1300','','1296','272','14','10','5','10','30','20','50');
+INSERT INTO BatchAfterProd_2020 (batch_id,keg_20_amount,keg_30_amount,bottles_qty,waste_litter,waste_precent,purge_amount,prod_waste,harvest_amount,beer_req_litter,filling_hose,tank_leftover)
+VALUES ('1884','1300','','1291','272','11','13','4','10','30','50','50');
+INSERT INTO BatchAfterProd_2020 (batch_id,keg_20_amount,keg_30_amount,bottles_qty,waste_litter,waste_precent,purge_amount,prod_waste,harvest_amount,beer_req_litter,filling_hose,tank_leftover)
+VALUES ('3','1300','','1296','272','14','10','5','10','30','20','50');
+INSERT INTO BatchAfterProd_2020 (batch_id,keg_20_amount,keg_30_amount,bottles_qty,waste_litter,waste_precent,purge_amount,prod_waste,harvest_amount,beer_req_litter,filling_hose,tank_leftover)
+VALUES ('4','1300','','1291','272','11','13','4','10','30','50','50');
+
 
 
 select * from BatchAfterProd_2020

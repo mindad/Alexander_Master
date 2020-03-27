@@ -13,6 +13,7 @@ namespace Alexander.Models.DAL
     {
         public SqlDataAdapter da;
         public DataTable dt;
+        private DBNull outputParam;
 
         public DBservices()
         {
@@ -94,7 +95,9 @@ namespace Alexander.Models.DAL
                 }
             }
         }
-
+        /// 
+        /// INSERT all Batches
+        /// 
         public int insert(Batch batch)
         {
             SqlConnection con;
@@ -146,6 +149,61 @@ namespace Alexander.Models.DAL
         // ** Batches END
 
 
+        /// INSERT all BatcheBatchebotteling
+        /// 
+        public int insert(Batch_Botteling Batch_Botteling)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            int numEffected = 0;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            try
+            {
+                String cStr = BuildInsertCommand(Batch_Botteling);      // helper method to build the insert string
+                cmd = CreateCommand(cStr, con);             // create the command
+                numEffected += cmd.ExecuteNonQuery();       // Execute command
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            return numEffected;
+        }
+
+        private String BuildInsertCommand(Batch_Botteling Batch_Botteling)
+        {
+            String command;
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("Values({0}, {1}, {2}, {3}, '{4}', {5}, '{6}' ,{7}, '{8}')", Batch_Botteling.BatchID, 
+                Batch_Botteling.Keg20_amount, Batch_Botteling.Keg30_amount,
+                Batch_Botteling.Bottels_qty,Batch_Botteling.Waste_litter,
+                Batch_Botteling.Wort_volume, Batch_Botteling.Date.ToString("yyyy-MM-dd"),
+                Batch_Botteling.BeerType, Batch_Botteling.Tank);
+            String prefix = "INSERT INTO BatchAfterProd_2020 " + "([batch_id], [keg_20_amount], [keg_30_amount], [bottles_qty], [waste_litter], [wort_volume], [tank], [beer_type] ";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        // Batchebotteling END
 
 
         /// 
@@ -211,8 +269,75 @@ namespace Alexander.Models.DAL
                 }
             }
         }
+        /// 
+        /// GET all get_Batch_BottelingDB
+        /// 
+        public List<Batch_Botteling> get_Batch_BottelingDB()
+        {
+            List<Batch_Botteling> Batch_Botteling_List = new List<Batch_Botteling>();
+            SqlConnection con = null;
+            //select * from [dbo].[BatchAfterProd_2020] INNER JOIN [dbo].[Batch_2020] ON [BatchAfterProd_2020].batch_id=[Batch_2020].batch_id
+            try
+            {
+                con = connect("DBConnectionString");
+                // connect 2 table to 1 table with ID key
+                String query = "select  [Batch_2020].[batch_id],[Batch_2020].[date],[Batch_2020].[tank],[Batch_2020].[wort_volume],[Batch_2020].[beer_type],[dbo].[BatchAfterProd_2020].[keg_20_amount] , [dbo].[BatchAfterProd_2020].[keg_30_amount] , [dbo].[BatchAfterProd_2020].[bottles_qty] , [dbo].[BatchAfterProd_2020].[waste_litter] ,[dbo].[BatchAfterProd_2020].[purge_amount] , [dbo].[BatchAfterProd_2020].[prod_waste] ,[dbo].[BatchAfterProd_2020].[harvest_amount] ,[dbo].[BatchAfterProd_2020].[beer_req_litter] ,[dbo].[BatchAfterProd_2020].[filling_hose] ,[dbo].[BatchAfterProd_2020].[tank_leftover]   from [dbo].[BatchAfterProd_2020]  right JOIN  [dbo].[Batch_2020] ON [BatchAfterProd_2020].batch_id=[Batch_2020].batch_id";
 
-        
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+
+                    Batch_Botteling Batch_Botteling = new Batch_Botteling();
+
+                    //check if nul from SQL
+                    Batch_Botteling.BatchID = Convert.ToInt32(dr["batch_id"]);
+                    if(dr["keg_20_amount"] != DBNull.Value)
+                    {
+                        Batch_Botteling.Keg20_amount = Convert.ToInt32(dr["keg_20_amount"]);
+                    }
+                    if (dr["keg_30_amount"] != DBNull.Value)
+                    {
+                        Batch_Botteling.Keg30_amount = Convert.ToInt32(dr["keg_30_amount"]);
+                    }
+                    if (dr["bottles_qty"] != DBNull.Value)
+                    {
+                        Batch_Botteling.Bottels_qty = Convert.ToInt32(dr["bottles_qty"]);
+                    }
+                    if (dr["waste_litter"] != DBNull.Value)
+                    {
+                        Batch_Botteling.Waste_litter = Convert.ToInt32(dr["waste_litter"]);
+                    }
+
+                    //Batch_Botteling.Waste_percent = (float)dr["waste_precent"];
+                    Batch_Botteling.Date = Convert.ToDateTime(dr["date"]);
+                    Batch_Botteling.Tank = Convert.ToInt32(dr["tank"]);
+                    Batch_Botteling.Wort_volume = (float)dr["wort_volume"];
+                    Batch_Botteling.BeerType = (string)dr["beer_type"];
+                    
+                   
+                   
+                    Batch_Botteling_List.Add(Batch_Botteling);
+                }
+
+                return Batch_Botteling_List;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+
         /// 
         /// GET all Beers
         /// 

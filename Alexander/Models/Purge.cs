@@ -15,6 +15,11 @@ namespace Alexander.Models
         float num_of_buckets;
         string notes;
 
-
+        public DateTime Date { get => date; set => date = value; }
+        public string Name { get => name; set => name = value; }
+        public float Temperature { get => temperature; set => temperature = value; }
+        public float Weight { get => weight; set => weight = value; }
+        public float Num_of_buckets { get => num_of_buckets; set => num_of_buckets = value; }
+        public string Notes { get => notes; set => notes = value; }
     }
 }
