@@ -39,7 +39,19 @@ namespace Alexander.Models
         public int insert()
         {
             DBservices dbs = new DBservices();
-            int numEffected = dbs.insert(this);
+            int numEffected = dbs.insert(this); // insert to batch_2020
+
+            try
+            {
+                dbs = dbs.read("[BatchAfterProd_2020]");
+
+                dbs.dt.Rows.Add(BatchID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); // create new row in BatchAfterProd_2020 with the same id
+                numEffected = dbs.update();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             return numEffected;
         }
 
