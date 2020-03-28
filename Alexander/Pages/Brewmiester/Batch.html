@@ -31,16 +31,16 @@
         // 
         // create 4 DT for: harvest, fermentation, purge, sample details
         // ajaxCall to get details from the 4 other tables
-        // change tables in DB. most of the mdoesnt have keys!! need to have primary !! 
-        // maybe need to create another different ID to save all of these values
+        //
+        // put new values according to new tables into:
+        //select * from SampleDetails_2020
+        //select * from Purge_2020
+        //select * from Harvest_2020
+        //select * from Fermantation_2020
 
         $(document).ready(function () {
 
-            let batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
-
-            console.log('this is batch_id:', batch_id);
-
-            ajaxCall('GET', '../../api/Batch', JSON.stringify(batch_id), GetBatchSuccess, GetBatchError); // check if exist and bring values into tables
+            ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // check if exist and bring values into tables
 
             //populateBatch(batch_id);
 
@@ -56,7 +56,47 @@
         function GetBatchSuccess(data) {
             console.log('Batch At Production Data:', data);
 
+            //let batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
+
+
+            // for checks use id=3:
+            let batch_id = 3;
+
+            let batch;
+
+            for (let bt of data) {
+                if (batch_id == bt.BatchID) {
+                    batch = bt;
+                    break;
+                }
+            }
+
             // build simple table as for the excel
+            let st = `
+            <tr>
+                <th colspan="2">Tank #: ${batch.Tank}</th>
+                <th>Beer Type: ${batch.BeerType}</th>
+            </tr>
+            <tr>
+                <th colspan="2">Brew Date: ${(batch.Date).substr(0,10)}</th>
+                <th>Batch #: ${batch.BatchID}</th>
+            </tr>
+            <tr>
+                <th>Yest Cycle: </th>
+                <th>Pitch Time: </th>
+                <th colspan="2">Pitching Rate: </th>
+            </tr>
+            <tr>
+                <th>Cast Vol: </th>
+                <th>O.G: </th>
+                <th colspan="2">O - Temp - Tank: </th>
+            </tr>
+            <tr>
+                <th>co2 Vol: </th>
+                <th>F.G: </th>
+                <th colspan="2">Set - Temp: </th>
+            </tr>`
+            $('#batchTBL').html(st);
         }
         function GetBatchError(err) {
             console.log(err);
@@ -93,6 +133,19 @@
         #notes_input {
             height: 15%;
             width: 80%;
+        }
+        /*tbl CSS*/
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 5px;
+            text-align: left;
         }
     </style>
 
@@ -135,23 +188,14 @@
     <!-- NavBar Template -->
     <!-- table -->
     <div class="container">
-        <h1 class="text-center">Batch</h1>
-        <table id="tbl" class="display" border="1" style="width:100%">
-            <thead style="background-color:cornflowerblue">
-                <tr>
-                    <th></th> <!--edit/delete buttons-->
-                    <th>Type</th>
-                    <th>Time</th>
-                    <th>Description</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-
+        <h1 class="text-center">Batch</h1><br />
+        <table class="display" border="1" style="width:100%" id="batchTBL">
+            
         </table>
     </div>
     <!-- table -->
+
+
    
 </body>
 

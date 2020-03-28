@@ -143,35 +143,38 @@ create table WasteAlert_2020(
 	Primary key ([Alert_id])
 )
 create table Fermantation_2020(
-	[BeerType] int NOT NULL,
+	[index] smallint IDENTITY (1, 1) NOT NULL ,
+	[batch_id] int NOT NULL,
 	[date] datetime,
 	[pressure_change] real,
 	[pressure_tank] real,
 	[tank_temperature] real,
-	Primary key ([BeerType])
+	Primary key ([index])
 )
 create table Harvest_2020(
-	[BeerType] int NOT NULL,
+	[index] smallint IDENTITY (1, 1) NOT NULL ,
+	[batch_id] int NOT NULL,
 	[date] datetime,
 	[name] nvarchar(255),
 	[temperature] real,
-	[weight] real,
-	[Num_Of_Buckets] smallint,
-	[notes] nvarchar(255),
-	Primary key ([BeerType])
+	[timeForTapTwo] datetime,
+	[total_time] datetime,
+	Primary key ([index])
 )
 create table Purge_2020(
-	[BeerType] int NOT NULL,
+	[index] smallint IDENTITY (1, 1) NOT NULL ,
+	[batch_id] int NOT NULL,
 	[date] datetime,
 	[name] nvarchar(255),
 	[temperature] real,
 	[weight] real,
 	[Num_Of_Buckets] real,
 	[notes] nvarchar(255),
-	Primary key ([BeerType])
+	Primary key ([index])
 )
 create table SampleDetails_2020(
-	[BeerType] int NOT NULL,
+	[index] smallint IDENTITY (1, 1) NOT NULL ,
+	[batch_id] int NOT NULL,
 	[date] datetime,
 	[Tank_temp] real,
 	[Sample_Temp] real,
@@ -179,7 +182,7 @@ create table SampleDetails_2020(
 	[Gravity] real,
 	[ph] real,
 	[notes] nvarchar(255),
-	Primary key ([BeerType])
+	Primary key ([index])
 )
 
 
