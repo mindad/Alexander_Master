@@ -28,7 +28,11 @@
     <script>
 
         //TODO
-        // need to regex bathc_id
+        // 
+        // create 4 DT for: harvest, fermentation, purge, sample details
+        // ajaxCall to get details from the 4 other tables
+        // change tables in DB. most of the mdoesnt have keys!! need to have primary !! 
+        // maybe need to create another different ID to save all of these values
 
         $(document).ready(function () {
 
@@ -36,10 +40,11 @@
 
             console.log('this is batch_id:', batch_id);
 
-            ajaxCall('GET', '../../api/Batch', GetBatchSuccess, GetBatchError); // check if exist and bring values into tables
+            ajaxCall('GET', '../../api/Batch', JSON.stringify(batch_id), GetBatchSuccess, GetBatchError); // check if exist and bring values into tables
 
-            populateTBLs(batch_id);
+            //populateBatch(batch_id);
 
+            
 
         });
 
@@ -50,6 +55,8 @@
         // Batch API
         function GetBatchSuccess(data) {
             console.log('Batch At Production Data:', data);
+
+            // build simple table as for the excel
         }
         function GetBatchError(err) {
             console.log(err);
