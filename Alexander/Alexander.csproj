@@ -196,6 +196,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Pages\Brewmiester\Alerts.html" />
+    <Content Include="Pages\Brewmiester\Batch.html" />
     <Content Include="Pages\Brewmiester\Brewmiester-dashboard.html" />
     <Content Include="Pages\Brewmiester\Brewmiester-prod.html" />
     <Content Include="Pages\Brewmiester\Inventory.html" />

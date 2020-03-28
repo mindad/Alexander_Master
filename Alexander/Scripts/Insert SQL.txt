@@ -252,10 +252,10 @@ select * from BatchAfterProd_2020
 *************INSERT  BatchAtProd_2020TABLE*******************
 
 INSERT INTO BatchAtProd_2020(batch_id,cast_volume,yeast_cycle,co2_vol,pitch_time,OG,FG,Pitching_Rate,Temp_Tank,Set_Temp)
-VALUES ('1884','1300','','1727','1291','272','11','13','4','10');
+VALUES ('3','1300','','1727','2020-01-02','272','11','13','4','10');
 
 INSERT INTO BatchAtProd_2020 (batch_id,cast_volume,yeast_cycle,co2_vol,pitch_time,OG,FG,Pitching_Rate,Temp_Tank,Set_Temp)
-VALUES ('1883','120','14','127','1291','272','11','13','4','10');
+VALUES ('4','120','14','127','2020-01-01','272','11','13','4','10');
 
 select * from BatchAtProd_2020
 

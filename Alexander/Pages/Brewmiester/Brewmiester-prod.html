@@ -148,7 +148,7 @@
                             data: "BatchID",
                             render: function (data, type, row, meta) {
                                 // ADD HREF !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                return `<a href="#" id="${data}">${data}</a>`
+                                return `<a href="#" id="${data}" onclick="return GoToBatch(${data})">${data}</a>`
                             }
                         }
                     ]
@@ -350,6 +350,17 @@
             $("#editDiv").hide();
 
             ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
+        }
+
+        function GoToBatch(batch_id) {
+
+            //let batch_id = $(this).attr('href');
+
+            console.log('this is batch id:', batch_id);
+
+            //let st = `?batch_id=${batch_id}`;
+
+            window.open(`Batch.html?batch_id=${batch_id}`, '_self');
         }
     </script>
 

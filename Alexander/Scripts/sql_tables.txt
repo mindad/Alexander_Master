@@ -131,6 +131,7 @@ create table BatchAtProd_2020(
 	[Pitching_Rate] real,
 	[Temp_Tank] real,
 	[Set_Temp] real,
+	FOREIGN KEY (batch_id) REFERENCES Batch_2020(batch_id),
 	Primary key ([batch_id])
 )
 create table WasteAlert_2020(
