@@ -522,7 +522,113 @@ namespace Alexander.Models.DAL
             }
         }
 
-        
+        // get_Batch_AtProduction
+        public List<Batch_Production> get_Batch_AtProduction()
+        {
+            List<Batch_Production> batch_prod_list = new List<Batch_Production>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [Batch_2020] join [BatchAtProd_2020] ON [Batch_2020].batch_id=[BatchAtProd_2020].batch_id;";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+
+                    Batch_Production batch = new Batch_Production();
+
+                    batch.BatchID = Convert.ToInt32(dr["batch_id"]);
+                    batch.Date = Convert.ToDateTime(dr["date"]);
+                    batch.Tank = Convert.ToInt32(dr["tank"]);
+                    batch.Wort_volume = Convert.ToInt32(dr["wort_volume"]);
+                    batch.BeerType = (string)dr["beer_type"];
+                    batch.Cast_volume = (float)dr["cast_volume"];
+                    batch.Yeast_cycle = Convert.ToInt32(dr["yeast_cycle"]);
+                    batch.Co2_vol = (float)dr["Co2_vol"];
+                    batch.PitchTime = ((TimeSpan)dr["pitch_time"]).ToString(); // this will fail in case of NULL
+                    batch.Og = (float)dr["OG"];
+                    batch.Fg = (float)dr["FG"];
+                    batch.Pitching_rate = (float)dr["pitching_rate"];
+                    batch.Tank_temp = (float)dr["Temp_Tank"];
+                    batch.Set_temp = (float)dr["Set_Temp"];
+
+
+                    batch_prod_list.Add(batch);
+                }
+
+                return batch_prod_list;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        ////get_SamplesDB
+        //public List<Batch_Production> get_SamplesDB()
+        //{
+        //    List<sampleDetails> smpl_list = new List<sampleDetails>();
+        //    SqlConnection con = null;
+
+        //    try
+        //    {
+        //        con = connect("DBConnectionString");
+
+        //        String query = "SELECT * FROM SampleDetails_2020";
+        //        SqlCommand cmd = new SqlCommand(query, con);
+
+        //        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+        //        while (dr.Read())
+        //        {
+
+        //            sampleDetails smpl = new sampleDetails();
+
+        //            //batch.BatchID = Convert.ToInt32(dr["batch_id"]);
+        //            //batch.Date = Convert.ToDateTime(dr["date"]);
+        //            //batch.Tank = Convert.ToInt32(dr["tank"]);
+        //            //batch.Wort_volume = Convert.ToInt32(dr["wort_volume"]);
+        //            //batch.BeerType = (string)dr["beer_type"];
+        //            //batch.Cast_volume = (float)dr["cast_volume"];
+        //            //batch.Yeast_cycle = Convert.ToInt32(dr["yeast_cycle"]);
+        //            //batch.Co2_vol = (float)dr["Co2_vol"];
+        //            //batch.PitchTime = ((TimeSpan)dr["pitch_time"]).ToString(); // this will fail in case of NULL
+        //            //batch.Og = (float)dr["OG"];
+        //            //batch.Fg = (float)dr["FG"];
+        //            //batch.Pitching_rate = (float)dr["pitching_rate"];
+        //            //batch.Tank_temp = (float)dr["Temp_Tank"];
+        //            //batch.Set_temp = (float)dr["Set_Temp"];
+
+
+        //            smpl_list.Add(batch);
+        //        }
+
+        //        return smpl_list;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw (ex);
+        //    }
+        //    finally
+        //    {
+        //        if (con != null)
+        //        {
+        //            con.Close();
+        //        }
+        //    }
+        //}
 
 
         ///

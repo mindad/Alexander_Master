@@ -38,11 +38,17 @@
         //select * from Harvest_2020
         //select * from Fermantation_2020
 
+        // ******* read here: send batch_id to GET request and achive all samples
+
         $(document).ready(function () {
 
-            ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // check if exist and bring values into tables
+            ajaxCall('GET', '../../api/Batch_Production', '', GetBatchSuccess, GetBatchError); // check if exist and bring values into tables
 
-            //populateBatch(batch_id);
+            ajaxCall('GET', '../../api/SampleDetails', '', GetSampleSuccess, GetSampleError)
+            //ajaxCall('GET', '../../api/purg', '', GetBatchSuccess, GetBatchError)
+            //ajaxCall('GET', '../../api/purg', '', GetBatchSuccess, GetBatchError)
+            
+
 
             
 
@@ -74,27 +80,35 @@
             // build simple table as for the excel
             let st = `
             <tr>
-                <th colspan="2">Tank #: ${batch.Tank}</th>
-                <th>Beer Type: ${batch.BeerType}</th>
+                <th colspan="2">Tank #:
+                <input type="text" class="" value="${batch.Tank}" disabled/>
+                </th>
+                <th>Beer Type: 
+                <input type="text" class="" value="${batch.BeerType}" disabled/>
+                </th>
             </tr>
             <tr>
-                <th colspan="2">Brew Date: ${(batch.Date).substr(0,10)}</th>
-                <th>Batch #: ${batch.BatchID}</th>
+                <th colspan="2">Brew Date: 
+                <input type="text" class="" value="${(batch.Date).substr(0, 10)}" disabled/>
+                </th>
+                <th>Batch #: 
+                <input type="text" class="" value="${batch.BatchID}" disabled/> 
+                </th>
             </tr>
             <tr>
-                <th>Yest Cycle: </th>
-                <th>Pitch Time: </th>
-                <th colspan="2">Pitching Rate: </th>
+                <th>Yeast Cycle: <input type="text" class="" value="${batch.Yeast_cycle}"/> </th>
+                <th>Pitch Time: <input type="text" class="" value="${batch.PitchTime}"/></th>
+                <th colspan="2">Pitching Rate: <input type="text" class="" value="${batch.Pitching_rate}"/></th>
             </tr>
             <tr>
-                <th>Cast Vol: </th>
-                <th>O.G: </th>
-                <th colspan="2">O - Temp - Tank: </th>
+                <th>Cast Vol: <input type="text" class="" value="${batch.Cast_volume}"/></th>
+                <th>O.G: <input type="text" class="" value="${batch.Og}"/></th>
+                <th colspan="2">O - Temp - Tank: <input type="text" class="" value="${batch.Tank_temp}"/></th>
             </tr>
             <tr>
-                <th>co2 Vol: </th>
-                <th>F.G: </th>
-                <th colspan="2">Set - Temp: </th>
+                <th>co2 Vol: <input type="text" class="" value="${batch.Co2_vol}"/></th>
+                <th>F.G: <input type="text" class="" value="${batch.Fg}"/></th>
+                <th colspan="2">Set - Temp: <input type="text" class="" value="${batch.Set_temp}"/></th>
             </tr>`
             $('#batchTBL').html(st);
         }
@@ -102,6 +116,72 @@
             console.log(err);
         }
         // ** Batch API
+
+        // Sample API
+        function GetSampleSuccess(data) {
+            console.log(data);
+
+            
+            //try {
+            //    $('#tbl-sample').DataTable({
+
+            //        data: Batchdata,
+            //        pageLength: 5,
+            //        columns: [             
+            //            {
+            //                data:"BatchID",
+            //                render: function (data, type, row, meta) {
+
+            //                    let data_for_tbl = "data-btnId='" + data + "'";
+
+            //                    editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+            //                    deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+            //                    return editBtn + deleteBtn;
+            //                }
+            //            },
+            //            { data: "Date" },  
+            //            {
+            //                data: "BeerType",
+            //                render: function (data, type, row, meta) {
+
+            //                    for (var i = 0; i < recipeArr.length; i++) { // sets the relavent recipe for each beer type
+            //                        if (recipeArr[i].BeerType == data) {
+
+            //                            let st = ''; // will hold 'prod:amount' key value pairs
+
+            //                            for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) { 
+            //                                if (j == recipeArr[i].Products_in_recipe.length -1) {
+            //                                    st += recipeArr[i].Products_in_recipe[j].ProductType + ':' + recipeArr[i].Products_in_recipe[j].Amount;
+            //                                    continue;
+            //                                }
+            //                                st += recipeArr[i].Products_in_recipe[j].ProductType + ':' + recipeArr[i].Products_in_recipe[j].Amount +', ';
+            //                            }
+            //                            return st;
+            //                        }
+            //                    }
+            //                    return "no recipe for this beer";
+            //                }
+            //            }, 
+            //            { data: "Date" },
+            //            {
+            //                data: "BatchID",
+            //                render: function (data, type, row, meta) {
+            //                    // ADD HREF !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //                    return `<a href="#" id="${data}" onclick="return GoToBatch(${data})">${data}</a>`
+            //                }
+            //            }
+            //        ]
+            //    });
+            //}
+
+            //catch (err) {
+            //    alert(err);
+            //}
+        }
+        function GetSampleError(err) {
+            console.log(err);
+        }
+        // ** Sample API
       
 
     </script>
@@ -147,6 +227,9 @@
             padding: 5px;
             text-align: left;
         }
+        input[type=text]{
+            background-color: #f7f6f6;
+        }
     </style>
 
 </head>
@@ -186,17 +269,40 @@
     </div>
     <br>
     <!-- NavBar Template -->
-    <!-- table -->
+    <!-- table - General-->
     <div class="container">
         <h1 class="text-center">Batch</h1><br />
         <table class="display" border="1" style="width:100%" id="batchTBL">
-            
         </table>
     </div>
     <!-- table -->
+    <!-- table - sample Details-->
+    <div class="container">
+        <!--<h1 class="text-center">Production</h1>-->
+        <table id="tbl-sample" class="display" border="1" style="width:100%">
+            <thead style="background-color:cornflowerblue">
+                <tr>
+                    <th></th> <!--edit/delete buttons-->
+                    <th>Date</th>
+                    <th>Tank Temperature</th>
+                    <th>Sample Temperature</th>
+                    <th>Rate</th>
+                    <th>Gravity</th>
+                    <th>PH</th>
+                    <th>Notes</th>  
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+
+        </table>
+
+        <button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>
+        <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
+
+    </div>
 
 
-   
 </body>
 
 </html>

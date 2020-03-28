@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Alexander.Models.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -25,5 +26,32 @@ namespace Alexander.Models
         public float Gravity { get => gravity; set => gravity = value; }
         public float Ph { get => ph; set => ph = value; }
         public string Notes { get => notes; set => notes = value; }
+
+        public List<sampleDetails> get_Samples() //int id
+        {
+            List<sampleDetails> smpl_list = new List<sampleDetails>();
+            
+            DBservices dbs = new DBservices();
+            try
+            {
+                dbs = dbs.read("[SampleDetails_2020]");
+                var tmp_list = dbs.dt.Select("batch_id=" ).ToList(); //+ id
+
+                //foreach (var item in tmp_list)
+                //{
+                //    //sampleDetails x = new sampleDetails(Convert.ToInt32(item[""]);
+                //}
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
+
+            //List<Batch> Batch_arr = dbs.get_SamplesDB();
+
+            return smpl_list;
+        }
     }
 }

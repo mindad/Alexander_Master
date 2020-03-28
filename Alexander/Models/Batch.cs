@@ -65,7 +65,7 @@ namespace Alexander.Models
             {
                 dbs = dbs.read("[BatchAtProd_2020]");
 
-                dbs.dt.Rows.Add(BatchID, 0, 0, 0, null, 0, 0, 0, 0, 0); // create new row in BatchAfterProd_2020 with the same id
+                dbs.dt.Rows.Add(BatchID, 0, 0, 0, 0, 0, 0, 0, 0, 0); // create new row in BatchAfterProd_2020 with the same id
                 numEffected = dbs.update();
             }
             catch (Exception ex)
