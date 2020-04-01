@@ -28,29 +28,33 @@
     <script>
 
         //TODO
-        // 
+        //
         // create 4 DT for: harvest, fermentation, purge, sample details
         // ajaxCall to get details from the 4 other tables
         //
         // put new values according to new tables into:
-        //select * from SampleDetails_2020
-        //select * from Purge_2020
-        //select * from Harvest_2020
-        //select * from Fermantation_2020
+        // select * from Purge_2020
+        // select * from Harvest_2020
+        // select * from Fermantation_2020
 
-        // ******* read here: send batch_id to GET request and achive all samples
+        batch_id = 0; // current batch
 
         $(document).ready(function () {
 
+            batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
+
+            batch_id = 3;
+
             ajaxCall('GET', '../../api/Batch_Production', '', GetBatchSuccess, GetBatchError); // check if exist and bring values into tables
 
-            ajaxCall('GET', '../../api/SampleDetails', '', GetSampleSuccess, GetSampleError)
-            //ajaxCall('GET', '../../api/purg', '', GetBatchSuccess, GetBatchError)
-            //ajaxCall('GET', '../../api/purg', '', GetBatchSuccess, GetBatchError)
-            
+            ajaxCall('GET', '../../api/SampleDetails', '', GetSampleSuccess, GetSampleError);
+
+            //ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); //tbl-purge
+            //ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); //tbl-harvest
+            //ajaxCall('GET', '../../api/Fermantation', '', GetFermantationSuccess, GetFermantationError); //tbl-Fermant
 
 
-            
+
 
         });
 
@@ -62,13 +66,9 @@
         function GetBatchSuccess(data) {
             console.log('Batch At Production Data:', data);
 
-            //let batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
-
-
             // for checks use id=3:
-            let batch_id = 3;
 
-            let batch;
+            let batch; // find current batch
 
             for (let bt of data) {
                 if (batch_id == bt.BatchID) {
@@ -79,37 +79,37 @@
 
             // build simple table as for the excel
             let st = `
-            <tr>
-                <th colspan="2">Tank #:
-                <input type="text" class="" value="${batch.Tank}" disabled/>
-                </th>
-                <th>Beer Type: 
-                <input type="text" class="" value="${batch.BeerType}" disabled/>
-                </th>
-            </tr>
-            <tr>
-                <th colspan="2">Brew Date: 
-                <input type="text" class="" value="${(batch.Date).substr(0, 10)}" disabled/>
-                </th>
-                <th>Batch #: 
-                <input type="text" class="" value="${batch.BatchID}" disabled/> 
-                </th>
-            </tr>
-            <tr>
-                <th>Yeast Cycle: <input type="text" class="" value="${batch.Yeast_cycle}"/> </th>
-                <th>Pitch Time: <input type="text" class="" value="${batch.PitchTime}"/></th>
-                <th colspan="2">Pitching Rate: <input type="text" class="" value="${batch.Pitching_rate}"/></th>
-            </tr>
-            <tr>
-                <th>Cast Vol: <input type="text" class="" value="${batch.Cast_volume}"/></th>
-                <th>O.G: <input type="text" class="" value="${batch.Og}"/></th>
-                <th colspan="2">O - Temp - Tank: <input type="text" class="" value="${batch.Tank_temp}"/></th>
-            </tr>
-            <tr>
-                <th>co2 Vol: <input type="text" class="" value="${batch.Co2_vol}"/></th>
-                <th>F.G: <input type="text" class="" value="${batch.Fg}"/></th>
-                <th colspan="2">Set - Temp: <input type="text" class="" value="${batch.Set_temp}"/></th>
-            </tr>`
+                <tr>
+                    <th colspan="2">Tank #:
+                    <input type="text" class="" value="${batch.Tank}" disabled/>
+                    </th>
+                    <th>Beer Type:
+                    <input type="text" class="" value="${batch.BeerType}" disabled/>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="2">Brew Date:
+                    <input type="text" class="" value="${(batch.Date).substr(0, 10)}" disabled/>
+                    </th>
+                    <th>Batch #:
+                    <input type="text" class="" value="${batch.BatchID}" disabled/>
+                    </th>
+                </tr>
+                <tr>
+                    <th>Yeast Cycle: <input type="text" class="" value="${batch.Yeast_cycle}"/> </th>
+                    <th>Pitch Time: <input type="text" class="" value="${batch.PitchTime}"/></th>
+                    <th colspan="2">Pitching Rate: <input type="text" class="" value="${batch.Pitching_rate}"/></th>
+                </tr>
+                <tr>
+                    <th>Cast Vol: <input type="text" class="" value="${batch.Cast_volume}"/></th>
+                    <th>O.G: <input type="text" class="" value="${batch.Og}"/></th>
+                    <th colspan="2">O - Temp - Tank: <input type="text" class="" value="${batch.Tank_temp}"/></th>
+                </tr>
+                <tr>
+                    <th>co2 Vol: <input type="text" class="" value="${batch.Co2_vol}"/></th>
+                    <th>F.G: <input type="text" class="" value="${batch.Fg}"/></th>
+                    <th colspan="2">Set - Temp: <input type="text" class="" value="${batch.Set_temp}"/></th>
+                </tr>`
             $('#batchTBL').html(st);
         }
         function GetBatchError(err) {
@@ -118,58 +118,107 @@
         // ** Batch API
 
         // Sample API
-        function GetSampleSuccess(data) {
-            console.log(data);
+        function GetSampleSuccess(samples) {
+            console.log(samples);
 
-            
+            batch_id = 3;
+            let smp = [];
+
+            for (let sample of samples) {
+                if (sample.Batch_id == batch_id) {
+                    smp.push(sample);
+                }
+            }
+
+            console.log('this is smp:', smp);
+
+
+            try {
+                $('#tbl-sample').DataTable({
+
+                    data: smp,
+                    pageLength: 5,
+                    columns: [
+                        {
+                            data: "BatchID",
+                            render: function (data, type, row, meta) {
+
+                                let data_for_tbl = "data-sample-btnId='" + data + "'";
+
+                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+                                return editBtn + deleteBtn;
+                            }
+                        },
+                        {
+                            data: "Date",
+                            render: function (data) {
+                                return data.substr(0, 10);
+                            }
+                        },
+                        { data: "Tank_temp" },
+                        { data: "Sample_temp" },
+                        { data: "Rate" },
+                        { data: "Gravity" },
+                        { data: "Ph" },
+                        { data: "Notes" },
+                    ]
+                });
+            }
+
+            catch (err) {
+                alert(err);
+            }
+        }
+        function GetSampleError(err) {
+            console.log(err);
+        }
+        // ** Sample API
+
+        // Purge API
+        function GetPurgeSuccess(purges) {
+            console.log('purges:', purges);
+
+            batch_id = 3;
+            let prg = [];
+
+            for (let purge of purges) {
+                if (purge.Batch_id == batch_id) {
+                    prg.push(purge);
+                }
+            }
+
+            console.log('this is prg:', prg);
+
+
             //try {
             //    $('#tbl-sample').DataTable({
 
-            //        data: Batchdata,
+            //        data: prg,
             //        pageLength: 5,
-            //        columns: [             
+            //        columns: [
             //            {
             //                data:"BatchID",
             //                render: function (data, type, row, meta) {
 
-            //                    let data_for_tbl = "data-btnId='" + data + "'";
+            //                    let data_for_tbl = "data-purge-btnId='" + data + "'";
 
             //                    editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
             //                    deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
             //                    return editBtn + deleteBtn;
             //                }
             //            },
-            //            { data: "Date" },  
             //            {
-            //                data: "BeerType",
-            //                render: function (data, type, row, meta) {
-
-            //                    for (var i = 0; i < recipeArr.length; i++) { // sets the relavent recipe for each beer type
-            //                        if (recipeArr[i].BeerType == data) {
-
-            //                            let st = ''; // will hold 'prod:amount' key value pairs
-
-            //                            for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) { 
-            //                                if (j == recipeArr[i].Products_in_recipe.length -1) {
-            //                                    st += recipeArr[i].Products_in_recipe[j].ProductType + ':' + recipeArr[i].Products_in_recipe[j].Amount;
-            //                                    continue;
-            //                                }
-            //                                st += recipeArr[i].Products_in_recipe[j].ProductType + ':' + recipeArr[i].Products_in_recipe[j].Amount +', ';
-            //                            }
-            //                            return st;
-            //                        }
-            //                    }
-            //                    return "no recipe for this beer";
+            //                data: "Date",
+            //                render: function (data) {
+            //                    return data.substr(0, 10);
             //                }
-            //            }, 
-            //            { data: "Date" },
-            //            {
-            //                data: "BatchID",
-            //                render: function (data, type, row, meta) {
-            //                    // ADD HREF !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            //                    return `<a href="#" id="${data}" onclick="return GoToBatch(${data})">${data}</a>`
-            //                }
-            //            }
+            //            },
+            //            { data: "Name"},
+            //            { data: "Temparture"},
+            //            { data: "Weight" },
+            //            { data: "num_of" },
+            //            { data: "Notes" },
             //        ]
             //    });
             //}
@@ -178,11 +227,69 @@
             //    alert(err);
             //}
         }
-        function GetSampleError(err) {
+        function GetPurgeError(err) {
             console.log(err);
         }
-        // ** Sample API
-      
+        // ** Purge API
+
+
+        // Harvest API
+        function GetHarvestSuccess(harvests) {
+            console.log('Harvests:', harvests);
+
+            let harvest = [];
+
+            for (let hr of harvests) {
+                if (hr.Batch_id == batch_id) {
+                    harvest.push(hr);
+                }
+            }
+
+            console.log('this is harvest:', harvest);
+
+
+            //try {
+            //    $('#tbl-sample').DataTable({
+
+            //        data: harvest,
+            //        pageLength: 5,
+            //        columns: [
+            //            {
+            //                data:"BatchID",
+            //                render: function (data, type, row, meta) {
+
+            //                    let data_for_tbl = "data-harvest-btnId='" + data + "'";
+
+            //                    editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+            //                    deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+            //                    return editBtn + deleteBtn;
+            //                }
+            //            },
+            //            {
+            //                data: "Date",
+            //                render: function (data) {
+            //                    return data.substr(0, 10);
+            //                }
+            //            },
+            //            { data: "Name"},
+            //            { data: "Temparture"},
+            //            { data: "Weight" },
+            //            { data: "num_of" },
+            //            { data: "Notes" },
+            //        ]
+            //    });
+            //}
+
+            //catch (err) {
+            //    alert(err);
+            //}
+        }
+        function GetHarvestError(err) {
+            console.log(err);
+        }
+
+        // ** Harvest API
+
 
     </script>
 
@@ -225,9 +332,9 @@
         th,
         td {
             padding: 5px;
-            text-align: left;
         }
-        input[type=text]{
+
+        input[type=text] {
             background-color: #f7f6f6;
         }
     </style>
@@ -289,7 +396,7 @@
                     <th>Rate</th>
                     <th>Gravity</th>
                     <th>PH</th>
-                    <th>Notes</th>  
+                    <th>Notes</th>
                 </tr>
             </thead>
             <tbody>
@@ -297,11 +404,79 @@
 
         </table>
 
-        <button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>
+        <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
         <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
-
     </div>
+    <!-- table - sample Details-->
+    <!--Purge Table-->
+    <div class="container">
+        <!--<h1 class="text-center">Production</h1>-->
+        <table id="tbl-purge" class="display" border="1" style="width:100%">
+            <thead style="background-color:cornflowerblue">
+                <tr>
+                    <th></th> <!--edit/delete buttons-->
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Temperature</th>
+                    <th>Weight</th>
+                    <th># Of Buckets</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
 
+        </table>
+
+        <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
+        <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
+    </div>
+    <!--Purge Table-->
+    <!--Harvest Table-->
+    <div class="container">
+        <!--<h1 class="text-center">Production</h1>-->
+        <table id="tbl-harvest" class="display" border="1" style="width:100%">
+            <thead style="background-color:cornflowerblue">
+                <tr>
+                    <th></th> <!--edit/delete buttons-->
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Temperature</th>
+                    <th>Time For Tap 2</th>
+                    <th>Total Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+
+        </table>
+
+        <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
+        <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
+    </div>
+    <!--Harvest Table-->
+    <!--Fermant Table-->
+    <div class="container">
+        <!--<h1 class="text-center">Production</h1>-->
+        <table id="tbl-Fermant" class="display" border="1" style="width:100%">
+            <thead style="background-color:cornflowerblue">
+                <tr>
+                    <th></th> <!--edit/delete buttons-->
+                    <th>Date</th>
+                    <th>Pressure Change</th>
+                    <th>Tank Pressure</th>
+                    <th>Tank Temperature</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+
+        </table>
+
+        <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
+        <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
+    </div>
+    <!--Fermant Table-->
 
 </body>
 
