@@ -20,7 +20,7 @@
     <script src="../../Scripts/ajaxCalls.js"></script>
 
     <script>
-        Batch_BottelingArr = [];
+       ManagerInventoryArr = [];
 
         $(document).ready(function () {
 
@@ -28,33 +28,34 @@
             $('#submit_edit').on('click', submitEdit);
             $('#editDiv').on('submit', f1);
 
-            ajaxCall("GET", "../../api/Batch_Botteling", "", GetBatch_BottelingSucess, GetBatch_BottelingError);
+            //GET manager_products
+            ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError);
 
-            
+
             buttonEvents();
-           
+
             //$('#add_new_batchbotteling').on('click', toggle_add_visibilty);
 
         });
         //Batch_Botteling  API
-     
-        function GetBatch_BottelingSucess(Batch_Botteling_data) {
 
-            console.log('this is Batch_Botteling_data:', Batch_Botteling_data);
+        function GetmanagerproductsSucess(data) {
 
-            Batch_BottelingArr = Batch_Botteling_data;
-     
+            console.log('this is Batch_Botteling_data:', data);
+
+            ManagerInventoryArr = data;
+
             try {
                 $('#tbl').DataTable({
 
-                    data: Batch_Botteling_data,
+                    data: data,
 
                     pageLength: 7,
                     columns: [
                         {
-                            data:"BatchID",
+                            data: "ProdName",
                             render: function (data, type, row, meta) {
-                               
+
                                 let data_for_tbl = "data-btnId='" + data + "'";
 
                                 editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
@@ -62,83 +63,15 @@
                                 return editBtn /*+ deleteBtn*/;
                             }
                         },
+                        { data: "ProdName" },
+                        { data: "ProdID" },
+                      
+            
                         { data: "BeerType" },
-                        {
-                            data: "BatchID",
-                            render: function (data, type, row, meta) {
-                                // ADD HREF !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                return '<a href="#">' + data + '</a>'
-                            }
-                        },
-                        {
-                            data: "Date",
-                            render: function (data) {
-                                return data.substr(0, 10);
-                            }
-                        },
-                        { data: "Tank" },
-                        {
-                            data: "Tank",
-                            render: function (data, type, row, meta) {//func to check how much is the batch vol
-                                if (data>60)
-                                     return 6000;
-                                else if (data > 40)   
-                                    return 4000;
-                                else 
-                                    return 2000;
-                            }
-                        },
-                        { data: "Wort_volume" },
-                        { data: "Keg20_amount" },
-                        {
-                            data: "Keg20_amount",
-                            render: function (data, type, row, meta) {
-                                // ADD function *20 litter
-                                return  data*20 
-                            }
-                        },
-                        { data: "Keg30_amount" },
-                        {
-                            data: "Keg30_amount",
-                            render: function (data, type, row, meta) {
-                                // ADD function *30 litter
-                                return data * 30
-                            }
-                        },
-                        {
-                            data: {},
-                            render: function (data,type, row, meta) {
-                                return data.Keg20_amount + data.Keg30_amount + data.Bottels_qty
-                            }
-                        },
-                        { data: "Bottels_qty" },
-                        {
-                            data: "Bottels_qty",
-                            render: function (data, type, row, meta) {
-                                // ADD function *0.33 litter bottle
-                                return data * 0.33
-                            }
-                        },
-                        {
-                            data: "Bottels_qty",
-                            render: function (data, type, row, meta) {
-                                // ADD function *24 bottles in box
-                                return data / 24
-                            }
-                        },
-                        { data: "Waste_litter" },
-                        {
-                            data: {},
-                            render: function (data, type, row, meta) {
-                                console.log(data.Waste_litter)
-                                if (data.tank>60)
-                                    return data.Waste_litter / 6000
-                                else if (data.tank > 40)
-                                    return data.Waste_litter / 4000
-                                else
-                                    return data.Waste_litter / 2000
-                            }
-                        },
+                  
+                        { data: "Amount" },
+                        { data: "Min_in_stock" },
+                      
                     ]
                 });
             }
@@ -149,11 +82,11 @@
 
         }
 
-        function GetBatch_BottelingError(err) {
+        function GetmanagerproductsError(err) {
             console.log(err);
         }
-   
-      
+
+
 
         // post batchbotteling
         //function PostNewBatchBotteling() {
@@ -174,7 +107,7 @@
         //        date: $('#addDate').val(),
         //        beerType: $('#beerSelect').val(),
         //        tank: 0,
-              
+
         //    }
 
         //    console.log('this is batch to post:', batchbotteling);
@@ -251,7 +184,7 @@
             return false;
         }
 
-         function Put_Error(err) {
+        function Put_Error(err) {
             console.log(err);
         }
 
@@ -259,7 +192,7 @@
 
             let batch;
 
-            for (let item of Batch_BottelingArr) { // find batch_id clicked on in 'Batch_BottelingArr'
+            for (let item of ManagerInventoryArr) { // find batch_id clicked on in 'Batch_BottelingArr'
                 if (item.BatchID == batch_id) {
                     batch = item;
                     break;
@@ -294,7 +227,7 @@
 
             ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(batch), Put_success, Put_Error);
 
-           // refresh_table();
+            // refresh_table();
 
         }
         // ** Edit Batch
@@ -313,7 +246,6 @@
         body {
             background-color: #f7f6f6;
             padding-bottom: 1%;
-            
         }
 
         #headerRow {
@@ -394,22 +326,12 @@
             <thead style="background-color:cornflowerblue">
                 <tr>
                     <th></th> <!--edit/delete buttons-->
-                    <th>Beer Type</th>
-                    <th>Batch Id</th>
-                    <th>Date</th>
-                    <th>Tank</th>
-                    <th>Batch Volume</th>
-                    <th>Wort Volume</th>
-                    <th>Keg20 amount</th>
-                    <th>Keg20 qty</th>
-                    <th>Keg30 amount</th>
-                    <th>Keg30 qty</th>
-                    <th>Total Production</th>
-                    <th>Bottles qty</th>
-                    <th>Bottles Litter</th>
-                    <th>Boxes qty</th>
-                    <th>Waste Litter</th>
-                    <th>Waste Precent</th>
+                    <th>prodName</th>
+                    <th>prodID</th>
+                    <th>beerType</th>
+                    <th>amount</th>
+                    <th>min_In_Stock</th>
+                    
                 </tr>
             </thead>
             <tbody></tbody>

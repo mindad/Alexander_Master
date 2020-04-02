@@ -34,13 +34,20 @@ create table label_2020(
 	[prodID] int,
 	Primary key ([prodType],[prodID])
 )
-create table box_2020(
-	[prodType] nvarchar(50) NOT NULL,
+create table manager_products_2020(
+	[prodName] nvarchar(50) NOT NULL,
 	[prodID] int,
-	[boxSize] smallint,
 	[beerType] nvarchar(50) NOT NULL,
+	[amount] int, 
+	[min_In_Stock] int, 
 	FOREIGN KEY (BeerType) REFERENCES BeerInStock_2020(BeerType),
-	Primary key ([prodType],[prodID])
+	Primary key ([prodName],[prodID])
+)
+
+create table manager_products(
+	[prodName] nvarchar(50) NOT NULL,
+	[prodID] int,
+	Primary key ([prodName],[prodID])
 )
 
 

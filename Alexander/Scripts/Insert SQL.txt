@@ -313,3 +313,86 @@ VALUES ('2',02/2/2020,'20','12.1','10','5','10','');
 INSERT INTO SampleDetails_2020 (BeerType, date,Tank_temp,Sample_Temp,Rate,Gravity,ph,notes)
 VALUES ('1',02/2/2020,'20','12.1','10','5','10','');
 select * from SampleDetails_2020
+
+
+
+################################################
+*************INSERT  manager_products_2020 TABLE*******************
+ **********AMBREE*******
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box12','1','Ambree','200','1500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box24','1','Ambree','200','1500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelFront','1','Ambree','200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelBack','1','Ambree','200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelNeck','1','Ambree','200','5000');
+ **********BLACK*******
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box12','2','BLACK','200','500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box24','2','BLACK','2200','500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelFront','2','BLACK','200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelBack','2','BLACK','6200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelNeck','2','BLACK','1200','5000');
+ **********BLAZER*******
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box12','3','BLAZER','200','500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box24','3','BLAZER','200','500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelFront','3','BLAZER','200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelBack','3','BLAZER','200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelNeck','3','BLAZER','200','5000');
+**********BLONDE*******
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box12','4','BLONDE','1200','1500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box24','4','BLONDE','2200','1500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelFront','4','BLONDE','200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelBack','4','BLONDE','200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelNeck','4','BLONDE','200','5000');
+**********GREEN*******
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box12','5','GREEN','200','500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box24','5','GREEN','1200','500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelFront','5','GREEN','4200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelBack','5','GREEN','200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelNeck','5','GREEN','200','5000');
+**********SHAPIRO SHLAGER*******
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box12','6','SHAPIRO SHLAGER','200','500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box24','6','SHAPIRO SHLAGER','200','500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelFront','6','SHAPIRO SHLAGER','200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelBack','6','SHAPIRO SHLAGER','200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelNeck','6','SHAPIRO SHLAGER','200','5000');
+
+**********חיטה ישראלית*******
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box12','7','חיטה ישראלית','200','500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('Box24','7','חיטה ישראלית','200','500');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelFront','7','חיטה ישראלית','200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelBack','7','חיטה ישראלית','200','5000');
+INSERT INTO manager_products_2020 (prodName, prodID,beerType ,amount, min_In_Stock)
+VALUES ('LabelNeck','7','חיטה ישראלית','200','5000');

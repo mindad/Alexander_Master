@@ -7,91 +7,128 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Manager Dashboard</title>
 
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!--<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+    
+    <!--asd-->
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
+    <script src="../../Scripts/ajaxCalls.js"></script>
 
     <script>
+        Beers_arr = [];
+        kegs20_backgroudColor = [];
+        kegs20_borderColor = [];
+        kegs30_borderColor = [];
+        kegs30_backgroudColor = [];
+        BottleCasebackgroudColor = [];
+        BottleCaseborderColor = [];
+        FrontLabelbackgroudColor = [];
+        FrontLabelborderColor = [];
+
+
+
 
         $(document).ready(function () {
+              //GET manager_products
+            ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError);
+            //GET BEER IN STOCK
+            ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
+          
+             //GET ORDER--------TODO
+            ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError);
 
-            let ctx_rightTop = document.getElementById('myChart').getContext('2d');
-            let ctx_leftTop = document.getElementById('myChartSecond').getContext('2d');
-            let ctx_rightBottom = document.getElementById('myChartBottom').getContext('2d'); // horizontalBar
-            let ctx_leftBottom = document.getElementById('myChartSecondBottom').getContext('2d');
+            $('.toast').toast('show'); // Shows toast without event!!! very important!!
 
+            $('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
+                if (confirm('are you sure yow want to delete this alert?')) {
+
+
+                }
+            });
+
+
+        });
+     
+
+        // Beer API
+        function GetBeerSucess(data) {
+            console.log('data from Beer_2020:', data);
+
+          
+
+
+        //make array backgroud colors dinamic
+            console.log(data.length);
+            for (var i = 0; i < data.length; i++) {
+                kegs20_backgroudColor[i] ="rgba(255, 99, 132, 0.6)";
+                kegs20_borderColor[i] ="rgba(255, 99, 132, 1),";
+                kegs30_borderColor[i] =" rgba(54, 162, 235, 1),";
+                kegs30_backgroudColor[i] ="rgba(54, 162, 235, 0.6),";
+                BottleCasebackgroudColor[i] ="rgba(153, 102, 255, 0.6),";
+                BottleCaseborderColor[i] ="rgba(153, 102, 255, 1),";
+         
+            }
+            console.log("amit is ", kegs20_backgroudColor);
+
+
+
+            let ctx_rightTop = document.getElementById('myChartSecond').getContext('2d');
+            let ctx_leftTop = document.getElementById('myChart').getContext('2d');
+        
+            let ctx_leftBottom = document.getElementById('myChartSecondBottom').getContext('2d');// horizontalBar
+
+            //create Beers Array
+            //let Beers_arr = [];
+            Init_arrays(data, Beers_arr);
+            
             // Beer Stock (Daily)
             var crt_leftTop = new Chart(ctx_rightTop, {
                 type: 'bar',
                 // data: feed Data Here
                 data: {
-                    labels: ['Blonde', 'Ambree', 'Blazer', 'Green', 'IPA', 'Black'],
+                    
+                    //TODO  dinamic label from beer types
+                    labels: data.map(item => item.BeerType),
                     datasets: [{
                         label: 'Kegs 20',
-                        data: [12, 18.2, 3, 5, 6, 3],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(255, 99, 132, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(255, 99, 132, 1)'
-                        ],
+                        data: data.map(item => item.Keg20_amount),//[12, 5, 3, 5, 6, 3],
+                        backgroundColor:kegs20_backgroudColor,
+                        borderColor: kegs20_borderColor,
                         borderWidth: 1,
                         yAxisID: 'y-axis-1'
                     },
                     {
                         label: 'Kegs 30',
-                        data: [13, 9.2, 3, 7, 2, 3],
-                        backgroundColor: [
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(54, 162, 235, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(54, 162, 235, 1)'
-                        ],
+                        data: data.map(item => item.Keg30_amount),
+                        backgroundColor: kegs30_backgroudColor,
+                        borderColor: kegs30_borderColor,
                         borderWidth: 1,
                         yAxisID: 'y-axis-2'
                     },
                     {
                         label: 'Bottle Cases',
-                        data: [15, 6, 3, 5, 2, 3],
-                        backgroundColor: [
-                            'rgba(153, 102, 255, 0.6)',
-                            'rgba(153, 102, 255, 0.6)',
-                            'rgba(153, 102, 255, 0.6)',
-                            'rgba(153, 102, 255, 0.6)',
-                            'rgba(153, 102, 255, 0.6)',
-                            'rgba(153, 102, 255, 0.6)',
-                        ],
-                        borderColor: [
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(153, 102, 255, 1)',
-                        ],
+                        data: data.map(item => item.BottleCase_amount),
+                        backgroundColor: BottleCasebackgroudColor,
+                        borderColor: BottleCasebackgroudColor,
                         borderWidth: 1,
                         yAxisID: 'y-axis-3'
                     },
@@ -155,11 +192,12 @@
                 type: 'bar',
                 // data: feed Data Here
                 data: {
-                    labels: ['Blonde', 'Ambree', 'Blazer', 'Green', 'IPA', 'Black'],
+                    labels: data.map(item => item.BeerType),
                     datasets: [{
                         label: 'Kegs 20',
-                        data: [12, 6, 3, 5, 13, 8],
+                        data: data.map(item => item.Keg20_amount),
                         backgroundColor: [
+                            'rgba(255, 159, 64, 0.6)',
                             'rgba(255, 159, 64, 0.6)',
                             'rgba(255, 159, 64, 0.6)',
                             'rgba(255, 159, 64, 0.6)',
@@ -168,6 +206,7 @@
                             'rgba(255, 159, 64, 0.6)',
                         ],
                         borderColor: [
+                            'rgba(255, 159, 64, 1)',
                             'rgba(255, 159, 64, 1)',
                             'rgba(255, 159, 64, 1)',
                             'rgba(255, 159, 64, 1)',
@@ -180,8 +219,9 @@
                     },
                     {
                         label: 'Kegs 30',
-                        data: [13, 19, 6.6, 5, 8.9, 3],
+                        data: data.map(item => item.Keg30_amount),
                         backgroundColor: [
+                            'rgba(75, 192, 192, 0.6)',
                             'rgba(75, 192, 192, 0.6)',
                             'rgba(75, 192, 192, 0.6)',
                             'rgba(75, 192, 192, 0.6)',
@@ -190,6 +230,7 @@
                             'rgba(75, 192, 192, 0.6)',
                         ],
                         borderColor: [
+                            'rgba(75, 192, 192, 1)',
                             'rgba(75, 192, 192, 1)',
                             'rgba(75, 192, 192, 1)',
                             'rgba(75, 192, 192, 1)',
@@ -202,8 +243,9 @@
                     },
                     {
                         label: 'Bottle Cases',
-                        data: [15, 14.5, 3, 5, 2, 3],
+                        data: data.map(item => item.BottleCase_amount),
                         backgroundColor: [
+                            'rgba(255, 206, 86, 0.6)',
                             'rgba(255, 206, 86, 0.6)',
                             'rgba(255, 206, 86, 0.6)',
                             'rgba(255, 206, 86, 0.6)',
@@ -212,6 +254,7 @@
                             'rgba(255, 206, 86, 0.6)',
                         ],
                         borderColor: [
+                            'rgba(255, 206, 86, 1)',
                             'rgba(255, 206, 86, 1)',
                             'rgba(255, 206, 86, 1)',
                             'rgba(255, 206, 86, 1)',
@@ -273,130 +316,7 @@
                     }
                 }
             });
-
-            // Labels & Boxes
-            var crt_leftBottom = new Chart(ctx_rightBottom, {
-                type: 'bar',
-                // data: feed Data Here
-                data: {
-                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                    datasets: [{
-                        label: 'Front',
-                        data: [12, 14, 3, 5, 2, 3],
-                        backgroundColor: [
-                            'rgba(153, 102, 255, 0.6)',
-                            'rgba(153, 102, 255, 0.6)',
-                            'rgba(153, 102, 255, 0.6)',
-                            'rgba(153, 102, 255, 0.6)',
-                            'rgba(153, 102, 255, 0.6)',
-                            'rgba(153, 102, 255, 0.6)',
-                        ],
-                        borderColor: [
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(153, 102, 255, 1)',
-                        ],
-                        borderWidth: 1,
-                        yAxisID: 'y-axis-1'
-                    },
-                    {
-                        label: 'Back',
-                        data: [13, 19, 12, 5, 2, 3],
-                        backgroundColor: [
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                        ],
-                        borderColor: [
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(54, 162, 235, 1)',
-                        ],
-                        borderWidth: 1,
-                        yAxisID: 'y-axis-2'
-                    },
-                    {
-                        label: 'Neck',
-                        data: [15, 5, 3, 14, 2, 16],
-                        backgroundColor: [
-                            'rgba(255, 159, 64, 0.6)',
-                            'rgba(255, 159, 64, 0.6)',
-                            'rgba(255, 159, 64, 0.6)',
-                            'rgba(255, 159, 64, 0.6)',
-                            'rgba(255, 159, 64, 0.6)',
-                            'rgba(255, 159, 64, 0.6)',
-                        ],
-                        borderColor: [
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(255, 159, 64, 1)',
-                        ],
-                        borderWidth: 1,
-                        yAxisID: 'y-axis-3'
-                    },
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    title: {
-                        display: true,
-                        text: 'Labels & Boxes'
-                    },
-                    tooltips: {
-                        mode: 'index',
-                        intersect: true
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            },
-                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                            display: true,
-                            position: 'left',
-                            id: 'y-axis-1'
-                        },
-                        {
-                            ticks: {
-                                beginAtZero: true,
-                                display: false // left / right axis
-                            },
-                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                            display: true,
-                            position: 'right',
-                            id: 'y-axis-2',
-                            gridLines: {
-                                display: false  // the vertical lines inside the chart itself
-                            },
-                        },
-                        {
-                            ticks: {
-                                beginAtZero: true
-                            },
-                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                            display: true,
-                            position: 'right',
-                            id: 'y-axis-3',
-                            gridLines: {
-                                display: false  // the vertical lines inside the chart itself
-                            },
-                        }
-                        ]
-                    }
-                }
-            });
+                      //////////////////////////////  //////////////////////////////
 
             // Orders
             var crt_rightBottom = new Chart(ctx_leftBottom, { // orders
@@ -437,18 +357,173 @@
             });
 
 
+        }
 
-            $('.toast').toast('show'); // Shows toast without event!!! very important!!
+        function GetBeerError(err) {
+            console.log(err);
+        }
 
-            $('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
-                if (confirm('are you sure yow want to delete this alert?')) {
+        //manager_products API
+        function GetmanagerproductsSucess(data) {
+            console.log('data from manager_products_2020:', data);
+            ////////////////////////////// Labels & Boxes      //////////////////////////////
+            let ctx_rightBottom = document.getElementById('myChartBottom').getContext('2d');
+            var arrBox24 = [];
+            a = data;
+            
+            //for (var i = 1; i < a.length+1; i++) {
+            //    x = i;
 
+            //    if (a[i].ProdName == "Box24")
+            //        arrBox24 += a[i].BeerType + a[i].Amount + a[i].Min_in_stock;
+
+            //}
+            console.log("test ",arrBox24);
+            //////////////////////////////      //////////////////////////////
+            var crt_leftBottom = new Chart(ctx_rightBottom, {
+                type: 'bar',
+                // data: feed Data Here
+                data: {
+                    labels: data.map(item => item.BeerType),
+                    datasets: [{
+                        label: 'Front',
+                        data:data.map(item => item.ProdName) ,
+                        backgroundColor: FrontLabelbackgroudColor ,
+                        borderColor: FrontLabelborderColor,
+                        borderWidth: 2,
+                        yAxisID: 'y-axis-1'
+                    },
+                    {
+                        label: 'Back',
+                        data: [13, 19, 12, 5, 2, 3, 2],
+                        backgroundColor: BottleCasebackgroudColor,
+                        borderColor: BottleCaseborderColor,
+                        borderWidth: 2,
+                        yAxisID: 'y-axis-2'
+                    },
+                    {
+                        label: 'Neck',
+                        data: [15, 5, 3, 14, 2, 16, 2],
+                        backgroundColor:kegs30_backgroudColor ,
+                        borderColor: kegs30_borderColor ,
+                        borderWidth: 2,
+                        yAxisID: 'y-axis-3'
+                    },
+                    
+                    {
+                        label: 'Box24',
+                        data: [15, 7, 4, 14, 1, 16, 2],
+                        backgroundColor:kegs20_backgroudColor,
+                        borderColor: kegs20_borderColor,
+                        borderWidth: 2,
+                        yAxisID: 'y-axis-4'
+                    },
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Labels & Boxes'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: true
+                    },
+                    scales: {
+                        yAxes: [
+                            {
+                            ticks: {
+                                beginAtZero: true,
+                                display: false // left / right axis
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'left',
+                            id: 'y-axis-1'
+                        },
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                            
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'right',
+                            id: 'y-axis-2',
+                            gridLines: {
+                                display: false  // the vertical lines inside the chart itself
+                            },
+                        },
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                              
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'left',
+                            id: 'y-axis-3',
+                            gridLines: {
+                                display: false  // the vertical lines inside the chart itself
+                            },
+                            },
+                            {
+                            ticks: {
+                                beginAtZero: true,
+                              
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'right',
+                            id: 'y-axis-4',
+                            gridLines: {
+                                display: false  // the vertical lines inside the chart itself
+                            },
+                        }
+                        ]
+                    }
                 }
             });
 
+        }
 
-        });
+        function GetmanagerproductsError(err) {
+            console.log(err);
+        }
+            // ** Order API
+    
+        //manager_products API
+        function GetOrderSucess(data) {
+            console.log('data from Order_2020:', data);
+        }
 
+        function GetOrderError(err) {
+            console.log(err);
+        }
+
+
+        function Init_arrays(data, Beers_arr) {
+
+            for (var i = 0; i < data.length; i++) {
+                Beers_arr.push(data[i].BeerType);
+
+
+            }
+            console.log(Beers_arr);
+            //////////////////////make array backgroud colors dinamicly/////////////////
+            console.log(data.length);
+            for (var i = 0; i < data.length; i++) {
+                kegs20_backgroudColor[i] = "rgba(255, 99, 132, 0.6)";
+                kegs20_borderColor[i] = "rgba(255, 99, 132, 1)";
+                kegs30_borderColor[i] = " rgba(54, 162, 235, 1)";
+                kegs30_backgroudColor[i] = "rgba(54, 162, 235, 0.6)";
+                BottleCasebackgroudColor[i] = "rgba(153, 102, 255, 0.6)";
+                BottleCaseborderColor[i] = "rgba(153, 102, 255, 1)";
+                FrontLabelbackgroudColor[i] = "rgba(255, 206, 86, 0.6)";
+                FrontLabelborderColor[i] = "rgba(255, 206, 86, 1)";
+            }
+        }
     </script>
 
     <style>
@@ -516,7 +591,8 @@
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
-                <img src="../Logo_alexander.jpeg" height="68" alt="alexander logo">
+                <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
+             
             </a>
         </nav>
     </div>

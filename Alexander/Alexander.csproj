@@ -160,6 +160,8 @@
     <Compile Include="Controllers\Batch_BottelingController.cs" />
     <Compile Include="Controllers\BeerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\managerproductsController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\RecipeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -176,6 +178,7 @@
     <Compile Include="Models\Fermentation.cs" />
     <Compile Include="Models\Harvest.cs" />
     <Compile Include="Models\Label.cs" />
+    <Compile Include="Models\managerproducts.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Purge.cs" />
@@ -203,6 +206,7 @@
     <Content Include="Pages\Images\Logo_alexander.jpeg" />
     <Content Include="Pages\Manager\Manager-dashboard.html" />
     <Content Include="Pages\Manager\Manager-prod.html" />
+    <Content Include="Pages\Manager\Manager-ProductInventory.html" />
     <Content Include="Scripts\ajaxCalls.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

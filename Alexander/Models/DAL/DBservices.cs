@@ -49,7 +49,53 @@ namespace Alexander.Models.DAL
         }
 
 
+        //GET ALL MANAGER PRODUCT
+        
+                  public List<managerproducts> get_manager_productsDB()
+        {
+            List<managerproducts> manager_products_List = new List<managerproducts>();
+            SqlConnection con = null;
 
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [manager_products_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+
+                    managerproducts mp = new managerproducts();
+                    mp.ProdName=(string)dr["prodName"];
+                    mp.ProdID = Convert.ToInt32(dr["prodID"]);
+                    mp.BeerType = (string)dr["beerType"];
+                 mp.Amount = Convert.ToInt32(dr["amount"]);
+                    mp.Min_in_stock = Convert.ToInt32(dr["min_In_Stock"]);
+                 
+
+                    manager_products_List.Add(mp);
+                }
+
+                return manager_products_List;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+        /// 
+
+        //END GET ALL MANAGER PRODUCTS
         /// 
         /// GET all Batches
         /// 
@@ -148,6 +194,79 @@ namespace Alexander.Models.DAL
 
         // Batches END
 
+    
+       
+        public List<Order> get_OrdersDB()
+        {
+            List<Order> Order_List = new List<Order>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [Order_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+
+                    Order order = new Order();
+
+                    //TODO add the beer type
+                    order.OrderID = Convert.ToInt32(dr["Order_id"]);
+                    order.Date = Convert.ToDateTime(dr["SupplyDate"]);
+                    
+
+                    // parse here all prods in Beers_in_order
+                    //string[] parsed_Beers_in_order = ((string)dr["beers_in_order"]).Split(',');
+                    List<Beer> beer_lst = new List<Beer>();
+                    Beer b = new Beer();
+                    b.Keg20_amount= (Convert.ToInt32(dr["keg_20_amount"]));
+                    b.Keg30_amount= (Convert.ToInt32(dr["keg_30_amount"]));
+                    b.BottleCase_amount= (Convert.ToInt32(dr["box_24"]));
+                    b.BeerType= (string)(dr["beerType"]);
+                    beer_lst.Add(b);
+                    order.Beers_in_order = beer_lst;
+
+
+
+
+
+                    //for (int i = 0; i < beers_in_order.Length; i++)
+                    //{
+                    //    Beer beer = new Beer();
+
+                    //    beer.BeerType = beers_in_order[i].Split(':')[0];
+
+
+                    //    beer_lst.Add(beer);
+                    //    /////////////////
+
+
+                    //}
+                    Order_List.Add(order);
+                }
+                return Order_List;
+              
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        //end orders
+
         /// INSERT all BatcheBatchebotteling
         /// 
         public int insert(Batch_Botteling Batch_Botteling)
@@ -191,9 +310,9 @@ namespace Alexander.Models.DAL
 
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("Values({0}, {1}, {2}, {3}, '{4}', {5}, '{6}' ,{7}, '{8}')", Batch_Botteling.BatchID, 
+            sb.AppendFormat("Values({0}, {1}, {2}, {3}, '{4}', {5}, '{6}' ,{7}, '{8}')", Batch_Botteling.BatchID,
                 Batch_Botteling.Keg20_amount, Batch_Botteling.Keg30_amount,
-                Batch_Botteling.Bottels_qty,Batch_Botteling.Waste_litter,
+                Batch_Botteling.Bottels_qty, Batch_Botteling.Waste_litter,
                 Batch_Botteling.Wort_volume, Batch_Botteling.Date.ToString("yyyy-MM-dd"),
                 Batch_Botteling.BeerType, Batch_Botteling.Tank);
             String prefix = "INSERT INTO BatchAfterProd_2020 " + "([batch_id], [keg_20_amount], [keg_30_amount], [bottles_qty], [waste_litter], [wort_volume], [tank], [beer_type] ";
@@ -231,10 +350,10 @@ namespace Alexander.Models.DAL
                     recipe.CreationDate = Convert.ToDateTime(dr["creationDate"]);
 
                     // parse here all prods in recipe
-                    string [] parsed_items_in_recipe = ((string)dr["prods_in_recipe"]).Split(',');
+                    string[] parsed_items_in_recipe = ((string)dr["prods_in_recipe"]).Split(',');
                     List<Product> prd_lst = new List<Product>();
 
-                    for (int i = 0; i < parsed_items_in_recipe.Length; i++) 
+                    for (int i = 0; i < parsed_items_in_recipe.Length; i++)
                     {
                         Product prod = new Product();
 
@@ -246,12 +365,12 @@ namespace Alexander.Models.DAL
                         //TODO make sure what ever happns here works
 
                         prd_lst.Add(prod);
-                        
+
                     }
 
                     recipe.Products_in_recipe = prd_lst;
 
-                    recipe_List.Add(recipe); 
+                    recipe_List.Add(recipe);
                 }
 
                 return recipe_List;
@@ -293,7 +412,7 @@ namespace Alexander.Models.DAL
 
                     //check if nul from SQL
                     Batch_Botteling.BatchID = Convert.ToInt32(dr["batch_id"]);
-                    if(dr["keg_20_amount"] != DBNull.Value)
+                    if (dr["keg_20_amount"] != DBNull.Value)
                     {
                         Batch_Botteling.Keg20_amount = Convert.ToInt32(dr["keg_20_amount"]);
                     }
@@ -315,9 +434,9 @@ namespace Alexander.Models.DAL
                     Batch_Botteling.Tank = Convert.ToInt32(dr["tank"]);
                     Batch_Botteling.Wort_volume = (float)dr["wort_volume"];
                     Batch_Botteling.BeerType = (string)dr["beer_type"];
-                    
-                   
-                   
+
+
+
                     Batch_Botteling_List.Add(Batch_Botteling);
                 }
 
@@ -345,6 +464,7 @@ namespace Alexander.Models.DAL
             List<Beer> beer_list = new List<Beer>();
             SqlConnection con = null;
 
+
             try
             {
                 con = connect("DBConnectionString");
@@ -355,7 +475,7 @@ namespace Alexander.Models.DAL
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
                 while (dr.Read())
-                {   
+                {
 
                     Beer beer = new Beer();
 
@@ -521,7 +641,7 @@ namespace Alexander.Models.DAL
             }
         }
 
-        
+
 
 
         ///
@@ -562,7 +682,7 @@ namespace Alexander.Models.DAL
             try
             {
                 con = connect("DBConnectionString");
-                da = new SqlDataAdapter("select * from "+ tbl_name, con);
+                da = new SqlDataAdapter("select * from " + tbl_name, con);
                 SqlCommandBuilder builder = new SqlCommandBuilder(da);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -585,7 +705,7 @@ namespace Alexander.Models.DAL
         }
 
         // Global update for any dt
-        public int update() 
+        public int update()
         {
             try
             {
