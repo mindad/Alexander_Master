@@ -368,34 +368,84 @@
             console.log('data from manager_products_2020:', data);
             ////////////////////////////// Labels & Boxes      //////////////////////////////
             let ctx_rightBottom = document.getElementById('myChartBottom').getContext('2d');
-            var arrBox24 = [];
-            a = data;
+
+
+
+            let lbl_back = [];
+            let lbl_front = [];
+            let lbl_neck = [];
+            let box_24 = [];
+
+            let beerTyps_unique = [...new Set(data.map(item => item.BeerType))]; // unique set of beer types
+
+
+            for (var i = 0; i < beerTyps_unique.length; i++) {
+                let amount_a = 0;
+                let amount_b = 0;
+                let amount_c = 0;
+                let amount_d = 0;
+                for (let prod of data) {
+                    
+                    if (prod.ProdName.includes('LabelBack') && beerTyps_unique[i] == prod.BeerType) {
+                        amount_a += prod.Amount;
+                        continue;
+                    }
+                    if (prod.ProdName.includes('LabelFront') && beerTyps_unique[i] == prod.BeerType) {
+                        amount_b += prod.Amount;
+                        continue;
+                    }
+                    if (prod.ProdName.includes('LabelNeck') && beerTyps_unique[i] == prod.BeerType){ // LabelNeck
+                        amount_c += prod.Amount;
+                        continue;
+                    }
+                    if (prod.ProdName.includes('Box24') && beerTyps_unique[i] == prod.BeerType){ // box
+                        amount_d += prod.Amount;
+                    }
+                }
+
+                lbl_back.push({
+                    "ProdName":beerTyps_unique[i],
+                    "Amount":amount_a
+                })
+                lbl_front.push({
+                    "ProdName":beerTyps_unique[i],
+                    "Amount":amount_b
+                })
+                lbl_neck.push({
+                    "ProdName":beerTyps_unique[i],
+                    "Amount":amount_c
+                })
+                box_24.push({
+                    "ProdName":beerTyps_unique[i],
+                    "Amount":amount_d
+                })
+            }
+
+            console.log('this is lbl_back:', lbl_back);
+            console.log('this is lbl_front:', lbl_front);
+            console.log('this is lbl_neck:', lbl_neck);
+            console.log('this is box_24:', box_24);
+
+
+
             
-            //for (var i = 1; i < a.length+1; i++) {
-            //    x = i;
-
-            //    if (a[i].ProdName == "Box24")
-            //        arrBox24 += a[i].BeerType + a[i].Amount + a[i].Min_in_stock;
-
-            //}
-            console.log("test ",arrBox24);
-            //////////////////////////////      //////////////////////////////
-            var crt_leftBottom = new Chart(ctx_rightBottom, {
+            
+            var crt_leftBottom = new Chart(ctx_rightBottom, { // labels & boxes
                 type: 'bar',
                 // data: feed Data Here
                 data: {
-                    labels: data.map(item => item.BeerType),
+                    labels: beerTyps_unique,
                     datasets: [{
                         label: 'Front',
-                        data:data.map(item => item.ProdName) ,
-                        backgroundColor: FrontLabelbackgroudColor ,
+                        data: lbl_front.map(item => item.Amount),//data.map(item => item.ProdName),
+                        backgroundColor: FrontLabelbackgroudColor,
                         borderColor: FrontLabelborderColor,
                         borderWidth: 2,
                         yAxisID: 'y-axis-1'
                     },
                     {
                         label: 'Back',
-                        data: [13, 19, 12, 5, 2, 3, 2],
+                        data: lbl_back.map(item => item.Amount),
                         backgroundColor: BottleCasebackgroudColor,
                         borderColor: BottleCaseborderColor,
                         borderWidth: 2,
@@ -403,17 +453,16 @@
                     },
                     {
                         label: 'Neck',
-                        data: [15, 5, 3, 14, 2, 16, 2],
-                        backgroundColor:kegs30_backgroudColor ,
-                        borderColor: kegs30_borderColor ,
+                        data: lbl_neck.map(item => item.Amount),//[15, 5, 3, 14, 2, 16, 2],
+                        backgroundColor: kegs30_backgroudColor,
+                        borderColor: kegs30_borderColor,
                         borderWidth: 2,
                         yAxisID: 'y-axis-3'
                     },
-                    
                     {
                         label: 'Box24',
-                        data: [15, 7, 4, 14, 1, 16, 2],
-                        backgroundColor:kegs20_backgroudColor,
+                        data: box_24.map(item => item.Amount),//[15, 7, 4, 14, 1, 16, 2],
+                        backgroundColor: kegs20_backgroudColor,
                         borderColor: kegs20_borderColor,
                         borderWidth: 2,
                         yAxisID: 'y-axis-4'
@@ -433,54 +482,53 @@
                     scales: {
                         yAxes: [
                             {
-                            ticks: {
-                                beginAtZero: true,
-                                display: false // left / right axis
-                            },
-                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                            display: true,
-                            position: 'left',
-                            id: 'y-axis-1'
-                        },
-                        {
-                            ticks: {
-                                beginAtZero: true,
-                            
-                            },
-                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                            display: true,
-                            position: 'right',
-                            id: 'y-axis-2',
-                            gridLines: {
-                                display: false  // the vertical lines inside the chart itself
-                            },
-                        },
-                        {
-                            ticks: {
-                                beginAtZero: true,
-                              
-                            },
-                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                            display: true,
-                            position: 'left',
-                            id: 'y-axis-3',
-                            gridLines: {
-                                display: false  // the vertical lines inside the chart itself
-                            },
+                                ticks: {
+                                    beginAtZero: true,
+                                    display: false // left / right axis
+                                },
+                                type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                                display: true,
+                                position: 'left',
+                                id: 'y-axis-1'
                             },
                             {
-                            ticks: {
-                                beginAtZero: true,
-                              
+                                ticks: {
+                                    beginAtZero: true,
+
+                                },
+                                type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                                display: true,
+                                position: 'right',
+                                id: 'y-axis-2',
+                                gridLines: {
+                                    display: false  // the vertical lines inside the chart itself
+                                },
                             },
-                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                            display: true,
-                            position: 'right',
-                            id: 'y-axis-4',
-                            gridLines: {
-                                display: false  // the vertical lines inside the chart itself
+                            {
+                                ticks: {
+                                    beginAtZero: true,
+
+                                },
+                                type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                                display: true,
+                                position: 'left',
+                                id: 'y-axis-3',
+                                gridLines: {
+                                    display: false  // the vertical lines inside the chart itself
+                                },
                             },
-                        }
+                            {
+                                ticks: {
+                                    beginAtZero: true
+                                },
+                                type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                                display: true,
+                                position: 'right',
+                                id: 'y-axis-4',
+                                gridLines: {
+                                    display: false  // the vertical lines inside the chart itself
+                                },
+                            }
                         ]
                     }
                 }
@@ -496,6 +544,8 @@
         //manager_products API
         function GetOrderSucess(data) {
             console.log('data from Order_2020:', data);
+
+
         }
 
         function GetOrderError(err) {
