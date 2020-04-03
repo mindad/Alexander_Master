@@ -8,17 +8,30 @@ namespace Alexander.Models
 {
     public class Order
     {
-        public int orderID;
-        public DateTime date;
-        private List<Beer> beers_in_order;
+        private int orderID;
+        private DateTime date;
+        private string beerType;
+        private int keg20_inOrder;
+        private int keg30_inOrder;
+        private int box24_inOrder;
+
+        public int OrderID { get => orderID; set => orderID = value; }
+        public DateTime Date { get => date; set => date = value; }
+        public string BeerType { get => beerType; set => beerType = value; }
+        public int Keg20_inOrder { get => keg20_inOrder; set => keg20_inOrder = value; }
+        public int Keg30_inOrder { get => keg30_inOrder; set => keg30_inOrder = value; }
+        public int Box24_inOrder { get => box24_inOrder; set => box24_inOrder = value; }
 
         public Order() { }
 
-        public Order(int orderID, DateTime date, Beer beers_in_order)
+        public Order(int orderID, DateTime date, string beerType, int keg20_inOrder, int keg30_inOrder, int box24_inOrder)
         {
             OrderID = orderID;
             Date = date;
-           
+            BeerType = beerType;
+            Keg20_inOrder = keg20_inOrder;
+            Keg30_inOrder = keg30_inOrder;
+            Box24_inOrder = box24_inOrder;
         }
 
         public List<Order> get_Orders()
@@ -31,8 +44,7 @@ namespace Alexander.Models
         }
 
         // getters + setters
-        public int OrderID { get => orderID; set => orderID = value; }
-        public DateTime Date { get => date; set => date = value; }
-        public List<Beer> Beers_in_order { get => beers_in_order; set => beers_in_order = value; }
+      
+
     }
 }

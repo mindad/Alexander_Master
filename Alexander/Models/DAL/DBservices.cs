@@ -218,35 +218,15 @@ namespace Alexander.Models.DAL
                     //TODO add the beer type
                     order.OrderID = Convert.ToInt32(dr["Order_id"]);
                     order.Date = Convert.ToDateTime(dr["SupplyDate"]);
-                    
-
-                    // parse here all prods in Beers_in_order
-                    //string[] parsed_Beers_in_order = ((string)dr["beers_in_order"]).Split(',');
-                    List<Beer> beer_lst = new List<Beer>();
-                    Beer b = new Beer();
-                    b.Keg20_amount= (Convert.ToInt32(dr["keg_20_amount"]));
-                    b.Keg30_amount= (Convert.ToInt32(dr["keg_30_amount"]));
-                    b.BottleCase_amount= (Convert.ToInt32(dr["box_24"]));
-                    b.BeerType= (string)(dr["beerType"]);
-                    beer_lst.Add(b);
-                    order.Beers_in_order = beer_lst;
 
 
-
-
-
-                    //for (int i = 0; i < beers_in_order.Length; i++)
-                    //{
-                    //    Beer beer = new Beer();
-
-                    //    beer.BeerType = beers_in_order[i].Split(':')[0];
-
-
-                    //    beer_lst.Add(beer);
-                    //    /////////////////
-
-
-                    //}
+                    order.Keg20_inOrder= (Convert.ToInt32(dr["keg_20_amount"]));
+                    order.Keg30_inOrder= (Convert.ToInt32(dr["keg_30_amount"]));
+                    order.Box24_inOrder= (Convert.ToInt32(dr["box_24"]));
+                    order.BeerType= (string)(dr["beerType"]);
+                
+            
+         
                     Order_List.Add(order);
                 }
                 return Order_List;

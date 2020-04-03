@@ -84,20 +84,18 @@ create table Alert_Types_2020(
 
 create table Order_2020(
 	[Order_id] int NOT NULL,
-	[Alert_id] int NOT NULL,
-	[SupplyDate] datetime,
+	[SupplyDate] date,
 	[keg_20_amount] int,
 	[keg_30_amount] int,
 	[box_24] int,
 	[beerType] nvarchar(50) NOT NULL,
 	FOREIGN KEY (BeerType) REFERENCES BeerInStock_2020(BeerType),
-	Primary key ([Alert_id])
+	Primary key ([Order_id],[beerType])
 )
 create table OrderSubmission_2020(
 	[Order_id] int NOT NULL,
-[Alert_id] int NOT NULL,
-	[SupplyDate] datetime,
-	Primary key ([Alert_id],[SupplyDate])
+	[SupplyDate] date,
+	Primary key ([Order_id])
 )
 
 create table Batch_2020(
