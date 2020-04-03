@@ -54,6 +54,7 @@ create table manager_products(
 create table User_2020(
 	[userName] nvarchar(50) NOT NULL,
 	[password] nvarchar(50) NOT NULL,
+	[email] nvarchar(50) NOT NULL,
 	Primary key ([userName])
 )
 create table manager_2020(

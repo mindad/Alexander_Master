@@ -195,7 +195,7 @@ namespace Alexander.Models.DAL
         // Batches END
 
     
-       
+    //Get All Orders   
         public List<Order> get_OrdersDB()
         {
             List<Order> Order_List = new List<Order>();
@@ -246,6 +246,49 @@ namespace Alexander.Models.DAL
         }
 
         //end orders
+
+        //Get All Users   
+        public List<User> get_usersDB()
+        {
+            List<User> User_List = new List<User>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [User_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+
+                    User U = new User();
+                    
+                    U.Username= (string)(dr["userName"]);
+                    U.Password= (string)(dr["password"]);
+                    U.Email= (string)(dr["email"]);
+                    User_List.Add(U);
+                }
+                return User_List;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        //end Users
 
         /// INSERT all BatcheBatchebotteling
         /// 

@@ -164,6 +164,7 @@
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\RecipeController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -201,9 +202,11 @@
     <Content Include="Pages\Brewmiester\Brewmiester-dashboard.html" />
     <Content Include="Pages\Brewmiester\Brewmiester-prod.html" />
     <Content Include="Pages\Brewmiester\Inventory.html" />
+    <Content Include="Pages\Images\alexanderlogo.png" />
     <Content Include="Pages\Images\details_close.png" />
     <Content Include="Pages\Images\details_open.png" />
     <Content Include="Pages\Images\Logo_alexander.jpeg" />
+    <Content Include="Pages\Login.html" />
     <Content Include="Pages\Manager\Manager-dashboard.html" />
     <Content Include="Pages\Manager\Manager-prod.html" />
     <Content Include="Pages\Manager\Manager-ProductInventory.html" />
