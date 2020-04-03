@@ -29,13 +29,10 @@
 
         //TODO
         //
-        // create 4 DT for: harvest, fermentation, purge, sample details
-        // ajaxCall to get details from the 4 other tables
+        // add ADD button for each table
+        // make EDIT logic for each table
         //
-        // put new values according to new tables into:
-        // select * from Purge_2020
-        // select * from Harvest_2020
-        // select * from Fermantation_2020
+       
 
         batch_id = 0; // current batch
 
@@ -46,15 +43,10 @@
             batch_id = 3;
 
             ajaxCall('GET', '../../api/Batch_Production', '', GetBatchSuccess, GetBatchError); // check if exist and bring values into tables
-
-            ajaxCall('GET', '../../api/SampleDetails', '', GetSampleSuccess, GetSampleError);
-
-            //ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); //tbl-purge
-            //ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); //tbl-harvest
-            //ajaxCall('GET', '../../api/Fermantation', '', GetFermantationSuccess, GetFermantationError); //tbl-Fermant
-
-
-
+            ajaxCall('GET', '../../api/SampleDetails', '', GetSampleSuccess, GetSampleError);// tbl-sample
+            ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); //tbl-purge
+            ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); //tbl-harvest
+            ajaxCall('GET', '../../api/Fermantation', '', GetFermantationSuccess, GetFermantationError); //tbl-Fermant
 
         });
 
@@ -65,8 +57,6 @@
         // Batch API
         function GetBatchSuccess(data) {
             console.log('Batch At Production Data:', data);
-
-            // for checks use id=3:
 
             let batch; // find current batch
 
@@ -119,7 +109,7 @@
 
         // Sample API
         function GetSampleSuccess(samples) {
-            console.log(samples);
+            console.log('sample Details:' ,samples);
 
             batch_id = 3;
             let smp = [];
@@ -135,7 +125,10 @@
 
             try {
                 $('#tbl-sample').DataTable({
-
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    "searching": false,
                     data: smp,
                     pageLength: 5,
                     columns: [
@@ -183,7 +176,7 @@
             let prg = [];
 
             for (let purge of purges) {
-                if (purge.Batch_id == batch_id) {
+                if (purge.Batchid == batch_id) {
                     prg.push(purge);
                 }
             }
@@ -191,41 +184,44 @@
             console.log('this is prg:', prg);
 
 
-            //try {
-            //    $('#tbl-sample').DataTable({
+            try {
+                $('#tbl-purge').DataTable({
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    "searching": false,
+                    data: prg,
+                    pageLength: 5,
+                    columns: [
+                        {
+                            data:"Batchid",
+                            render: function (data, type, row, meta) {
 
-            //        data: prg,
-            //        pageLength: 5,
-            //        columns: [
-            //            {
-            //                data:"BatchID",
-            //                render: function (data, type, row, meta) {
+                                let data_for_tbl = "data-purge-btnId='" + data + "'";
 
-            //                    let data_for_tbl = "data-purge-btnId='" + data + "'";
+                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+                                return editBtn + deleteBtn;
+                            }
+                        },
+                        {
+                            data: "Date",
+                            render: function (data) {
+                                return data.substr(0, 10);
+                            }
+                        },
+                        { data: "Name"},
+                        { data: "Temperature"},
+                        { data: "Weight" },
+                        { data: "Num_of_buckets" },
+                        { data: "Notes" },
+                    ]
+                });
+            }
 
-            //                    editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
-            //                    deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-            //                    return editBtn + deleteBtn;
-            //                }
-            //            },
-            //            {
-            //                data: "Date",
-            //                render: function (data) {
-            //                    return data.substr(0, 10);
-            //                }
-            //            },
-            //            { data: "Name"},
-            //            { data: "Temparture"},
-            //            { data: "Weight" },
-            //            { data: "num_of" },
-            //            { data: "Notes" },
-            //        ]
-            //    });
-            //}
-
-            //catch (err) {
-            //    alert(err);
-            //}
+            catch (err) {
+                alert(err);
+            }
         }
         function GetPurgeError(err) {
             console.log(err);
@@ -240,7 +236,7 @@
             let harvest = [];
 
             for (let hr of harvests) {
-                if (hr.Batch_id == batch_id) {
+                if (hr.Batchid == batch_id) {
                     harvest.push(hr);
                 }
             }
@@ -248,47 +244,107 @@
             console.log('this is harvest:', harvest);
 
 
-            //try {
-            //    $('#tbl-sample').DataTable({
+            try {
+                $('#tbl-harvest').DataTable({
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    "searching": false,
+                    data: harvest,
+                    pageLength: 5,
+                    columns: [
+                        {
+                            data:"Batchid",
+                            render: function (data, type, row, meta) {
 
-            //        data: harvest,
-            //        pageLength: 5,
-            //        columns: [
-            //            {
-            //                data:"BatchID",
-            //                render: function (data, type, row, meta) {
+                                let data_for_tbl = "data-harvest-btnId='" + data + "'";
 
-            //                    let data_for_tbl = "data-harvest-btnId='" + data + "'";
+                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+                                return editBtn + deleteBtn;
+                            }
+                        },
+                        {
+                            data: "Date",
+                            render: function (data) {
+                                return data.substr(0, 10);
+                            }
+                        },
+                        { data: "Name"},
+                        { data: "Temperature"},
+                        { data: "Time_tap_2" },
+                        { data: "Total_Duration" },
+                    ]
+                });
+            }
 
-            //                    editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
-            //                    deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-            //                    return editBtn + deleteBtn;
-            //                }
-            //            },
-            //            {
-            //                data: "Date",
-            //                render: function (data) {
-            //                    return data.substr(0, 10);
-            //                }
-            //            },
-            //            { data: "Name"},
-            //            { data: "Temparture"},
-            //            { data: "Weight" },
-            //            { data: "num_of" },
-            //            { data: "Notes" },
-            //        ]
-            //    });
-            //}
-
-            //catch (err) {
-            //    alert(err);
-            //}
+            catch (err) {
+                alert(err);
+            }
         }
         function GetHarvestError(err) {
             console.log(err);
         }
 
         // ** Harvest API
+
+        // Fermantation API
+        function GetFermantationSuccess(Fermantation) {
+            console.log('Fermantation:', Fermantation);
+
+            let fermant = [];
+
+            for (let fr of Fermantation) {
+                if (fr.Batchid == batch_id) {
+                    fermant.push(fr);
+                }
+            }
+
+            console.log('this is fermant:', fermant);
+
+
+            try {
+                $('#tbl-Fermant').DataTable({
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    "searching": false,
+                    data: fermant,
+                    pageLength: 5,
+                    columns: [
+                        {
+                            data:"Batchid",
+                            render: function (data, type, row, meta) {
+
+                                let data_for_tbl = "data-fermant-btnId='" + data + "'";
+
+                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+                                return editBtn + deleteBtn;
+                            }
+                        },
+                        {
+                            data: "Date",
+                            render: function (data) {
+                                return data.substr(0, 10);
+                            }
+                        },
+                        { data: "PressureChange"},
+                        { data: "Tank_pressure" },
+                        { data: "Tank_temperature" }
+                    ]
+                });
+            }
+
+            catch (err) {
+                alert(err);
+            }
+        }
+        function GetFermantationError(err) {
+            console.log(err);
+        }
+
+        // ** Fermantation API
 
 
     </script>

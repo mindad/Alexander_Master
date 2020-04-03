@@ -623,37 +623,140 @@ namespace Alexander.Models.DAL
             }
         }
 
+        // Get Purge 
+        public List<Purge> get_PurgeDB()
+        {
+            List<Purge> purge_list = new List<Purge>();
+            SqlConnection con = null;
 
-        ///
-        /// Edit batch_2020 tbl
-        /// 
-        //public DBservices read_batches()
-        //{
-        //    SqlConnection con = null;
-        //    try
-        //    {
-        //        con = connect("DBConnectionString");
-        //        da = new SqlDataAdapter("select * from Batch_2020", con);
-        //        SqlCommandBuilder builder = new SqlCommandBuilder(da);
-        //        DataSet ds = new DataSet();
-        //        da.Fill(ds);
-        //        dt = ds.Tables[0];
-        //    }
+            try
+            {
+                con = connect("DBConnectionString");
 
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
+                String query = "SELECT * FROM [Purge_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
 
-        //    finally
-        //    {
-        //        if (con != null)
-        //        {
-        //            con.Close();
-        //        }
-        //    }
-        //    return this;
-        //}
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+                    Purge prg = new Purge();
+
+                    prg.Batchid = Convert.ToInt32(dr["batch_id"]);
+                    prg.Date = Convert.ToDateTime(dr["date"]);
+                    prg.Name = (string)dr["name"];
+                    prg.Temperature = (float)dr["temperature"];
+                    prg.Weight = (float)dr["weight"];
+                    prg.Num_of_buckets = (float)dr["Num_Of_Buckets"];
+                    prg.Notes = (string)dr["notes"];
+
+
+                    purge_list.Add(prg);
+                }
+
+                return purge_list;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        // GET Harvest get_HarvestDB
+        public List<Harvest> get_HarvestDB()
+        {
+            List<Harvest> harvest_list = new List<Harvest>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [Harvest_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+                    Harvest harvest = new Harvest();
+
+                    harvest.Batchid = Convert.ToInt32(dr["batch_id"]);
+                    harvest.Date = Convert.ToDateTime(dr["date"]);
+                    harvest.Name = (string)dr["name"];
+                    harvest.Temperature = (float)dr["temperature"];
+                    harvest.Time_tap_2 = Convert.ToDateTime(dr["timeForTapTwo"]);
+                    harvest.Total_Duration = Convert.ToDateTime(dr["total_time"]);
+
+                    harvest_list.Add(harvest);
+                }
+
+                return harvest_list;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        // GET Fermantiation 
+
+        public List<Fermentation> get_FermentDB()
+        {
+            List<Fermentation> fermant_list = new List<Fermentation>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [Fermantation_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+                    Fermentation fr = new Fermentation();
+
+                    fr.Batchid = Convert.ToInt32(dr["batch_id"]);
+                    fr.Date = Convert.ToDateTime(dr["date"]);
+                    fr.PressureChange = (float)dr["pressure_change"];
+                    fr.Tank_pressure = (float)dr["pressure_tank"];
+                    fr.Tank_temperature = (float)dr["tank_temperature"];
+
+                    fermant_list.Add(fr);
+                }
+
+                return fermant_list;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+        
 
         // read DT based on string parameter
         public DBservices read(string tbl_name)

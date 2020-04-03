@@ -160,9 +160,12 @@
     <Compile Include="Controllers\Batch_BottelingController.cs" />
     <Compile Include="Controllers\Batch_ProductionController.cs" />
     <Compile Include="Controllers\BeerController.cs" />
+    <Compile Include="Controllers\FermantationController.cs" />
+    <Compile Include="Controllers\HarvestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\PurgeController.cs" />
     <Compile Include="Controllers\RecipeController.cs" />
     <Compile Include="Controllers\SampleDetailsController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
