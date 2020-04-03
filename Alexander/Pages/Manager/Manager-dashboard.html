@@ -511,90 +511,71 @@
             console.log('data from Order_2020:', data);
 
             orders_arr = data;
-            let beerTyps_unique = [];
+           
+            Build_orders_tbl('Ambree');
+            
+    
+        }
+
+        function GetOrderError(err) {
+            console.log(err);
+        }
+
+        function SetOrderChartValues() {
+
+            let selectedBeer = $(this).children("option:selected").val();
+
+            console.log(selectedBeer);
+        
+            Build_orders_tbl(selectedBeer);
+    
+        }
+
+        
+
+        function Build_orders_tbl(selectedBeer) { // Build Order Table
+
+            let selectedBeer_arr = [];
+            
 
             for (let order of orders_arr) {
-                for (let beer of order.Beers_in_order) {
-                    beerTyps_unique.push(beer.BeerType);
+                if (order.Beer.BeerType.toLowerCase() == selectedBeer.toLowerCase()) { // build array based on beer name
+                    selectedBeer_arr.push(order);
                 }
             }
-            beerTyps_unique = [...new Set(beerTyps_unique)]; // unique set of beer types
 
-            console.log('this is beerTyps_unique:', beerTyps_unique);
+            console.log('this is selectedBeer_arr', selectedBeer_arr);
 
+            // fill colors array 3 times
+            let bg_color =[Array(3).fill('rgba(255, 99, 132, 0.6)'), Array(3).fill('rgba(54, 162, 235, 0.6)'), Array(3).fill('rgba(75, 192, 192, 0.6)')];
+            let border_color = [Array(3).fill('rgba(255, 99, 132, 1)'), Array(3).fill('rgba(54, 162, 235, 1)'), Array(3).fill('rgba(75, 192, 192, 1)')];
 
-            let sumKeg20 = 0;
-            let sumKeg30 = 0;
-            let sumBottles = 0;
+            let chartdata = [];
 
-            //// sum all orders based on beertype 
-            //for (let order of orders_arr) {
-            //    for (let beer in beerTyps_unique) {
+            for (var i = 0; i < selectedBeer_arr.length; i++) { // create data array for chartJS || based on latest order dates
 
-            //        if (beer == order.) {
-            //        sumKeg20 += beer.Keg20_amount;
-            //        sumKeg30 += beer.Keg30_amount;
-            //        sumBottles += beer.BottleCase_amount;
-            //        }
-            //    }
-            //}
+                if (i == 3) { // shows only 3 records
+                    break;
+                }
 
-
+                let x = {
+                    label: selectedBeer_arr[i].Date, 
+                        data: [selectedBeer_arr[i].Beer.Keg20_amount,selectedBeer_arr[i].Beer.Keg30_amount, selectedBeer_arr[i].Beer.BottleCase_amount ],
+                        backgroundColor: bg_color[i],
+                        borderColor: border_color[i],
+                        borderWidth: 1
+                }
+                chartdata.push(x);
+            }
 
 
             let ctx_leftBottom = document.getElementById('myChartSecondBottom').getContext('2d'); // horizontalBar
-
-            var crt_rightBottom = new Chart(ctx_leftBottom, { // orders
+            var crt_rightBottom = new Chart(ctx_leftBottom, { 
                 type: 'horizontalBar',
                 data: {
                     labels:['Kegs20', 'Kegs30', 'Bottle Cases'],
-                    datasets: [{
-                        label: '1/1/2020', // each label will be a date of order that need to be supplied
-                        data: [10, 8.6, 9.2],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(75, 192, 192, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(75, 192, 192, 1)'
-                        ],
-                        borderWidth: 1
+                    datasets: chartdata
                     },
-                    {
-                        label: '1/2/2020',
-                        data: [10, 8.6, 9.2],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(75, 192, 192, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(75, 192, 192, 1)'
-                        ],
-                        borderWidth: 1
-                    },
-                    {
-                        label: '1/3/2020',
-                        data: [10, 8.6, 9.2],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(75, 192, 192, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(75, 192, 192, 1)'
-                        ],
-                        borderWidth: 1
-                    }
-                    ]
-                },
                 options: {
                     responsive: true,
                     scales: {
@@ -624,22 +605,9 @@
 					},
             }
             });
-
-        }
-
-        function GetOrderError(err) {
-            console.log(err);
-        }
-
-        function SetOrderChartValues() {
-
-            let selectedBeer = $(this).children("option:selected").val();
-
-            // build chart !
         }
 
         // ** Orders API
-
 
         function Init_arrays(data, Beers_arr) {
 
