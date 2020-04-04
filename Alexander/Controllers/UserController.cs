@@ -17,6 +17,11 @@ namespace Alexander.Controllers
             User user = new User();
             return user.get_users();
         }
+         public int Post([FromBody]User user)
+        {
+            return user.insert();
+        }
 
+ 
     }
 }

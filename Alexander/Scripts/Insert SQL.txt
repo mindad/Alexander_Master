@@ -145,10 +145,10 @@ select * from box_2020
 
 #######################################################
 *************INSERT  User_2020 TABLE*******************
-INSERT INTO User_2020 (userName, password,email)
-VALUES ('sahar','2','amitelkatav@gmail.com');
-INSERT INTO User_2020 (userName, password,email)
-VALUES ('Eran','1','mindadmedia@gmail.com');
+INSERT INTO User_2020 (userName, password,email,question1,website)
+VALUES ('sahar','2','amitelkatav@gmail.com','23','http://localhost:49511/Pages/Manager/Manager-dashboard.html');
+INSERT INTO User_2020 (userName, password,email,question1,website)
+VALUES ('Eran','1','mindadmedia@gmail.com','21','http://localhost:49511/Pages/Brewmiester/Brewmiester-dashboard.html');
 
 select * from User_2020
 
