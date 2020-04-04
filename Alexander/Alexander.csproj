@@ -207,7 +207,6 @@
     <Content Include="Pages\Images\details_open.png" />
     <Content Include="Pages\Images\Logo_alexander.jpeg" />
     <Content Include="Pages\Login.html" />
-    <Content Include="Pages\LoginPage.html" />
     <Content Include="Pages\Manager\Manager-dashboard.html" />
     <Content Include="Pages\Manager\Manager-prod.html" />
     <Content Include="Pages\Manager\Manager-ProductInventory.html" />

@@ -38,17 +38,21 @@ namespace Alexander.Models
             Site = site;
         }
 
-        public int insert()
+        public string Check_Password()
         {
             DBservices dbs = new DBservices();
             dbs = dbs.read("[User_2020]");
 
             try
             {
-                DataRow dr = dbs.dt.Select("userName='" + username + "' AND password="+ password).First(); // 
-                if (dr == null || dr.ItemArray.All(i => i is DBNull))
+                DataRow[] dr = dbs.dt.Select("userName='" + username + "' AND password='"+ password + "'"); // 
+                if (dr.Length != 0)
                 {
-                    return 0;
+                    if ((string)dr[0]["userName"] == "sahar")
+                    {
+                        return "Brewmiester";
+                    }
+                    return "Manager";
                 }
             }
             catch (Exception ex)
@@ -56,7 +60,7 @@ namespace Alexander.Models
                 throw ex;
             }
 
-            return 1;
+            return "";
         }
 
 

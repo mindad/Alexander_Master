@@ -108,7 +108,7 @@
         $(document).ready(function () {
 
 
-            ajaxCall("GET", "../../api/User", "", GetUserSucess, Get_UserError);
+            //ajaxCall("GET", "../../api/User", "", GetUserSucess, Get_UserError);
             $("#loginform").submit(f1);
 
             $("#btn").click(submitUser);
@@ -133,18 +133,24 @@
         function submitUser() {
 
 
-            user = $("#username").val();
-            password = $("#password").val();
+            //user = $("#username").val();
+            //password = $("#password").val();
 
-
+        //    g username;
+        //private string password;
+        //private string email;
+        //private string question;
+        //private string site;
+        //private string newPass;
 
             userlogin = {
-                "user": user,
-                "Pass": password,
-
+                "username": $("#username").val(),
+                "password": $("#password").val()
             }
             console.log(userlogin);
             ajaxCall('POST', "../api/User", JSON.stringify(userlogin), PostUserSucess, PostUserError);
+
+
             //for (let i = 0; i < userarr.length; i++) {
             //    if (userlogin.user == userarr[i].Username) {
             //        if (userlogin.Pass == userarr[i].Password) {
@@ -161,7 +167,7 @@
             //}
 
             //alert("user not found");
-            //return false;
+            return false;
 
         }
         ///end submit user
@@ -283,13 +289,25 @@
 
 
         //post user
-        function PostUserSucess(data) {
-            console.log(data);
+        function PostUserSucess(user) {
+            console.log(user);
+
+            if (user == "sahar") { // brewmiester   
+
+                window.open('Brewmiester/Brewmiester-dashboard.html', '_self');
+                return;
+            }
+            if (user != "") { // manager
+                window.open('Manager/Manager-dashboard.html', '_self');
+                return;
+            }
+
+            alert("Username or Password is wrong");
         }
         function PostUserError(err) {
             console.log(err);
         }
-                ///end post
+        /// ** end post
 
 
     </script>
