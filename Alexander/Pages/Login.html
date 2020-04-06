@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--///////////////////////style/////////-->
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -82,7 +83,7 @@
             }
         }
     </style>
-
+    <!--///////////////////////style/////////-->
     <meta charset="utf-8" />
     <title>Manager Production</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -103,6 +104,7 @@
     <script src="../Scripts/ajaxCalls.js"></script>
 
     <script>
+
         var userarr = [];
 
         $(document).ready(function () {
@@ -132,43 +134,13 @@
         //submit user
         function submitUser() {
 
-
-            //user = $("#username").val();
-            //password = $("#password").val();
-
-        //    g username;
-        //private string password;
-        //private string email;
-        //private string question;
-        //private string site;
-        //private string newPass;
-
             userlogin = {
                 "username": $("#username").val(),
                 "password": $("#password").val()
             }
             console.log(userlogin);
             ajaxCall('POST', "../api/User", JSON.stringify(userlogin), PostUserSucess, PostUserError);
-
-
-            //for (let i = 0; i < userarr.length; i++) {
-            //    if (userlogin.user == userarr[i].Username) {
-            //        if (userlogin.Pass == userarr[i].Password) {
-            //            window.location.href = userarr[i].Site;
-            //            return false;
-            //        }
-            //        else {
-            //            alert("password incorrect");
-            //            return false;}
-            //    }
-
-
-
-            //}
-
-            //alert("user not found");
             return false;
-
         }
         ///end submit user
 
@@ -179,94 +151,65 @@
             userForgot = $("#userforgotpass").val();
             favoriteNumber = $("#favorite").val();
 
-
-
             userforgot = {
-                "user": userForgot,
-                "Q": favoriteNumber,
-
+                "username": userForgot,
+                "question": favoriteNumber
             }
+            console.log("forgot password data ", userforgot);
 
-            for (let i = 0; i < userarr.length; i++) {
-                if (userforgot.user == userarr[i].Username) {
-                    if (userforgot.Q == userarr[i].Question) {
-                        alert("your password is " + userarr[i].Password + " please try to no forget")
-                        return false;
-                    }
-                    else {
-                        alert("answer incorrect");
-                        return false;
-                    }
-                }
+            ajaxCall('POST', "../api/User/Forgotpass", JSON.stringify(userforgot), PostUserForgotSucess, PostUserForgotError);
 
-
-
-            }
-
-            alert("user not found");
             return false;
 
         }
         // end forgot password
 
+
+        //change password
+
         function changepass() {
-            user = $("#oldpass").val();
-            oldpassword = $("#password").val();
+            user = $("#changepassuser").val();
+            oldpassword = $("#oldpass").val();
             newpass = $("#newpass").val();
             confirm = $("#confirmpass").val();
 
+            if (newpass == confirm) {
+                userchange = {
+                    "username": user,
+                    "password": oldpassword,
+                    "newpass": newpass
+                }
 
 
-            userchange = {
-                "username": user,
-                "password": oldpassword,
-                "newpass": newpass,
-                "confirm": confirm
+                console.log(userchange);
+
+                ajaxCall("PUT", "../api/User/Changepass", JSON.stringify(userchange), PutUserSucess, PutUserError);
+                return false;
             }
-            console.log(userchange);
-            ajaxCall('POST', "../../api/User", JSON.stringify(userchange), PostUserSucess, PostUserError);
+            else
+                alert("new password and confirm new password must be the same");
 
-            //for (let i = 0; i < userarr.length; i++) {
-            //    if (userchange.user == userarr[i].Username) {
-            //        if (userchange.Pass == userarr[i].Password) {
-            //            if (userchange.newpass == userchange.confirm) {
-            //                //ajaxcall to change password
-
-            //                alert("password changed");
-            //            }
-            //            else
-            //                alert("new password and confirm passowrd have to be the same");
-
-            //            return false;
-            //        }
-            //        else {
-            //            alert("old password incorrect");
-            //            return false;
-            //        }
-            //    }
-
-
-
-            //}
-
-            //alert("user not found");
-            //return false;
 
         }
-        //change password
-
-
 
         //end change password
+        //put user password change
+        function PutUserSucess(data) {
+            console.log(data);
+            if (data == "Password Changed Successfuly")
+                alert("Password Changed Successfuly");
 
+        }
+        function PutUserError(err) {
+            console.log(err);
+            alert("Password Didnt Change");
+        }
 
 
         //show function
         function showforgotpass() {
             $("#forgotpass").toggle()
             $("#changepass").hide()
-
-
         }
         function showchangepass() {
             $("#changepass").toggle()
@@ -274,25 +217,27 @@
 
         }
 
-
-        //end
-        function GetUserSucess(data) {
-
-            userarr = data;
-            console.log(userarr);
+         //end  show function
+        
+        //post forgot password
+        function PostUserForgotSucess(password) {
+            console.log(password);
+            if (password == "")
+                alert("User name or answer for the questiong incorrect")
+            else
+                alert("your password is: '" + password + "' please dont forget next time")
         }
-        function Get_UserError(err) {
+        function PostUserForgotError(err) {
             console.log(err);
         }
+        /// ** end post Forgot passowrd User
 
 
-
-
-        //post user
+           //post Login user
         function PostUserSucess(user) {
             console.log(user);
 
-            if (user == "sahar") { // brewmiester   
+            if (user == "sahar") { // brewmiester
 
                 window.open('Brewmiester/Brewmiester-dashboard.html', '_self');
                 return;
@@ -307,7 +252,7 @@
         function PostUserError(err) {
             console.log(err);
         }
-        /// ** end post
+            /// ** end post Login User
 
 
     </script>

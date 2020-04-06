@@ -271,7 +271,7 @@ namespace Alexander.Models.DAL
                     U.Password= (string)(dr["password"]);
                     U.Email= (string)(dr["email"]);
                     U.Question= (string)(dr["question1"]);
-                    U.Site= (string)(dr["website"]);
+                 
 
                     User_List.Add(U);
                 }

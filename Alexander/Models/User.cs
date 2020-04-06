@@ -13,7 +13,7 @@ namespace Alexander.Models
         private string password;
         private string email;
         private string question;
-        private string site;
+        
         private string newPass;
 
 
@@ -22,20 +22,20 @@ namespace Alexander.Models
         public string Email { get => email; set => email = value; }
         public string NewPass { get => newPass; set => newPass = value; }
         public string Question { get => question; set => question = value; }
-        public string Site { get => site; set => site = value; }
+    
 
         public User()
         {
         }
 
-        public User(string username, string password, string email, string newPass, string question, string site)
+        public User(string username, string password, string email, string newPass, string question)
         {
             Username = username;
             Password = password;
             Email = email;
             NewPass = newPass;
             Question = question;
-            Site = site;
+           
         }
 
         public string Check_Password()
@@ -75,13 +75,15 @@ namespace Alexander.Models
 
             return User_arr;
         }
+         //end get
 
 
 
-        //update
+
+        //update new passowrd
 
 
-        public int Update()
+        public string updatepass()
         {
             int effected = 0;
             DBservices dbs = new DBservices();
@@ -90,35 +92,71 @@ namespace Alexander.Models
 
             try
             {
-                DataRow dr = dbs.dt.Select("userName='" + Username  ).First();
+              
+                DataRow[] dr = dbs.dt.Select("userName='" + username + "' AND password='" + password + "'"); // 
+                if (dr.Length != 0)
+                {
+                    if ((string)dr[0]["userName"] == "sahar")
+                    {
+                        dr[0]["password"] = NewPass;
 
-                dr["password"] =Username ;///////////////
-        
+                    }// cahnge password  manager
+                   else
+                        dr[0]["password"] = NewPass;
+
+                    effected = dbs.update(); // update DB
+                }
+                
             }
             catch (Exception ex)
             {
+                throw ex;
 
+            }
+
+            if (effected==1) // true
+            {
+                return "Password Changed Successfuly";
+            }
+            return "Password Didnt Change";
+            
+        }
+
+        //End update new passowrd
+
+        //forgot password
+
+        
+
+        public string get_oldpass()
+        {
+
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[User_2020]");
+
+            try
+            {
+                DataRow[] dr = dbs.dt.Select("userName='" + username + "' AND question1='" + question + "'"); // 
+                if (dr.Length != 0)
+                {
+                    if ((string)dr[0]["userName"] == "sahar")
+                    {
+                        return (string)dr[0]["password"];
+                    }
+                    return (string)dr[0]["password"];
+                }
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
 
-
-
-
-
-            effected = dbs.update(); // update DB
-
-            return effected;
+            return "";
         }
 
+        //end forgot password
 
 
-
-        //end update
-
-
-        public string forgotPassword()
-        {
-            return null;
-        }
+   
     }
 }
