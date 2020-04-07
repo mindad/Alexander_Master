@@ -510,9 +510,69 @@
         function GetOrderSucess(data) {
             console.log('data from Order_2020:', data);
 
+
+
+            //get today Date
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth()+1 ).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            console.log(today);
+            today = mm + '/' + dd + '/' + yyyy;
+
+            const firstDate = new Date(yyyy, mm, dd);
+            //end get today
+
             orders_arr = data;
+     
+  
+
+            //setting of day
+            const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+
+       
+       
            
-            Build_orders_tbl('Ambree');
+          
+
+        
+            var  closestdate = 50;
+            for (let i = 0; i < orders_arr.length; i++) {
+                date1 = new Date(orders_arr[i].Date);
+                var dd1 = String(date1.getDate()).padStart(2, '0');
+                var mm1 = String(date1.getMonth()+1).padStart(2, '0');
+                var yyyy1 = date1.getFullYear();
+                date1 = mm1 + '/' + dd1 + '/' + yyyy1;
+
+                var secondDate = new Date(yyyy1, mm1, dd1);
+
+                //end
+                if ((firstDate - secondDate) < 0)///only if the date didnt passed enter
+                {
+                    var diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));//check how many days between 2 dates
+                    console.log(diffDays);
+                    if (diffDays < closestdate)///take the closest date
+                    {
+                        closestdate = diffDays;
+                    }
+                }
+            }
+            if (closestdate == 50)///if there in no orders upcoming
+                document.getElementById("bartimetillnext").innerHTML = "not yet UpComing Orders"
+            else {
+                ///orders upcoming
+                if (closestdate > 30)
+                    document.getElementById("bartimetillnext").innerHTML = `<div class="progress-bar w-100" role="progressbar" style="width: 25%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="30">${closestdate} days</div>`;
+                    
+               else if (closestdate > 22)
+                    document.getElementById("bartimetillnext").innerHTML = `<div class="progress-bar w-75" role="progressbar" style="width: 25%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="30">${closestdate} days</div>`;
+                else if (closestdate > 14)
+                    document.getElementById("bartimetillnext").innerHTML = `<div class="progress-bar w-50" role="progressbar" style="width: 25%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="30">${closestdate} days</div>`;
+                else
+                    document.getElementById("bartimetillnext").innerHTML = `<div class="progress-bar w-25" role="progressbar" style="width: 25%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="30">${closestdate} days</div>`;
+            }
+
+                Build_orders_tbl('Ambree');
             
     
         }
@@ -740,8 +800,8 @@
 
                 <h4 class="text-center">Time Till Next Order:</h4>
 
-                <div class="progress">
-                    <div class="progress-bar w-75" role="progressbar" style="width: 25%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">6 days</div>
+                <div class="progress" id="bartimetillnext">
+                   
                 </div>
 
             </div>
