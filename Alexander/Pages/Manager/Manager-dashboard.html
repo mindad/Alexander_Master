@@ -145,7 +145,7 @@
                     responsive: true,
                     title: {
                         display: true,
-                        text: 'Beer Stock (Daily)'
+                        text: 'Beer Stock'
                     },
                     tooltips: {
                         mode: 'index',
@@ -512,7 +512,6 @@
             console.log('data from Order_2020:', data);
 
 
-
             //get today Date
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
@@ -525,18 +524,10 @@
             //end get today
 
             orders_arr = data;
-     
-  
 
             //setting of day
             const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
 
-       
-       
-           
-          
-
-        
             var  closestdate = 50;
             for (let i = 0; i < orders_arr.length; i++) {
                 date1 = new Date(orders_arr[i].Date);
@@ -559,7 +550,7 @@
                 }
             }
             if (closestdate == 50)///if there in no orders upcoming
-                document.getElementById("bartimetillnext").innerHTML = "not yet UpComing Orders"
+                document.getElementById("bartimetillnext").innerHTML = "No UpComing Orders"
             else {
                 ///orders upcoming
                 if (closestdate > 30)
@@ -573,9 +564,11 @@
                     document.getElementById("bartimetillnext").innerHTML = `<div class="progress-bar w-25" role="progressbar" style="width: 25%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="30">${closestdate} days</div>`;
             }
 
-                Build_orders_tbl('Ambree');
+
+            //let beer_in_stock = beer_in_stock('Ambree'); // ben 
+            beer_in_stock('Ambree'); // ben
+            //Build_orders_tbl('Ambree', beer_in_stock); // ben
             
-    
         }
 
         function GetOrderError(err) {
@@ -586,20 +579,13 @@
 
             let selectedBeer = $(this).children("option:selected").val();
 
-            console.log(selectedBeer);
+            console.log('this is selectedBeer', selectedBeer);
             
-            
-            console.log("beer arr is :", beerinstock);
-            //function take selected beer and return beer in stock from this beer
-            beer_in_stock(selectedBeer);
-
-            console.log("beeramountinstock is ", beeramountinstock);
-
-            Build_orders_tbl(selectedBeer);
+            beer_in_stock(selectedBeer); // Find Beer amounts and Build Order Table
         }
         
 
-        function Build_orders_tbl(selectedBeer) { // Build Order Table
+        function Build_orders_tbl(selectedBeer , beer_amounts) { // Build Order Table
 
             let selectedBeer_arr = [];
             
@@ -611,32 +597,43 @@
             }
 
             console.log('this is selectedBeer_arr', selectedBeer_arr);
-            //function take selectedBeer_arr return orderid of closest date
-            closestday(selectedBeer_arr);
+            
+            closest_Order_ID = closestday(selectedBeer_arr); // return orderid of closest date
         
+            console.log('this is closest_Order_ID', closest_Order_ID);
 
 
-
-            // fill colors array 3 times
-            let bg_color =[Array(3).fill('rgba(255, 99, 132, 0.6)'), Array(3).fill('rgba(54, 162, 235, 0.6)'), Array(3).fill('rgba(75, 192, 192, 0.6)')];
+            // fill colors array - 3 times
+            let bg_color = [Array(3).fill('rgba(255, 99, 132, 0.6)'), Array(3).fill('rgba(54, 162, 235, 0.6)'), Array(3).fill('rgba(75, 192, 192, 0.6)')];
             let border_color = [Array(3).fill('rgba(255, 99, 132, 1)'), Array(3).fill('rgba(54, 162, 235, 1)'), Array(3).fill('rgba(75, 192, 192, 1)')];
 
             let chartdata = [];
+            let new_title = {}; // Set title with date of the newest order
+            for (var i = 0; i < selectedBeer_arr.length; i++) {
+                if (closest_Order_ID == selectedBeer_arr[i].OrderID) {
+                    let x = {
+                        label: 'Order Amount', 
+                            data: [selectedBeer_arr[i].Beer.Keg20_amount,selectedBeer_arr[i].Beer.Keg30_amount, selectedBeer_arr[i].Beer.BottleCase_amount ],
+                            backgroundColor: bg_color[0],
+                            borderColor: border_color[0],
+                            borderWidth: 1
+                    }
+                    chartdata.push(x);
+                    x = {
+                        label: 'Stock Amount', 
+                            data: [beer_amounts.Keg20_amount,beer_amounts.Keg30_amount, beer_amounts.BottleCase_amount ],
+                            backgroundColor: bg_color[1],
+                            borderColor: border_color[1],
+                            borderWidth: 1
+                    }
+                    chartdata.push(x);
 
-            for (var i = 0; i < selectedBeer_arr.length; i++) { // create data array for chartJS || based on latest order dates
-
-                if (i == 3) { // shows only 3 records
+                    new_title = {
+                        "display": true,
+                        "text": 'Orders ' + selectedBeer_arr[i].Date.substr(0,10)
+                    };
                     break;
                 }
-
-                let x = {
-                    label: selectedBeer_arr[i].Date, 
-                        data: [selectedBeer_arr[i].Beer.Keg20_amount,selectedBeer_arr[i].Beer.Keg30_amount, selectedBeer_arr[i].Beer.BottleCase_amount ],
-                        backgroundColor: bg_color[i],
-                        borderColor: border_color[i],
-                        borderWidth: 1
-                }
-                chartdata.push(x);
             }
 
 
@@ -644,7 +641,7 @@
             var crt_rightBottom = new Chart(ctx_leftBottom, { 
                 type: 'horizontalBar',
                 data: {
-                    labels:['Kegs20', 'Kegs30', 'Bottle Cases'],
+                    labels:['Kegs 20', 'Kegs 30', 'Bottle Cases'],
                     datasets: chartdata
                     },
                 options: {
@@ -663,10 +660,10 @@
                             }
                         }]
                     },
-                    title: {
-                        display: true,
-                        text: 'Orders'
-                    },
+                    title: new_title, //{
+                        //display: true,
+                        //text: 'Orders'
+                    //},
                     legend: { // top label (with the color besides it)
                         display: false
                     },
@@ -700,8 +697,8 @@
             }
         }
 
-//// function to return closest day
-        function closestday(selectedBeer_arr) {
+
+        function closestday(selectedBeer_arr) { //// function to return closest day
             //check date///
             var closeorderid;
             var closedate = 100;
@@ -743,34 +740,30 @@
             }
             console.log("the order id", closeorderid);
             
-
+            return closeorderid;
            // end check Date
-
         }
 
 
-    //function take selected beer and return beer in stock from this beer
-        function beer_in_stock(selectedBeer) {
+    
+        function beer_in_stock(selectedBeer) { ///take amounts from the selected beer in stock
+
+            let beer_amount_in_stock;
             for (let i = 0; i < beerinstock.length; i++) {
-                if (beerinstock[i].BeerType == selectedBeer)//return the arr of the beer in stock
+                if (beerinstock[i].BeerType == selectedBeer)
                 {
-
-
-                    ///take all the amounts from the selected beer in stock
-                    beeramountinstock = {
+                    beer_amount_in_stock = {
                         "beertypeinorder": selectedBeer,
-                        "kegsamount20": beerinstock[i].Keg20_amount,
-                        "kegsamount30": beerinstock[i].Keg30_amount,
-                        "BottleCaseamount": beerinstock[i].BottleCase_amount
+                        "Keg20_amount": beerinstock[i].Keg20_amount,
+                        "Keg30_amount": beerinstock[i].Keg30_amount,
+                        "BottleCase_amount": beerinstock[i].BottleCase_amount  
                     }
-                 
-                    ///in the beer i want to check with her
-                    return beeramountinstock;
-
-
                 }
             }
+            Build_orders_tbl(selectedBeer, beer_amount_in_stock); // builds Order Table
         }
+
+
     </script>
 
     <style>
