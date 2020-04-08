@@ -43,6 +43,7 @@
         BottleCaseborderColor = [];
         FrontLabelbackgroudColor = [];
         FrontLabelborderColor = [];
+        beerinstock = [];
 
         orders_arr = []; // DO NOT DELETE !!!
 
@@ -73,7 +74,7 @@
         // Beer API
         function GetBeerSucess(data) {
             console.log('data from Beer_2020:', data);
-
+            beerinstock = data;
             // Build Select button options
             let BeerTypesOptions = "";
             for (var i = 0; i < data.length; i++) {
@@ -586,11 +587,16 @@
             let selectedBeer = $(this).children("option:selected").val();
 
             console.log(selectedBeer);
-        
-            Build_orders_tbl(selectedBeer);
-    
-        }
+            
+            
+            console.log("beer arr is :", beerinstock);
+            //function take selected beer and return beer in stock from this beer
+            beer_in_stock(selectedBeer);
 
+            console.log("beeramountinstock is ", beeramountinstock);
+
+            Build_orders_tbl(selectedBeer);
+        }
         
 
         function Build_orders_tbl(selectedBeer) { // Build Order Table
@@ -605,6 +611,11 @@
             }
 
             console.log('this is selectedBeer_arr', selectedBeer_arr);
+            //function take selectedBeer_arr return orderid of closest date
+            closestday(selectedBeer_arr);
+        
+
+
 
             // fill colors array 3 times
             let bg_color =[Array(3).fill('rgba(255, 99, 132, 0.6)'), Array(3).fill('rgba(54, 162, 235, 0.6)'), Array(3).fill('rgba(75, 192, 192, 0.6)')];
@@ -689,7 +700,77 @@
             }
         }
 
+//// function to return closest day
+        function closestday(selectedBeer_arr) {
+            //check date///
+            var closeorderid;
+            var closedate = 100;
+            ///check date 
+            for (let i = 0; i < selectedBeer_arr.length; i++) {
+                date1 = new Date(selectedBeer_arr[i].Date);
+                var dd1 = String(date1.getDate()).padStart(2, '0');
+                var mm1 = String(date1.getMonth() + 1).padStart(2, '0');
+                var yyyy1 = date1.getFullYear();
+                date1 = mm1 + '/' + dd1 + '/' + yyyy1;
 
+                var secondDate = new Date(yyyy1, mm1, dd1);
+
+
+                //get today Date
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0');
+                var yyyy = today.getFullYear();
+                console.log(today);
+                today = mm + '/' + dd + '/' + yyyy;
+
+                const firstDate = new Date(yyyy, mm, dd);
+                //setting of day
+                const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+
+                //end get today
+                //end
+                if ((firstDate - secondDate) < 0)///only if the date didnt passed enter
+                {
+                    let diffDays2 = Math.round(Math.abs((firstDate - secondDate) / oneDay));//check how many days between 2 dates
+                    console.log(diffDays2);
+                    if (diffDays2 < closedate)///take the closest date
+                    {
+                        closedate = diffDays2;
+                        closeorderid = selectedBeer_arr[i].OrderID;
+                    }
+                }
+            }
+            console.log("the order id", closeorderid);
+            
+
+           // end check Date
+
+        }
+
+
+    //function take selected beer and return beer in stock from this beer
+        function beer_in_stock(selectedBeer) {
+            for (let i = 0; i < beerinstock.length; i++) {
+                if (beerinstock[i].BeerType == selectedBeer)//return the arr of the beer in stock
+                {
+
+
+                    ///take all the amounts from the selected beer in stock
+                    beeramountinstock = {
+                        "beertypeinorder": selectedBeer,
+                        "kegsamount20": beerinstock[i].Keg20_amount,
+                        "kegsamount30": beerinstock[i].Keg30_amount,
+                        "BottleCaseamount": beerinstock[i].BottleCase_amount
+                    }
+                 
+                    ///in the beer i want to check with her
+                    return beeramountinstock;
+
+
+                }
+            }
+        }
     </script>
 
     <style>
