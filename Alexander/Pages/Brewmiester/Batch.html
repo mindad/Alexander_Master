@@ -34,7 +34,7 @@
         //
        
 
-        batch_id = 0; // current batch
+        batch_id = null; // current batch
 
         $(document).ready(function () {
 
@@ -48,11 +48,10 @@
             ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); //tbl-harvest
             ajaxCall('GET', '../../api/Fermantation', '', GetFermantationSuccess, GetFermantationError); //tbl-Fermant
 
+            //buttonEvents();
         });
 
-        function populateTBLs() {
 
-        }
 
         // Batch API
         function GetBatchSuccess(data) {
@@ -111,7 +110,7 @@
         function GetSampleSuccess(samples) {
             console.log('sample Details:' ,samples);
 
-            batch_id = 3;
+            //batch_id = 3;
             let smp = [];
 
             for (let sample of samples) {
@@ -121,7 +120,7 @@
             }
 
             console.log('this is smp:', smp);
-
+            let blabla = { 1: 1, 2: 2, 3: 3 };
 
             try {
                 $('#tbl-sample').DataTable({
@@ -133,16 +132,18 @@
                     pageLength: 5,
                     columns: [
                         {
-                            data: "BatchID",
-                            render: function (data, type, row, meta) {
+                            data: {},//"Batch_id",
+                            render: function (data,type,row) { //
 
-                                let data_for_tbl = "data-sample-btnId='" + data + "'";
+                                console.log(row);
 
-                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
-                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+                                let data_for_tbl = "data-Sample-btnId='" + data + "'";
+
+                                editBtn = "<button type='button' class = 'editSampleBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+                                deleteBtn = "<button type='button' class = 'deleteSampleBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
                                 return editBtn + deleteBtn;
                             }
-                        },
+                        },  
                         {
                             data: "Date",
                             render: function (data) {
@@ -162,6 +163,8 @@
             catch (err) {
                 alert(err);
             }
+
+            buttonEvents();
         }
         function GetSampleError(err) {
             console.log(err);
@@ -197,10 +200,10 @@
                             data:"Batchid",
                             render: function (data, type, row, meta) {
 
-                                let data_for_tbl = "data-purge-btnId='" + data + "'";
+                                let data_for_tbl = "data-Purge-btnId='" + data + "'";
 
-                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
-                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+                                editBtn = "<button type='button' class = 'editPurgeBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+                                deleteBtn = "<button type='button' class = 'deletePurgeBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
                                 return editBtn + deleteBtn;
                             }
                         },
@@ -222,6 +225,8 @@
             catch (err) {
                 alert(err);
             }
+
+            buttonEvents();
         }
         function GetPurgeError(err) {
             console.log(err);
@@ -257,10 +262,10 @@
                             data:"Batchid",
                             render: function (data, type, row, meta) {
 
-                                let data_for_tbl = "data-harvest-btnId='" + data + "'";
+                                let data_for_tbl = "data-Harvest-btnId='" + data + "'";
 
-                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
-                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+                                editBtn = "<button type='button' class = 'editHarvestBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+                                deleteBtn = "<button type='button' class = 'deletHarvestBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
                                 return editBtn + deleteBtn;
                             }
                         },
@@ -281,6 +286,8 @@
             catch (err) {
                 alert(err);
             }
+
+            buttonEvents();
         }
         function GetHarvestError(err) {
             console.log(err);
@@ -316,10 +323,10 @@
                             data:"Batchid",
                             render: function (data, type, row, meta) {
 
-                                let data_for_tbl = "data-fermant-btnId='" + data + "'";
+                                let data_for_tbl = "data-Fermantation-btnId='" + data + "'";
 
-                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
-                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+                                editBtn = "<button type='button' class = 'editFermantationBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+                                deleteBtn = "<button type='button' class = 'deleteFermantationBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
                                 return editBtn + deleteBtn;
                             }
                         },
@@ -339,6 +346,8 @@
             catch (err) {
                 alert(err);
             }
+
+            buttonEvents();
         }
         function GetFermantationError(err) {
             console.log(err);
@@ -346,6 +355,91 @@
 
         // ** Fermantation API
 
+
+        // Global Functions
+
+
+        //////// edit + delete
+        function buttonEvents() {
+
+            $(document).on("click", ".editSampleBtn,.editHarvestBtn,.editPurgeBtn,.editFermantationBtn", function () {
+
+                let tbl_name = $(this).attr('class').replace(/^edit/, '').replace(/Btn.+/, ''); 
+
+                console.log("tbl_name is:",tbl_name.toLowerCase())
+
+                Edit_Row_In_TBL(this.getAttribute(`data-${tbl_name.toLowerCase()}-btnid`), tbl_name); //
+
+                //populateFields(this.getAttribute('data-btnId')); // fill the form fields according to the selected row
+            });
+
+            $(document).on("click", ".deleteBtn", function () {
+
+                //var batch_id = this.getAttribute('data-btnId');
+
+                let tbl_name = $(this).attr('class').replace(/^delete/, '').replace(/Btn$/, ''); 
+
+                Delete_Row_In_TBL(this, tbl_name);
+
+            });
+        }
+
+        function Edit_Row_In_TBL(row_id, tbl_name) {
+
+            console.log('row_id:', row_id);
+
+            Hide_Tables(tbl_name);
+
+            if (tbl_name == "Sample") {
+
+            }
+            if (tbl_name == "Purge") {
+
+            }
+            if (tbl_name == "Harvest") {
+
+            }
+            if (tbl_name == "Fermantation") {
+
+            }
+        }
+
+        function Delete_Row_In_TBL(obj, tbl_name) {
+
+            console.log('batch id is:' ,obj.getAttribute('data-btnId'));
+
+            if (tbl_name == "Sample") {
+
+                if (confirm("Are You Sure You Want To Delete This Row?")) {
+
+                    //ajaxCall("Delete", "../../api/Batch", JSON.stringify(batch_id), DeleteBatchSucess, DeleteBatchError); 
+                }
+                else {
+                    alert("You pressed Cancel!");
+                }
+
+            }
+            if (tbl_name == "Purge") {
+
+            }
+            if (tbl_name == "Harvest") {
+
+            }
+            if (tbl_name == "Fermantation") {
+
+            }
+        }
+
+        function Hide_Tables(tbl_name) {
+
+            let tbl_list = ['tbl-sample', 'tbl-purge', 'tbl-harvest', 'tbl-Fermant'];
+            tbl_list.pop(tbl_name); // removes tbl_name from list
+
+            for (tbl of tbl_list) {
+                $(`#${tbl}`).hide(); 
+            }
+            
+        }
 
     </script>
 
@@ -481,7 +575,7 @@
             </thead>
             <tbody>
             </tbody>
-
+            
         </table>
 
         <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
@@ -504,7 +598,7 @@
             </thead>
             <tbody>
             </tbody>
-
+            
         </table>
 
         <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
@@ -526,7 +620,7 @@
             </thead>
             <tbody>
             </tbody>
-
+            
         </table>
 
         <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
