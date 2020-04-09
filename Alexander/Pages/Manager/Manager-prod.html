@@ -293,6 +293,7 @@
             console.log('batch to PUT:', batch);
 
             ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(batch), Put_success, Put_Error);
+            refresh_table();
 
            // refresh_table();
 
@@ -451,16 +452,16 @@
             <div class="form-group">
                 <h2 id="batchID_header_edit"></h2><br />
                 <label>Keg20_amount</label>
-                <input type="text" value="" id="Keg20_amountInput_edit" />
+                <input type="number" value="" id="Keg20_amountInput_edit" />
                 <br>
                 <label>Keg30_amount</label>
-                <input type="text" value="" id="Keg30_amountInput_edit" />
+                <input type="number" value="" id="Keg30_amountInput_edit" />
                 <br>
                 <label>Bottles_qty</label>
-                <input type="text" value="" id="Bottles_qtyInput_edit" />
+                <input type="number" value="" id="Bottles_qtyInput_edit" />
                 <br>
                 <label>Waste_Litter</label>
-                <input type="text" value="" id="WasteInput_edit" />
+                <input type="number" value="" id="WasteInput_edit" />
             </div>
             <button id="submit_edit">Submit</button>
         </form>
