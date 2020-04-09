@@ -57,6 +57,9 @@
              //GET ORDER--------TODO
             ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError);
 
+            //get Alerts from manager table
+            ajaxCall("GET", "../../api/AlertsManager", "", GetAlertSucess, GetAlertError); // get all Alerts
+
             $('.toast').toast('show'); // Shows toast without event!!! very important!!
 
             $('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
@@ -762,6 +765,42 @@
             }
             Build_orders_tbl(selectedBeer, beer_amount_in_stock); // builds Order Table
         }
+
+
+        // ** Alert API for manager
+        function GetAlertSucess(Alertdata) {
+            console.log('This is alert data:', Alertdata);
+
+            st = "";
+
+            for (alert of Alertdata) {
+
+                if (alert.Type == 'Boxes Stock' || alert.Type == 'Label Stock') { // only brewmiester alerts
+                    st += `
+                    <div class="toast" data-autohide="false"><div class="toast-header">
+                    <strong class="mr-auto text-primary">${alert.Type}</strong>
+                    <small class="text-muted">${alert.Date.substr(0, 10)}</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+                    </div><div class="toast-body">${alert.Description}</div></div>`
+                }
+            }
+
+            $('#toastdiv').html(st); // insert toast alerts into div
+
+            $('.toast').toast('show'); // Shows toast without event!!! very important!!
+
+            $('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
+                if (confirm('are you sure yow want to delete this alert?')) {
+
+                }
+                else return false;
+            });
+
+        }
+
+        function GetAlertError(err) {
+            console.log(err);
+        }
+        // ** Alert API
 
 
     </script>

@@ -576,6 +576,55 @@ namespace Alexander.Models.DAL
 
 
         /// 
+        /// GET all Alerts [Alert_Manager_2020]
+        /// 
+        public List<AlertsManager> get_AlertsManagerDB()
+        {
+            List<AlertsManager> alert_list_manager = new List<AlertsManager>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [Alert_Manager_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+
+                    AlertsManager alert_to_add = new AlertsManager();
+
+                    alert_to_add.AlertID = Convert.ToInt32(dr["Alert_id"]);
+                    alert_to_add.Type = (string)dr["type"];
+                    alert_to_add.Date = Convert.ToDateTime(dr["date"]);
+                    alert_to_add.Description = (string)dr["description"];
+                    alert_to_add.Notes = (string)dr["notes"];
+
+                    alert_list_manager.Add(alert_to_add);
+                }
+
+                return alert_list_manager;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        //end Get all alert [Alert_Manager_2020]
+
+
+
         /// GET all Alerts [Alert_2020]
         /// 
         public List<alert> get_AlertsDB()
@@ -621,7 +670,7 @@ namespace Alexander.Models.DAL
             }
         }
 
-
+        //end Get all alert BREWMEISTER
 
 
         ///
