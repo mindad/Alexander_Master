@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Brewmiester Production</title>
+    <title>Inventory</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -32,6 +32,7 @@
         // TODO
         // form control - validation and return false
         // Add delete button to delete a product - NOT A Inventory! just prod
+        /// why need of choosing prod type when ADD button clicked (inline add from the right)
 
         $(document).ready(function () {
 
@@ -39,10 +40,9 @@
             $('#editDiv').hide();
             $('#add_prod_Div').hide();
             $('#BTN_inventory').on('click', Show_Add_prod_Div ); // show add new inventory item DIV
-            $('#submit_edit').on("click", edit_Inventory_table);
-            $('#submit_add').on("click", submit_Inventory_item);
-            $("#editForm").on('submit', f1); // return false -> form control
-            $('#BTN_submit').on("click", submit_new_product);
+            $('#editForm').on("submit", edit_Inventory_table);
+            $('#addForm').on("submit", submit_Inventory_item);
+            $('#add_prod_Form').on("submit", submit_new_product); //  BTN_submit
 
             ajaxCall("GET", "../../api/Inventory", "", GetInventorySucess, GetInventoryError); // get all inventory products
 
@@ -83,9 +83,8 @@
 
             buttonEvents(); // initialize DT buttons activity
 
-            $("#close_Btn").on("click", Close_Div); // Add new Product
-            $("#close_add_from_prod_Btn").on("click", Close_addExisting_Div); // add Product from existing
-            
+            $(".close_Btn").on("click", Close_Div); // Closes all EDIT and ADD forms
+
         });
 
         function createDT(DT_data) {
@@ -190,7 +189,7 @@
                             data: {},
                             render: function (data, type, row, meta) {
 
-                                let data_for_tbl = "data-prod_Id='" + data.ProductID + "'" + "data-prod_Name='" + data.ProductName + "'";
+                                let data_for_tbl = "data-prod_Id='" + data.ProductID + "'" + "data-prod_Name='" + data.ProductName + "'"  + "data-prod_type='" + data.ProductType + "'";
 
                                 addBtn = "<button type='button' class = 'addBtn btn btn-success'" + data_for_tbl + "> Add </button>";
                                 deleteBtn = "<button type='button' class = 'delete_prod_Btn btn btn-danger'" + data_for_tbl + "> Delete </button>";
@@ -204,6 +203,7 @@
             catch (err) {
                 alert(err);
             }
+
         }
 
         function GetProductError(err) {
@@ -212,18 +212,26 @@
 
         function submit_new_product() {
 
+            if ($("#prod_type_select").val() == "Select Product Type") { // product type validation
+                alert("Please Enter Product Type");
+                return false;
+            }
+
             let prod = {
-                productType: $('#TB_type').val(),
+                productType: $("#prod_type_select").val(),
                 amount:0,
                 min_amount:$('#TB_minAmount').val(),
                 last_arrivalTime:null,
                 productName:$('#TB_name').val(),
-                productID:$('#TB_id').val(),
+                productID:$('#TB_id').val()
             }
+
+            console.log("prod to POST", prod);
 
             ajaxCall('POST', '../../api/Product', JSON.stringify(prod), post_new_inventory_success, post_new_inventory_error);
 
             return false;
+
         }
 
         function post_new_inventory_success(data) {
@@ -253,7 +261,9 @@
 
             $(document).on("click", ".editBtn", function () {
 
-                populateFields(this.getAttribute('data-btnId'), this.getAttribute('data-Date').substr(0,10)); // fill the form fields according to the selected row
+                populateFields(this.getAttribute('data-btnId'), this.getAttribute('data-Date').substr(0, 10)); // fill the form fields according to the selected row
+
+                $("#BTN_inventory_container").hide();
             });
 
 
@@ -285,17 +295,19 @@
 
                 $("#ph").val(this.getAttribute('data-prod_Id'));
                 $("#ph1").val(this.getAttribute('data-prod_Name'));
+                $("#ph2").val(this.getAttribute('data-prod_type'));
 
-                let UniqueNames= $.unique(inventoryArr.map(function (d) {return d.ProductType;})); // get unique product types
+                //let UniqueNames= $.unique(inventoryArr.map(function (d) {return d.ProductType;})); // get unique product types
 
-                // insert values to beerType Select     
-                prodTypesOptions = "<option>Select Product Type</option>`";
-                for (name of UniqueNames) {
-                    prodTypesOptions += `<option>${name}</option>`;
-                }
+                //// insert values to beerType Select     
+                //prodTypesOptions = "<option>Select Product Type</option>`";
+                //for (name of UniqueNames) {
+                //    prodTypesOptions += `<option>${name}</option>`;
+                //}
 
                 $("#addDiv").show();
-                document.getElementById("prod_type_select").innerHTML = prodTypesOptions;
+                $("#BTN_inventory_container").hide();
+                //document.getElementById("prod_type_select").innerHTML = prodTypesOptions;
 
                 
             });
@@ -329,7 +341,7 @@
         function submit_Inventory_item() {
 
             let prod = {
-               productType:$("#prod_type_select").val(),
+               productType:$("#ph2").val(),
                amount: $("#amountTypeInput_add").val(),
                min_amount:0,
                last_arrivalTime:$("#DateInput_add").val(),
@@ -340,8 +352,6 @@
             console.log('this is prod that will send to POST', prod);
           
             ajaxCall("POST", "../../api/Inventory", JSON.stringify(prod), add_InventorySucess, add_InventoryError);
-
-            $("#addDiv").hide();
 
             return false; // form submit
         }
@@ -405,15 +415,10 @@
 
         function populateFields(product_name, product_date) { // set values in edit DIV
 
-            console.log('populate fileds:', product_name, product_date);
             $("#editDiv").show();
 
             for (prod of inventoryArr) {
 
-                //console.log(prod.ProductName);
-                //console.log(prod.Last_arrivalTime.substr(0, 10));
-
-                
                 if (prod.ProductName == product_name && prod.Last_arrivalTime.substr(0,10) == product_date) {
                     $("#amountTypeInput").val(prod.Amount);
                     $("#DateInput").val(prod.Last_arrivalTime.substr(0, 10)); 
@@ -430,25 +435,33 @@
             location.reload();
         }
 
-           function f1(e) {
+           function f1() {
             return false; // form submit
         }
 
-          function Show_Add_prod_Div() {
-              $('#add_prod_Div').show();
-              $('#BTN_inventory_container').hide();
-        }
-        function Close_addExisting_Div() {
-            $("#addDiv").show();
-            $('#BTN_inventory_container').hide();
-        }
+        function Show_Add_prod_Div() {
 
+            
+            let UniqueTypes= [...new Set(inventoryArr.map(d => d.ProductType))]//  $.unique(inventoryArr.map(d => d.ProductType)); // get unique product types
+            
+            let prodTypesOptions = "<option>Select Product Type</option>";
+
+            for (type of UniqueTypes) {
+                prodTypesOptions += `<option>${type}</option>`;
+            }
+
+            document.getElementById("prod_type_select").innerHTML = prodTypesOptions;
+
+            $('#add_prod_Div').show();
+            $('#BTN_inventory_container').hide();
+
+        }
         function Close_Div() {
-            $('#add_prod_Div').hide();//add_prod_Div
             $("#addDiv").hide();
+            $("#add_prod_Div").hide();
+            $("#editDiv").hide();
             $('#BTN_inventory_container').show();
         }
-        
 
     </script>
 
@@ -495,6 +508,10 @@
         #BTN_inventory_container{ 
             width:50%;
             /*bottom add new product button*/
+        }
+        #btnDiv{
+            /*padding-top:1%;*/
+            width:50%;
         }
     </style>
 
@@ -580,43 +597,48 @@
     <!-- Add Product -->
     <!--Edit Row In Table-->
     <div class="container" id="editDiv">
+        <button type="button" class="close close_Btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
         <form id="editForm">
             <div class="form-group">
                 <label for="">Amount</label>
-                <input type="text" class="form-control" id="amountTypeInput" required />
+                <input type="text" class="form-control" id="amountTypeInput" required pattern="[0-9]+" />
                 <br />
                 <label for="fromDate">Date</label>
                 <input type="date" class="form-control" id="DateInput" required />
                 <br />
+                <div id="btnDiv" class="container">
+                    <button id="submit_edit" type="submit" class="btn btn-primary btn-block">Submit</button>
+                </div>
             </div>
-            <button id="submit_edit">Submit</button>
+            <!--<button id="submit_edit" type="submit">Submit</button>-->
+
         </form>
     </div>
     <!--Edit Row In  Table-->
     <!--ADD Row In Table-->
     <div class="container" id="addDiv">
-        <button id="close_Btn" type="button" class="close" aria-label="Close">
+        <button type="button" class="close close_Btn" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         <form id="addForm">
             <div class="form-group">
-                <!-- TODO create a select that holds prodType options-->
-                <select name="Beer" id="prod_type_select"></select>
-                <br />
                 <label for="">Amount</label>
-                <input type="text" class="form-control" id="amountTypeInput_add" required />
+                <input type="text" class="form-control" id="amountTypeInput_add" required pattern="[0-9]+" />
                 <br />
                 <label for="fromDate">Date</label>
                 <input type="date" class="form-control" id="DateInput_add" required />
                 <br />
             </div>
-            <button id="submit_add">Submit</button>
+            <button id="submit_add" type="submit">Submit</button>
         </form>
     </div>
     <!--ADD Row In Table-->
     <!--ADD Row -- Product In Table-->
     <div class="container" id="add_prod_Div">
-        <button id="close_Btn" type="button" class="close" aria-label="Close">
+        <button type="button" class="close close_Btn" aria-label="Close">
+            <!--close_add_prod_DivBtn-->
             <span aria-hidden="true">&times;</span>
         </button>
         <form id="add_prod_Form">
@@ -626,21 +648,26 @@
                 <input type="text" class="form-control" id="TB_name" required />
                 <br />
                 <label for="">Product ID</label>
-                <input type="text" class="form-control" id="TB_id" required />
+                <input type="text" class="form-control" id="TB_id" required pattern="[0-9]+" />
                 <br />
                 <label for="">Product Type</label>
-                <input type="text" class="form-control" id="TB_type" required />
+                <select id="prod_type_select">
+                </select>
+                <!--<input type="text" class="form-control" id="TB_type" required />-->
                 <br />
                 <label for="">Minimum Amount</label>
-                <input type="text" class="form-control" id="TB_minAmount" required />
+                <input type="text" class="form-control" id="TB_minAmount" required pattern="[0-9]+" />
                 <br />
+                <div id="btnDiv" class="container">
+                    <button id="BTN_submit" type="submit" class="btn btn-primary btn-block">Submit</button>
+                </div>
             </div>
-            <button id="BTN_submit">Submit</button>
         </form>
     </div>
     <!--ADD Row -- Product In Table-->
     <div id="ph"></div>
     <div id="ph1"></div>
+    <div id="ph2"></div>
     <div class="container" id="BTN_inventory_container">
         <button id="BTN_inventory" class="btn btn-primary btn-block">Add New Product</button>
     </div>

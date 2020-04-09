@@ -35,10 +35,7 @@
             //// TODO
             //// check form validation + make form return false so page wont be rendered
             /// Select Beer Type ==> add function that will validate the Select tag
-            // escape button to exit Edit DIV
-
-            // Form Validation
-            //$('input[type=number]').on('blur', checkValidation);
+            
 
             $('#editDiv').hide();
 
@@ -52,53 +49,13 @@
 
             $("#addToBatch").on("click", PostNewBatch);
 
-            $('#submit_edit').on("click", edit_Batch_table);
+            $('#submit_edit').on("submit", edit_Batch_table);
 
-            buttonEvents();
+            buttonEvents(); // edit+delete buttons
 
-            $("#close_editDiv_Btn").on("click", CloseEditDiv)
+            $("#close_editDiv_Btn").on("click", CloseEditDiv); // Close button
 
         });
-
-        function checkValidation() {
-
-            let checkInt = $(this).val();
-
-            console.log('this is checkint:', checkInt);
-
-            if ( /^[1-9]\d*$/g.test(checkInt) == false ) {
-                this.validity.valid = false;
-                this.setCustomValidity("Please enter a valid positive number");
-                return false;
-            }
-            else {
-                this.validity.valid = true;
-                this.setCustomValidity('');
-                return false;
-            }
-        }
-
-        function PostNewBatch() {
-
-            //get max batchID
-            let ID_arr = [];
-            for (var i = 0; i < batchArr.length; i++) {
-                ID_arr.push(batchArr[i].BatchID);
-            }
-
-            batch = {
-                batchID: Math.max.apply(null, ID_arr) + 1,
-                date: $('#addDate').val(), 
-                beerType: $('#beerSelect').val(),
-                tank:0,
-                wort_volume:0
-            }
-
-            console.log('this is batch to post:', batch);
-
-
-            ajaxCall('POST', "../../api/Batch", JSON.stringify(batch), PostBatchSucess, PostBatchError);
-        }
 
         // Batch API
         function GetBatchSucess(Batchdata) {
@@ -109,7 +66,6 @@
 
             try {
                 $('#tbl').DataTable({
-
                     data: Batchdata,
                     pageLength: 8,
                     columns: [             
@@ -161,12 +117,32 @@
             catch (err) {
                 alert(err);
             }
-
-           
         }
 
         function GetBatchError(err) {
             console.log(err);
+        }
+
+        function PostNewBatch() {
+
+            //get max batchID
+            let ID_arr = [];
+            for (var i = 0; i < batchArr.length; i++) {
+                ID_arr.push(batchArr[i].BatchID);
+            }
+
+            batch = {
+                batchID: Math.max.apply(null, ID_arr) + 1,
+                date: $('#addDate').val(), 
+                beerType: $('#beerSelect').val(),
+                tank:0,
+                wort_volume:0
+            }
+
+            console.log('this is batch to post:', batch);
+
+
+            ajaxCall('POST', "../../api/Batch", JSON.stringify(batch), PostBatchSucess, PostBatchError);
         }
 
         function PostBatchSucess(data) {
@@ -183,33 +159,20 @@
         // ** Batch API
 
 
+
         // Recipe API
         function GetRecipeSucess(data) {
             console.log('data from Recipe:', data);
 
             recipeArr = data;
 
-            // GET batch details
-            ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
+            ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError); // GET batch details
         }
 
         function GetRecipeError(err) {
             console.log(err);
         }
         // ** Recipe API
-
-
-        
-
-
-        function toggle_add_visibilty() {
-            //$('.invisible').removeClass();
-
-            ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
-
-
-            // toggle class and remove the form
-        }
 
         // Beer API
         function GetBeerSucess(data) {
@@ -226,6 +189,15 @@
 
         function GetBeerError(err) {
             console.log(err);
+        }
+
+        function toggle_add_visibilty() {
+            //$('.invisible').removeClass();
+
+            ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
+
+
+            // toggle class and remove the form
         }
         // ** Beer API
 
@@ -263,7 +235,7 @@
 
             $(document).on("click", ".editBtn", function () {
 
-                $('#btnDiv').hide(); // add To table remove
+                $('#btnDiv').hide(); // add To table button 
 
                 console.log('batch id is:' ,this.getAttribute('data-btnId'));
 
@@ -355,16 +327,13 @@
             ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
         }
 
-        function GoToBatch(batch_id) {
-
-            //let batch_id = $(this).attr('href');
+        function GoToBatch(batch_id) { // Go To Batch.html
 
             console.log('this is batch id:', batch_id);
 
-            //let st = `?batch_id=${batch_id}`;
-
             window.open(`Batch.html?batch_id=${batch_id}`, '_self');
         }
+
 
         function CloseEditDiv() {
             $("#editDiv").hide();
@@ -441,9 +410,6 @@
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Alerts.html">Alerts</a>
                     </li>
-                    <!-- <li class="nav-item">
-                      <a class="nav-link disabled" href="#">Disabled</a>
-                    </li> -->
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
@@ -505,13 +471,14 @@
             <h4 id="edit_batch_header"></h4>
             <div class="form-group">
                 <label for="">Beer Type</label>
-                <input type="text" class="form-control" id="beerTypeInput" required />
+                <input type="text" class="form-control" id="beerTypeInput" required pattern="[a-zA-Z]+" />
                 <br />
                 <label for="fromDate">Date</label>
                 <input type="date" class="form-control" id="batchDateInput" required />
-            </div>
-            <div id="btnDiv" class="container">
-                <button id="submit_edit" class="btn btn-primary btn-block">Submit</button>
+
+                <div id="btnDiv" class="container">
+                    <button id="submit_edit" class="btn btn-primary btn-block" type="submit">Submit</button>
+                </div>
             </div>
         </form>
     </div>
