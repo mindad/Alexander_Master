@@ -141,7 +141,8 @@
 
                                 editBtn = "<button type='button' class = 'editSampleBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deleteSampleBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn + deleteBtn;
+                                addBtn =  "<button type='button' class = 'addSampleBtn btn btn-warning'" + data_for_tbl + "> Add </button>";
+                                return addBtn + editBtn + deleteBtn;
                             }
                         },  
                         {
@@ -204,7 +205,8 @@
 
                                 editBtn = "<button type='button' class = 'editPurgeBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deletePurgeBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn + deleteBtn;
+                                addBtn =  "<button type='button' class = 'addPurgeBtn btn btn-warning'" + data_for_tbl + "> Add </button>";
+                                return addBtn + editBtn + deleteBtn;
                             }
                         },
                         {
@@ -266,7 +268,8 @@
 
                                 editBtn = "<button type='button' class = 'editHarvestBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deletHarvestBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn + deleteBtn;
+                                addBtn =  "<button type='button' class = 'addHarvestBtn btn btn-warning'" + data_for_tbl + "> Add </button>";
+                                return addBtn + editBtn + deleteBtn;
                             }
                         },
                         {
@@ -327,7 +330,8 @@
 
                                 editBtn = "<button type='button' class = 'editFermantationBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deleteFermantationBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn + deleteBtn;
+                                addBtn =  "<button type='button' class = 'addFermantationBtn btn btn-warning'" + data_for_tbl + "> Add </button>";
+                                return addBtn + editBtn + deleteBtn;
                             }
                         },
                         {
@@ -365,7 +369,6 @@
             $(document).on("click", ".editSampleBtn,.editHarvestBtn,.editPurgeBtn,.editFermantationBtn", function () {
 
                 let tbl_name = $(this).attr('class').replace(/^edit/, '').replace(/Btn.+/, ''); 
-
                 console.log("tbl_name is:",tbl_name.toLowerCase())
 
                 Edit_Row_In_TBL(this.getAttribute(`data-${tbl_name.toLowerCase()}-btnid`), tbl_name); //
@@ -373,13 +376,21 @@
                 //populateFields(this.getAttribute('data-btnId')); // fill the form fields according to the selected row
             });
 
-            $(document).on("click", ".deleteBtn", function () {
+            $(document).on("click", ".deleteSampleBtn,.deleteHarvestBtn,.deletePurgeBtn,.deleteFermantationBtn", function () {
 
-                //var batch_id = this.getAttribute('data-btnId');
+                let tbl_name = $(this).attr('class').replace(/^delete/, '').replace(/Btn.+/, ''); 
+                console.log("tbl_name is:", tbl_name.toLowerCase());
 
-                let tbl_name = $(this).attr('class').replace(/^delete/, '').replace(/Btn$/, ''); 
+                Delete_Row_In_TBL(this.getAttribute(`data-${tbl_name.toLowerCase()}-btnid`), tbl_name);
 
-                Delete_Row_In_TBL(this, tbl_name);
+            });
+
+            $(document).on("click", ".addSampleBtn,.addHarvestBtn,.addPurgeBtn,.addFermantationBtn", function () {
+
+                let tbl_name = $(this).attr('class').replace(/^add/, '').replace(/Btn.+/, ''); 
+                console.log("tbl_name is:", tbl_name.toLowerCase());
+
+                Add_Row_In_TBL(this.getAttribute(`data-${tbl_name.toLowerCase()}-btnid`), tbl_name);
 
             });
         }
@@ -404,9 +415,9 @@
             }
         }
 
-        function Delete_Row_In_TBL(obj, tbl_name) {
+        function Delete_Row_In_TBL(row_id, tbl_name) {
 
-            console.log('batch id is:' ,obj.getAttribute('data-btnId'));
+            console.log('row_id:', row_id);
 
             if (tbl_name == "Sample") {
 
@@ -432,7 +443,7 @@
 
         function Hide_Tables(tbl_name) {
 
-            let tbl_list = ['tbl-sample', 'tbl-purge', 'tbl-harvest', 'tbl-Fermant'];
+            let tbl_list = ['sample_div', 'purge_div', 'harvest_div', 'fermant_div'];
             tbl_list.pop(tbl_name); // removes tbl_name from list
 
             for (tbl of tbl_list) {
@@ -464,7 +475,7 @@
         }
 
         .container {
-            padding-bottom: 4%;
+            padding-bottom: 1%;
         }
 
         #notes_input {
@@ -534,8 +545,8 @@
     </div>
     <!-- table -->
     <!-- table - sample Details-->
-    <div class="container">
-        <!--<h1 class="text-center">Production</h1>-->
+    <div class="container" id="sample_div">
+        <h5 class="text-center">Sample Details</h5>
         <table id="tbl-sample" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
@@ -559,8 +570,8 @@
     </div>
     <!-- table - sample Details-->
     <!--Purge Table-->
-    <div class="container">
-        <!--<h1 class="text-center">Production</h1>-->
+    <div class="container" id="purge_div">
+        <h5 class="text-center">Purge</h5>
         <table id="tbl-purge" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
@@ -583,8 +594,8 @@
     </div>
     <!--Purge Table-->
     <!--Harvest Table-->
-    <div class="container">
-        <!--<h1 class="text-center">Production</h1>-->
+    <div class="container" id="harvest_div">
+        <h5 class="text-center">Harvest</h5>
         <table id="tbl-harvest" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
@@ -606,8 +617,8 @@
     </div>
     <!--Harvest Table-->
     <!--Fermant Table-->
-    <div class="container">
-        <!--<h1 class="text-center">Production</h1>-->
+    <div class="container" id="fermant_div">
+        <h5 class="text-center">Fermantation</h5>
         <table id="tbl-Fermant" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
