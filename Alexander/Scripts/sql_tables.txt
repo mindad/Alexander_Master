@@ -77,6 +77,16 @@ create table Alert_2020(
 	Primary key ([Alert_id])
 )
 
+create table Alert_Manager_2020(
+	[Alert_id] int NOT NULL,
+	[type] nvarchar(50) not null,
+	[date] datetime,
+	[description] nvarchar(255),
+	[notes] nvarchar(255),
+	FOREIGN KEY ([type]) REFERENCES Alert_Types_2020([type]),
+	Primary key ([Alert_id])
+)
+
 create table Alert_Types_2020(
 	[type] nvarchar(50),
 	Primary key ([type])
