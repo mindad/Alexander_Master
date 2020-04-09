@@ -116,14 +116,14 @@
                             data: "Bottels_qty",
                             render: function (data, type, row, meta) {
                                 // ADD function *0.33 litter bottle
-                                return data * 0.33
+                                return (data * 0.33).toFixed(2)
                             }
                         },
                         {
                             data: "Bottels_qty",
                             render: function (data, type, row, meta) {
                                 // ADD function *24 bottles in box
-                                return data / 24
+                                return (data / 24).toFixed(2)
                             }
                         },
                         { data: "Waste_litter" },
@@ -132,11 +132,11 @@
                             render: function (data, type, row, meta) {
                                 console.log(data.Waste_litter)
                                 if (data.tank>60)
-                                    return data.Waste_litter / 6000
+                                    return (data.Waste_litter / 6000).toFixed(2)
                                 else if (data.tank > 40)
-                                    return data.Waste_litter / 4000
+                                    return (data.Waste_litter / 4000).toFixed(2)
                                 else
-                                    return data.Waste_litter / 2000
+                                    return (data.Waste_litter / 2000).toFixed(2)
                             }
                         },
                     ]
