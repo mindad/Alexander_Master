@@ -38,7 +38,7 @@
             $("#addDiv").hide();
             $('#editDiv').hide();
             $('#add_prod_Div').hide();
-            $('#BTN_inventory').on('click', function () { $('#add_prod_Div').show() }); // show add new inventory item DIV
+            $('#BTN_inventory').on('click', Show_Add_prod_Div ); // show add new inventory item DIV
             $('#submit_edit').on("click", edit_Inventory_table);
             $('#submit_add').on("click", submit_Inventory_item);
             $("#editForm").on('submit', f1); // return false -> form control
@@ -82,6 +82,10 @@
             // ** DT events for Plus btn
 
             buttonEvents(); // initialize DT buttons activity
+
+            $("#close_Btn").on("click", Close_Div); // Add new Product
+            $("#close_add_from_prod_Btn").on("click", Close_addExisting_Div); // add Product from existing
+            
         });
 
         function createDT(DT_data) {
@@ -165,7 +169,7 @@
                 $('#tbl').DataTable({
 
                     data: Product_data,
-                    pageLength: 10,
+                    pageLength: 8,
                     columns: [             
                         {
                             "className": 'details-control',
@@ -430,6 +434,22 @@
             return false; // form submit
         }
 
+          function Show_Add_prod_Div() {
+              $('#add_prod_Div').show();
+              $('#BTN_inventory_container').hide();
+        }
+        function Close_addExisting_Div() {
+            $("#addDiv").show();
+            $('#BTN_inventory_container').hide();
+        }
+
+        function Close_Div() {
+            $('#add_prod_Div').hide();//add_prod_Div
+            $("#addDiv").hide();
+            $('#BTN_inventory_container').show();
+        }
+        
+
     </script>
 
 
@@ -461,7 +481,7 @@
         }
 
         .container {
-            padding-bottom: 4%;
+            padding-bottom: 1%;
         }
 
         td.details-control {
@@ -471,6 +491,10 @@
 
         tr.shown td.details-control {
             background: url('../Images/details_close.png') no-repeat center center;
+        }
+        #BTN_inventory_container{ 
+            width:50%;
+            /*bottom add new product button*/
         }
     </style>
 
@@ -571,6 +595,9 @@
     <!--Edit Row In  Table-->
     <!--ADD Row In Table-->
     <div class="container" id="addDiv">
+        <button id="close_Btn" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
         <form id="addForm">
             <div class="form-group">
                 <!-- TODO create a select that holds prodType options-->
@@ -589,6 +616,9 @@
     <!--ADD Row In Table-->
     <!--ADD Row -- Product In Table-->
     <div class="container" id="add_prod_Div">
+        <button id="close_Btn" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
         <form id="add_prod_Form">
             <div class="form-group">
                 <!-- TODO create a select that holds prodType options-->
@@ -611,8 +641,8 @@
     <!--ADD Row -- Product In Table-->
     <div id="ph"></div>
     <div id="ph1"></div>
-    <div class="container">
-        <button id="BTN_inventory">Add New Product</button>
+    <div class="container" id="BTN_inventory_container">
+        <button id="BTN_inventory" class="btn btn-primary btn-block">Add New Product</button>
     </div>
 </body>
 

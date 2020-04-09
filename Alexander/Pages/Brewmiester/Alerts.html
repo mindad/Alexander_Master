@@ -37,6 +37,8 @@
 
             buttonEvents();
 
+            $("#close_editDiv_Btn").on("click", CloseEditDiv)
+
             $("#submit_edit", "#editForm").submit(f1);
 
         });
@@ -50,7 +52,7 @@
                 $('#tbl').DataTable({
 
                     data: Alertdata,
-                    pageLength: 5,
+                    pageLength: 8,
                     columns: [
                         {
                             data:"AlertID",
@@ -163,6 +165,10 @@
             return false;
         }
 
+        function CloseEditDiv() {
+            $("#editDiv").hide();
+        }
+
     </script>
 
 
@@ -252,6 +258,9 @@
     <!-- table -->
     <!--Edit Row In  Table-->
     <div class="container" id="editDiv">
+        <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
         <form id="editForm">
             <div class="form-group">
                 <label for="">Add Notes Here:</label>

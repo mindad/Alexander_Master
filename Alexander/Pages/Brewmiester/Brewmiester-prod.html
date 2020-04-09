@@ -34,6 +34,8 @@
 
             //// TODO
             //// check form validation + make form return false so page wont be rendered
+            /// Select Beer Type ==> add function that will validate the Select tag
+            // escape button to exit Edit DIV
 
             // Form Validation
             //$('input[type=number]').on('blur', checkValidation);
@@ -53,6 +55,8 @@
             $('#submit_edit').on("click", edit_Batch_table);
 
             buttonEvents();
+
+            $("#close_editDiv_Btn").on("click", CloseEditDiv)
 
         });
 
@@ -107,7 +111,7 @@
                 $('#tbl').DataTable({
 
                     data: Batchdata,
-                    pageLength: 5,
+                    pageLength: 8,
                     columns: [             
                         {
                             data:"BatchID",
@@ -147,7 +151,6 @@
                         {
                             data: "BatchID",
                             render: function (data, type, row, meta) {
-                                // ADD HREF !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                                 return `<a href="#" id="${data}" onclick="return GoToBatch(${data})">${data}</a>`
                             }
                         }
@@ -260,8 +263,7 @@
 
             $(document).on("click", ".editBtn", function () {
 
-                //$('#addDiscount_btn').hide();
-                //$('#submit_edit').show();
+                $('#btnDiv').hide(); // add To table remove
 
                 console.log('batch id is:' ,this.getAttribute('data-btnId'));
 
@@ -340,6 +342,7 @@
             $('#ph').val(id_in_arr); // saves id for later use
             
             $("#editDiv").show();
+            $('#edit_batch_header').html(`Batch #: ${btnID}`); // shows batch_id in edit form header
             $("#beerTypeInput").val(batchArr[id_in_arr].BeerType);
             $("#batchDateInput").val(batchArr[id_in_arr].Date.substr(0,10));
         }
@@ -361,6 +364,11 @@
             //let st = `?batch_id=${batch_id}`;
 
             window.open(`Batch.html?batch_id=${batch_id}`, '_self');
+        }
+
+        function CloseEditDiv() {
+            $("#editDiv").hide();
+            $("#btnDiv").show();
         }
     </script>
 
@@ -384,11 +392,6 @@
             text-align: center;
         }
 
-        /*#addprod {
-            text-align: center;
-            margin-top: 100px;
-        }*/
-
         #addprod {
             text-align: center;
             margin-top: 100px;
@@ -398,8 +401,18 @@
             background-color: aliceblue;
         }
 
-        .container {
+        /*.container {
             padding-bottom: 4%;
+        }*/
+        #addprodContainer{
+            padding-top:1%;
+        }
+        #btnDiv{
+            padding-top:1%;
+            width:50%;
+        }
+        #edit_batch_header{
+            text-align:center;
         }
     </style>
 
@@ -455,11 +468,12 @@
             </thead>
             <tbody>
             </tbody>
-
         </table>
 
-        <button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>
-        <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
+        <div id="btnDiv" class="container">
+            <button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' class="btn btn-primary btn-block">Add To Table</button>
+            <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
+        </div>
 
     </div>
     <!-- table -->
@@ -471,7 +485,7 @@
                 <select name="Beer" id="beerSelect"></select>
                 <br><br>
                 <label>Choose date</label>
-                <input type="date" name="date" id="addDate">
+                <input type="date" name="date" id="addDate" required>
                 <br><br>
 
                 <div id="inForm"></div>
@@ -484,7 +498,11 @@
     <!-- Add Product -->
     <!--Edit Row In  Table-->
     <div class="container" id="editDiv">
+        <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
         <form id="editForm">
+            <h4 id="edit_batch_header"></h4>
             <div class="form-group">
                 <label for="">Beer Type</label>
                 <input type="text" class="form-control" id="beerTypeInput" required />
@@ -492,7 +510,9 @@
                 <label for="fromDate">Date</label>
                 <input type="date" class="form-control" id="batchDateInput" required />
             </div>
-            <button id="submit_edit">Submit</button>
+            <div id="btnDiv" class="container">
+                <button id="submit_edit" class="btn btn-primary btn-block">Submit</button>
+            </div>
         </form>
     </div>
     <!--Edit Row In  Table-->
