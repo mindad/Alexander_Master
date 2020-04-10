@@ -49,16 +49,16 @@
 
 
         $(document).ready(function () {
-            //GET manager_products
-            ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError);
-            //GET BEER IN STOCK
-            ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
+            
+            ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError); //GET manager_products
+            
+            ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError); //GET BEER IN STOCK
 
-            //GET ORDER--------TODO
-            ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError);
+            
+            ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError); //GET ORDER
 
-            //get Alerts from manager table
-            ajaxCall("GET", "../../api/AlertsManager", "", GetAlertSucess, GetAlertError); // get all Alerts
+            
+            ajaxCall("GET", "../../api/AlertsManager", "", GetAlertSucess, GetAlertError); // get Alerts from manager table
 
             $('.toast').toast('show'); // Shows toast without event!!! very important!!
 
