@@ -139,24 +139,22 @@
         function GetAlertSucess(Alertdata) {
             console.log('This is alert data:', Alertdata);
 
-            st = "";
-            
+            let st = "";
 
             for (alert of Alertdata) {
 
                 if (alert.Type == 'Product Stock' || alert.Type == 'Stock') { // only brewmiester alerts
-                    toasts_arr.push(`
-                    <div class="toast" data-autohide="false"><div class="toast-header">
-                    <strong class="mr-auto text-primary"><a href="Alerts.html">${alert.Type}</a></strong>
-                    <small class="text-muted">${alert.Date.substr(0, 10)}</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+                    toasts_arr.push(
+                     `<div class="toast" data-autohide="false" id="${toast_Count}"><div class="toast-header">\
+                    <strong class="mr-auto text-primary"><a href="Alerts.html">${alert.Type}</a></strong>\
+                    <small class="text-muted">${alert.Date.substr(0, 10)}</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>\
                     </div><div class="toast-body">${alert.Description}</div></div>`);
                     toast_Count += 1;
                 }
-                if ( toast_Count == 2 ) {
-                    st = toasts_arr[0] + toasts_arr[1];
-                }
             }
-            
+
+            st = toasts_arr[toasts_arr.length - 1] + toasts_arr[toasts_arr.length - 2];
+
             $('#toastdiv').html(st); // insert toast alerts into div
 
             $('.toast').toast('show'); // Shows toast without event!!! very important!!
@@ -164,18 +162,31 @@
             $('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
                 if (confirm('are you sure yow want to delete this alert?')) {
 
-                    console.log("this is toast coint:", toast_Count);
-                    if (toast_Count > 2) {
-                        $('#toastdiv').html(toasts_arr[toast_Count - 1] + toasts_arr[toast_Count - 2]);
-                        toast_Count -= 1;
-                        toasts_arr.pop();
-                        $(this).remove();
-                        $('.toast').toast('show');
+                    for (var i = 0; i < toasts_arr.length; i++) { // find toast id and remove it from toast_arr
+                        let toast_id = toasts_arr[i].match(/id="([0-9])"/);
 
-                        ToastEvents();
+                        if (toast_id[1] == this.id) {
+                            toasts_arr.splice(i, 1);
+                            break;
+                        }
                     }
-                    
-                    return;
+
+                    if (toasts_arr.length == 0) { // no toasts left
+                        $('#toastdiv').html("");
+                        return;
+                    }
+                    if (toasts_arr.length == 1) {
+                        $('#toastdiv').html(toasts_arr[toasts_arr.length - 1]);
+                        ToastEvents();
+                        $('.toast').toast('show');
+                        return;
+                    }
+                    if (toasts_arr.length >= 2) {
+                        $('#toastdiv').html(toasts_arr[toasts_arr.length - 1] + toasts_arr[toasts_arr.length - 2]);
+                        ToastEvents();
+                        $('.toast').toast('show');
+                        return;
+                    }
                 }
                 return false; // Toast Not Deleted
             });
@@ -190,16 +201,34 @@
             $('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
                 if (confirm('are you sure yow want to delete this alert?')) {
 
-                    console.log("this is toast coint:", toast_Count);
-                    if (toast_Count > 2) {
-                        $('#toastdiv').html(toasts_arr[toast_Count - 1] + toasts_arr[toast_Count - 2]);
-                        toast_Count -= 1;
-                        toasts_arr.pop();
-                        $(this).remove();
-                        $('.toast').toast('show');
+                    for (var i = 0; i < toasts_arr.length; i++) { // find toast id and remove it from toast_arr
+                        let toast_id = toasts_arr[i].match(/id="([0-9])"/);
+
+                        if (toast_id[1] == this.id) {
+                            toasts_arr.splice(i, 1);
+                            console.log("this is toast_id", toast_id[1]);
+                            console.log("deleted at toast_id place",toasts_arr);
+                            break;
+                        }
                     }
-                    
-                    return;
+                    if (toasts_arr.length == 0) { // no toasts left
+                        $('#toastdiv').html("");
+                        return;
+                    }
+                    if (toasts_arr.length == 1) { // one toast left
+                        $('#toastdiv').html(toasts_arr[toasts_arr.length - 1]);
+
+                        ToastEvents();
+                        $('.toast').toast('show');
+                        
+                        return;
+                    }
+                    if (toasts_arr.length >= 2) { // more toasts to show
+                        $('#toastdiv').html(toasts_arr[toasts_arr.length - 1] + toasts_arr[toasts_arr.length - 2]);
+                        ToastEvents();
+                        $('.toast').toast('show');
+                        return;
+                    }
                 }
                 return false; // Toast Not Deleted
             });
@@ -274,24 +303,6 @@
         <!-- toast Div -->
         <div class="row" id="headerRow">
             <div class="col-4" id="toastdiv">
-
-                <!--<div class="toast" data-autohide="false">
-                    <div class="toast-header">
-                        <strong class="mr-auto text-primary">Waste Alert</strong>
-                        <small class="text-muted">1 hr ago</small>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
-                    </div>
-                    <div class="toast-body">Waste Alert -> batch #1322</div>
-                </div>
-
-                <div class="toast" data-autohide="false">
-                    <div class="toast-header">
-                        <strong class="mr-auto text-primary">Minimum Alert</strong>
-                        <small class="text-muted">5 mins ago</small>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
-                    </div>
-                    <div class="toast-body">US Malt reached Minimum amount</div>
-                </div>-->
 
             </div>
             <!-- toast Div -->
