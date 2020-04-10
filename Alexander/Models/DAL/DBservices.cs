@@ -283,8 +283,9 @@ namespace Alexander.Models.DAL
                         Product prod = new Product();
 
                         prod.ProductType = parsed_items_in_recipe[i].Split(':')[0];
-                        //prod.Amount = (float)Convert.ToDouble(parsed_items_in_recipe[i].Split(':')[1]);
+                        prod.Amount = (float)Convert.ToDouble(parsed_items_in_recipe[i].Split(':')[1]);
                         prod.Min_amount = 0;
+                        
                         //prod.Last_arrivalTime = new DateTime(); // not needed
 
                         //TODO make sure what ever happns here works

@@ -47,9 +47,9 @@
 
             $("#beerSelect").on('change', SetFormValues); // set form values when add batch to table
 
-            $("#addToBatch").on("click", PostNewBatch);
+            $("#ourForm").on("submit", PostNewBatch); // #addToBatch
 
-            $('#submit_edit').on("submit", edit_Batch_table);
+            $('#editForm').submit(edit_Batch_table);
 
             buttonEvents(); // edit+delete buttons
 
@@ -63,6 +63,9 @@
             console.log('this is cooking data:', Batchdata);
             batchArr = Batchdata;
 
+            ///// Sort the Array by dates!!!!!!!!! TODO TODO TODO
+
+            // Batchdata.sort((a,b)=>a.getTime()-b.getTime());// no work
 
             try {
                 $('#tbl').DataTable({
@@ -76,8 +79,8 @@
                                 let data_for_tbl = "data-btnId='" + data + "'";
 
                                 editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
-                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn + deleteBtn;
+                                //deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+                                return editBtn;// + deleteBtn;
                             }
                         },
                         { data: "BeerType" },  
@@ -103,7 +106,12 @@
                                 return "no recipe for this beer";
                             }
                         }, 
-                        { data: "Date" },
+                        {
+                            data: "Date",
+                             render: function (data) {
+                                 return data.substr(0, 10);
+                            }
+                        },
                         {
                             data: "BatchID",
                             render: function (data, type, row, meta) {
@@ -124,6 +132,11 @@
         }
 
         function PostNewBatch() {
+
+            if ($("#beerSelect").val() == "Select Beer Type") {
+                alert("Please Select Beer Type");
+                return;
+            }
 
             //get max batchID
             let ID_arr = [];
@@ -150,7 +163,7 @@
 
             $('.collapse').collapse('hide'); // collapse addprodContainer
 
-            alert('Batch Added Succefully');
+            window.reload();
         }
 
         function PostBatchError(err) {
@@ -192,10 +205,8 @@
         }
 
         function toggle_add_visibilty() {
-            //$('.invisible').removeClass();
 
             ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
-
 
             // toggle class and remove the form
         }
@@ -216,7 +227,9 @@
 
                         for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) {
 
-                            st += `<label>${recipeArr[i].Products_in_recipe[j].ProductType} </label><input type="number" min="0" value="${recipeArr[i].Products_in_recipe[j].Amount}" class="text-center" /><br><br>`
+                            st += `<label>${recipeArr[i].Products_in_recipe[j].ProductType} </label>\
+                                    <input type="number" min="0" value="${recipeArr[i].Products_in_recipe[j].Amount}" class="text-center" />\
+                                    <br><br>`
                         }
                         break;
                     }
@@ -242,19 +255,19 @@
                 populateFields(this.getAttribute('data-btnId')); // fill the form fields according to the selected row
             });
 
-            $(document).on("click", ".deleteBtn", function () {
+            //$(document).on("click", ".deleteBtn", function () {
 
-                var batch_id = this.getAttribute('data-btnId');
+            //    var batch_id = this.getAttribute('data-btnId');
 
-                if (confirm("Are You Sure You Want To Delete This Row?")) {
+            //    if (confirm("Are You Sure You Want To Delete This Row?")) {
 
-                    ajaxCall("Delete", "../../api/Batch", JSON.stringify(batch_id), DeleteBatchSucess, DeleteBatchError); 
-                }
-                else {
-                    console.log("You pressed Cancel!");
-                }
+            //        ajaxCall("Delete", "../../api/Batch", JSON.stringify(batch_id), DeleteBatchSucess, DeleteBatchError); 
+            //    }
+            //    else {
+            //        console.log("You pressed Cancel!");
+            //    }
 
-            });
+            //});
         }
 
         function edit_Batch_table() {
@@ -477,7 +490,8 @@
                 <input type="date" class="form-control" id="batchDateInput" required />
 
                 <div id="btnDiv" class="container">
-                    <button id="submit_edit" class="btn btn-primary btn-block" type="submit">Submit</button>
+                    <button class="btn btn-primary btn-block" type="submit">Submit</button>
+                    <!--id="submit_edit"-->
                 </div>
             </div>
         </form>
