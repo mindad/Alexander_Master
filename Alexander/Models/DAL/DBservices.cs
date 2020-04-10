@@ -48,6 +48,49 @@ namespace Alexander.Models.DAL
             return cmd;
         }
 
+        // read DT based on string parameter
+        public DBservices read(string tbl_name)
+        {
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                da = new SqlDataAdapter("select * from " + tbl_name, con);
+                SqlCommandBuilder builder = new SqlCommandBuilder(da);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                dt = ds.Tables[0];
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            return this;
+        }
+
+        // Global update for any dt
+        public int update()
+        {
+            try
+            {
+                da.Update(dt);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return 1;
+        }
+
 
 
         /// 
@@ -714,7 +757,6 @@ namespace Alexander.Models.DAL
         }
 
         // GET Fermantiation 
-
         public List<Fermentation> get_FermentDB()
         {
             List<Fermentation> fermant_list = new List<Fermentation>();
@@ -758,25 +800,43 @@ namespace Alexander.Models.DAL
         }
         
 
-        // read DT based on string parameter
-        public DBservices read(string tbl_name)
+        /// 
+        /// GET all Alerts [Alert_Manager_2020]
+        /// 
+        public List<AlertsManager> get_AlertsManagerDB()
         {
+            List<AlertsManager> alert_list_manager = new List<AlertsManager>();
             SqlConnection con = null;
+
             try
             {
                 con = connect("DBConnectionString");
-                da = new SqlDataAdapter("select * from "+ tbl_name, con);
-                SqlCommandBuilder builder = new SqlCommandBuilder(da);
-                DataSet ds = new DataSet();
-                da.Fill(ds);
-                dt = ds.Tables[0];
-            }
 
+                String query = "SELECT * FROM [Alert_Manager_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+
+                    AlertsManager alert_to_add = new AlertsManager();
+
+                    alert_to_add.AlertID = Convert.ToInt32(dr["Alert_id"]);
+                    alert_to_add.Type = (string)dr["type"];
+                    alert_to_add.Date = Convert.ToDateTime(dr["date"]);
+                    alert_to_add.Description = (string)dr["description"];
+                    alert_to_add.Notes = (string)dr["notes"];
+
+                    alert_list_manager.Add(alert_to_add);
+                }
+
+                return alert_list_manager;
+            }
             catch (Exception ex)
             {
-                throw ex;
+                throw (ex);
             }
-
             finally
             {
                 if (con != null)
@@ -784,21 +844,105 @@ namespace Alexander.Models.DAL
                     con.Close();
                 }
             }
-            return this;
         }
 
-        // Global update for any dt
-        public int update() 
+        //end Get all alert [Alert_Manager_2020]
+
+
+
+
+
+        //GET ALL MANAGER PRODUCT
+
+        public List<managerproducts> get_manager_productsDB()
         {
+            List<managerproducts> manager_products_List = new List<managerproducts>();
+            SqlConnection con = null;
+
             try
             {
-                da.Update(dt);
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [manager_products_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+
+                    managerproducts mp = new managerproducts();
+                    mp.ProdName = (string)dr["prodName"];
+                    mp.ProdID = Convert.ToInt32(dr["prodID"]);
+                    mp.BeerType = (string)dr["beerType"];
+                    mp.Amount = Convert.ToInt32(dr["amount"]);
+                    mp.Min_in_stock = Convert.ToInt32(dr["min_In_Stock"]);
+
+
+                    manager_products_List.Add(mp);
+                }
+
+                return manager_products_List;
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw (ex);
             }
-            return 1;
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
         }
+        
+
+
+        //get order_2020
+
+        public List<Order> get_OrdersDB()
+        {
+            List<Order> Order_List = new List<Order>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [Order_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {   
+
+                    Order order = new Order();
+
+                    //TODO add the beer type
+                    order.OrderID = Convert.ToInt32(dr["Order_id"]);
+                    order.Date = Convert.ToDateTime(dr["SupplyDate"]);
+                    order.Beer = new Beer((string)dr["beerType"], Convert.ToInt32(dr["keg_20_amount"]), Convert.ToInt32(dr["keg_30_amount"]), Convert.ToInt32(dr["box_24"]), 0);
+
+                    Order_List.Add(order);
+                }
+                return Order_List;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        //end get order_2020 orders
     }
 }

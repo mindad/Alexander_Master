@@ -20,7 +20,7 @@
     <script src="../../Scripts/ajaxCalls.js"></script>
 
     <script>
-        Batch_BottelingArr = [];
+       ManagerInventoryArr = [];
 
         $(document).ready(function () {
 
@@ -28,7 +28,8 @@
             $('#submit_edit').on('click', submitEdit);
             $('#editDiv').on('submit', f1);
 
-            ajaxCall("GET", "../../api/Batch_Botteling", "", GetBatch_BottelingSucess, GetBatch_BottelingError);
+            //GET manager_products
+            ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError);
 
 
             buttonEvents();
@@ -38,21 +39,21 @@
         });
         //Batch_Botteling  API
 
-        function GetBatch_BottelingSucess(Batch_Botteling_data) {
+        function GetmanagerproductsSucess(data) {
 
-            console.log('this is Batch_Botteling_data:', Batch_Botteling_data);
+            console.log('this is Batch_Botteling_data:', data);
 
-            Batch_BottelingArr = Batch_Botteling_data;
+            ManagerInventoryArr = data;
 
             try {
                 $('#tbl').DataTable({
 
-                    data: Batch_Botteling_data,
+                    data: data,
 
                     pageLength: 7,
                     columns: [
                         {
-                            data: "BatchID",
+                            data: "ProdName",
                             render: function (data, type, row, meta) {
 
                                 let data_for_tbl = "data-btnId='" + data + "'";
@@ -62,83 +63,15 @@
                                 return editBtn /*+ deleteBtn*/;
                             }
                         },
+                        { data: "ProdName" },
+                        { data: "ProdID" },
+
+
                         { data: "BeerType" },
-                        {
-                            data: "BatchID",
-                            render: function (data, type, row, meta) {
-                                // ADD HREF !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                return '<a href="#">' + data + '</a>'
-                            }
-                        },
-                        {
-                            data: "Date",
-                            render: function (data) {
-                                return data.substr(0, 10);
-                            }
-                        },
-                        { data: "Tank" },
-                        {
-                            data: "Tank",
-                            render: function (data, type, row, meta) {//func to check how much is the batch vol
-                                if (data > 60)
-                                    return 6000;
-                                else if (data > 40)
-                                    return 4000;
-                                else
-                                    return 2000;
-                            }
-                        },
-                        { data: "Wort_volume" },
-                        { data: "Keg20_amount" },
-                        {
-                            data: "Keg20_amount",
-                            render: function (data, type, row, meta) {
-                                // ADD function *20 litter
-                                return data * 20
-                            }
-                        },
-                        { data: "Keg30_amount" },
-                        {
-                            data: "Keg30_amount",
-                            render: function (data, type, row, meta) {
-                                // ADD function *30 litter
-                                return data * 30
-                            }
-                        },
-                        {
-                            data: {},
-                            render: function (data, type, row, meta) {
-                                return data.Keg20_amount + data.Keg30_amount + data.Bottels_qty
-                            }
-                        },
-                        { data: "Bottels_qty" },
-                        {
-                            data: "Bottels_qty",
-                            render: function (data, type, row, meta) {
-                                // ADD function *0.33 litter bottle
-                                return (data * 0.33).toFixed(2)
-                            }
-                        },
-                        {
-                            data: "Bottels_qty",
-                            render: function (data, type, row, meta) {
-                                // ADD function *24 bottles in box
-                                return (data / 24).toFixed(2)
-                            }
-                        },
-                        { data: "Waste_litter" },
-                        {
-                            data: {},
-                            render: function (data, type, row, meta) {
-                                console.log(data.Waste_litter)
-                                if (data.tank > 60)
-                                    return (data.Waste_litter / 6000).toFixed(2)
-                                else if (data.tank > 40)
-                                    return (data.Waste_litter / 4000).toFixed(2)
-                                else
-                                    return (data.Waste_litter / 2000).toFixed(2)
-                            }
-                        },
+
+                        { data: "Amount" },
+                        { data: "Min_in_stock" },
+
                     ]
                 });
             }
@@ -149,7 +82,7 @@
 
         }
 
-        function GetBatch_BottelingError(err) {
+        function GetmanagerproductsError(err) {
             console.log(err);
         }
 
@@ -216,7 +149,7 @@
 
             let batch;
 
-            for (let item of Batch_BottelingArr) { // find batch_id clicked on in 'Batch_BottelingArr'
+            for (let item of ManagerInventoryArr) { // find batch_id clicked on in 'Batch_BottelingArr'
                 if (item.BatchID == batch_id) {
                     batch = item;
                     break;
@@ -250,7 +183,6 @@
             console.log('batch to PUT:', batch);
 
             ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(batch), Put_success, Put_Error);
-            refresh_table();
 
             // refresh_table();
 
@@ -333,9 +265,6 @@
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="#">Annual Reports</a>
                     </li>
-                    <!-- <li class="nav-item">
-                      <a class="nav-link disabled" href="#">Disabled</a>
-                    </li> -->
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
@@ -351,30 +280,17 @@
             <thead style="background-color:cornflowerblue">
                 <tr>
                     <th></th> <!--edit/delete buttons-->
-                    <th>Beer Type</th>
-                    <th>Batch Id</th>
-                    <th>Date</th>
-                    <th>Tank</th>
-                    <th>Batch Volume</th>
-                    <th>Wort Volume</th>
-                    <th>Keg20 amount</th>
-                    <th>Keg20 qty</th>
-                    <th>Keg30 amount</th>
-                    <th>Keg30 qty</th>
-                    <th>Total Production</th>
-                    <th>Bottles qty</th>
-                    <th>Bottles Litter</th>
-                    <th>Boxes qty</th>
-                    <th>Waste Litter</th>
-                    <th>Waste Precent</th>
+                    <th>prodName</th>
+                    <th>prodID</th>
+                    <th>beerType</th>
+                    <th>amount</th>
+                    <th>min_In_Stock</th>
+
                 </tr>
             </thead>
             <tbody></tbody>
 
         </table>
-        <!--<button id="add_new_batchbotteling" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
-        <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
-
     </div>
     <!-- table -->
 
@@ -384,16 +300,16 @@
             <div class="form-group">
                 <h2 id="batchID_header_edit"></h2><br />
                 <label>Keg20_amount</label>
-                <input type="number" value="" id="Keg20_amountInput_edit" />
+                <input type="text" value="" id="Keg20_amountInput_edit" />
                 <br>
                 <label>Keg30_amount</label>
-                <input type="number" value="" id="Keg30_amountInput_edit" />
+                <input type="text" value="" id="Keg30_amountInput_edit" />
                 <br>
                 <label>Bottles_qty</label>
-                <input type="number" value="" id="Bottles_qtyInput_edit" />
+                <input type="text" value="" id="Bottles_qtyInput_edit" />
                 <br>
                 <label>Waste_Litter</label>
-                <input type="number" value="" id="WasteInput_edit" />
+                <input type="text" value="" id="WasteInput_edit" />
             </div>
             <button id="submit_edit">Submit</button>
         </form>

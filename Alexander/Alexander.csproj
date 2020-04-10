@@ -156,6 +156,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AlertController.cs" />
+    <Compile Include="Controllers\AlertsManagerController.cs" />
     <Compile Include="Controllers\BatchController.cs" />
     <Compile Include="Controllers\Batch_BottelingController.cs" />
     <Compile Include="Controllers\Batch_ProductionController.cs" />
@@ -164,15 +165,19 @@
     <Compile Include="Controllers\HarvestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\managerproductsController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\PurgeController.cs" />
     <Compile Include="Controllers\RecipeController.cs" />
     <Compile Include="Controllers\SampleDetailsController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\alert.cs" />
+    <Compile Include="Models\AlertsManager.cs" />
     <Compile Include="Models\Batch.cs" />
     <Compile Include="Models\Batch_Botteling.cs" />
     <Compile Include="Models\Batch_Production.cs" />
@@ -182,6 +187,7 @@
     <Compile Include="Models\Fermentation.cs" />
     <Compile Include="Models\Harvest.cs" />
     <Compile Include="Models\Label.cs" />
+    <Compile Include="Models\managerproducts.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Purge.cs" />
@@ -205,11 +211,15 @@
     <Content Include="Pages\Brewmiester\Brewmiester-dashboard.html" />
     <Content Include="Pages\Brewmiester\Brewmiester-prod.html" />
     <Content Include="Pages\Brewmiester\Inventory.html" />
+    <Content Include="Pages\Images\alexanderlogo.png" />
     <Content Include="Pages\Images\details_close.png" />
     <Content Include="Pages\Images\details_open.png" />
     <Content Include="Pages\Images\Logo_alexander.jpeg" />
+    <Content Include="Pages\Login.html" />
+    <Content Include="Pages\Manager\Alerts_Manager.html" />
     <Content Include="Pages\Manager\Manager-dashboard.html" />
     <Content Include="Pages\Manager\Manager-prod.html" />
+    <Content Include="Pages\Manager\Manager-ProductInventory.html" />
     <Content Include="Scripts\ajaxCalls.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

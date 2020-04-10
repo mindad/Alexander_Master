@@ -11,14 +11,14 @@ namespace Alexander.Models
     {
         private int keg20_amount;
         private int keg30_amount;
-       
+
         private int bottels_qty;
         private float waste_litter;
         private float waste_percent;
 
         public int Keg20_amount { get => keg20_amount; set => keg20_amount = value; }
         public int Keg30_amount { get => keg30_amount; set => keg30_amount = value; }
-       
+
         public int Bottels_qty { get => bottels_qty; set => bottels_qty = value; }
         public float Waste_litter { get => waste_litter; set => waste_litter = value; }
         public float Waste_percent { get => waste_percent; set => waste_percent = value; }
@@ -27,11 +27,11 @@ namespace Alexander.Models
 
         public Batch_Botteling() { }
 
-        public Batch_Botteling(int batchID, DateTime date, int tank, float wort_volume, string beerType, Recipe recipe_for_this_batch,int keg20_amount, int keg30_amount, int bottels_qty, float waste_litter, float waste_percent):base( batchID,  date,  tank,  wort_volume,  beerType,  recipe_for_this_batch)
+        public Batch_Botteling(int batchID, DateTime date, int tank, float wort_volume, string beerType, Recipe recipe_for_this_batch, int keg20_amount, int keg30_amount, int bottels_qty, float waste_litter, float waste_percent) : base(batchID, date, tank, wort_volume, beerType, recipe_for_this_batch)
         {
             this.Keg20_amount = keg20_amount;
             this.Keg30_amount = keg30_amount;
-      
+
             this.Bottels_qty = bottels_qty;
             this.Waste_litter = waste_litter;
             this.Waste_percent = waste_percent;
@@ -48,7 +48,7 @@ namespace Alexander.Models
         }
 
         //insert
-         public int insert_Batch_Botteling_arr()
+        public int insert_Batch_Botteling_arr()
         {
             DBservices dbs = new DBservices();
             int numEffected = dbs.insert(this);

@@ -1,0 +1,321 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--///////////////////////style/////////-->
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f7f6f6;
+            padding-bottom: 1%;
+        }
+
+        form {
+        }
+
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+            button:hover {
+                opacity: 0.8;
+            }
+
+        .cancelbtn {
+            width: auto;
+            padding: 10px 18px;
+            background-color: #f44336;
+        }
+
+        .imgcontainer {
+            text-align: center;
+            margin: 24px 0 12px 0;
+        }
+
+        img.avatar {
+            width: 40%;
+            border-radius: 40%;
+        }
+
+        .container {
+            padding: 5px;
+        }
+
+        span.psw {
+            float: right;
+        }
+
+        span.ChangePass {
+            float: left;
+        }
+
+        #forgotpass, #changepass {
+            margin: auto;
+            text-align: center;
+            width: 40%;
+            padding: 5px;
+            border: solid 1px black;
+        }
+        /* Change styles for span and cancel button on extra small screens */
+        @media screen and (max-width: 300px) {
+            span .psw {
+                display: block;
+                float: none;
+            }
+
+            .cancelbtn {
+                width: 100%;
+            }
+        }
+    </style>
+    <!--///////////////////////style/////////-->
+    <meta charset="utf-8" />
+    <title>Manager Production</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!--<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <script src="../Scripts/ajaxCalls.js"></script>
+
+    <script>
+
+        var userarr = [];
+
+        $(document).ready(function () {
+
+
+            //ajaxCall("GET", "../../api/User", "", GetUserSucess, Get_UserError);
+            $("#loginform").submit(f1);
+
+            $("#btn").click(submitUser);
+            $("#forgotpass").hide();
+            $("#changepass").hide();
+            $("#forgotpassB").click(showforgotpass);
+            $("#changepassB").click(showchangepass);
+
+            $("#btnforgotpass").click(forgotpass);
+            $("#btnchangepass").click(changepass);
+
+        });
+
+
+        function f1() {
+            return false;
+        }
+        var user = "";
+        var password = "";
+
+        //submit user
+        function submitUser() {
+
+            userlogin = {
+                "username": $("#username").val(),
+                "password": $("#password").val()
+            }
+            console.log(userlogin);
+            ajaxCall('POST', "../api/User", JSON.stringify(userlogin), PostUserSucess, PostUserError);
+            return false;
+        }
+        ///end submit user
+
+
+        //forgot password
+        function forgotpass() {
+
+            userForgot = $("#userforgotpass").val();
+            favoriteNumber = $("#favorite").val();
+
+            userforgot = {
+                "username": userForgot,
+                "question": favoriteNumber
+            }
+            console.log("forgot password data ", userforgot);
+
+            ajaxCall('POST', "../api/User/Forgotpass", JSON.stringify(userforgot), PostUserForgotSucess, PostUserForgotError);
+
+            return false;
+
+        }
+        // end forgot password
+
+
+        //change password
+
+        function changepass() {
+            user = $("#changepassuser").val();
+            oldpassword = $("#oldpass").val();
+            newpass = $("#newpass").val();
+            confirm = $("#confirmpass").val();
+
+            if (newpass == confirm) {
+                userchange = {
+                    "username": user,
+                    "password": oldpassword,
+                    "newpass": newpass
+                }
+
+
+                console.log(userchange);
+
+                ajaxCall("PUT", "../api/User/Changepass", JSON.stringify(userchange), PutUserSucess, PutUserError);
+                return false;
+            }
+            else
+                alert("new password and confirm new password must be the same");
+
+
+        }
+        //end change password
+
+
+        //put user password change
+        function PutUserSucess(data) {
+            console.log(data);
+            if (data == "Password Changed Successfuly")
+                alert("Password Changed Successfuly");
+
+        }
+        function PutUserError(err) {
+            console.log(err);
+            alert("Password Didnt Change");
+        }
+
+
+        //show function
+        function showforgotpass() {
+            $("#forgotpass").toggle()
+            $("#changepass").hide()
+        }
+        function showchangepass() {
+            $("#changepass").toggle()
+            $("#forgotpass").hide()
+
+        }
+
+         //end  show function
+
+        //post forgot password
+        function PostUserForgotSucess(password) {
+            console.log(password);
+            if (password == "")
+                alert("User name or answer for the questiong incorrect")
+            else
+                alert("your password is: '" + password + "' please dont forget next time")
+        }
+        function PostUserForgotError(err) {
+            console.log(err);
+        }
+        /// ** end post Forgot passowrd User
+
+
+           //post Login user
+        function PostUserSucess(user) {
+            console.log(user);
+
+            if (user == "sahar") { // brewmiester
+
+                window.open('Brewmiester/Brewmiester-dashboard.html', '_self');
+                return;
+            }
+            if (user != "") { // manager
+                window.open('Manager/Manager-dashboard.html', '_self');
+                return;
+            }
+
+            alert("Username or Password is wrong");
+        }
+        function PostUserError(err) {
+            console.log(err);
+        }
+        // ** end post Login User
+
+    </script>
+
+</head>
+<body>
+
+
+    <div class=" container" style="width:40%; text-align:center; margin:auto;  ">
+        <form id="loginform" style="margin-top:0px;">
+            <div class="imgcontainer">
+                <img src="Images/alexanderlogo.png" alt="alexanderlogo" class="avatar">
+            </div>
+
+
+            <div class="container">
+                <label for="uname"><b>Username</b></label>
+                <input id="username" type="text" placeholder="Enter Username" name="uname" required>
+
+                <label for="psw"><b>Password</b></label>
+                <input id="password" type="password" placeholder="Enter Password" name="psw" required>
+
+                <input id="btn" type="submit" style="margin-top:5px" value="Login">
+
+            </div>
+
+            <div class="container">
+
+                <input id="forgotpassB" type="button" style="margin-top:5px" value="Forgot password">
+                <input id="changepassB" type="button" style="margin-top:5px" value="Change password">
+
+
+            </div>
+        </form>
+
+    </div>
+    <form id="forgotpass">
+
+        <div class="container">
+            <label for="uname"><b>Username</b></label>
+            <input id="userforgotpass" type="text" placeholder="Enter Username" name="uname" required>
+
+            <label for="psw"><b>Question: Favorite number</b></label>
+            <input id="favorite" type="password" placeholder="Enter favorite number" name="psw" required>
+
+            <input id="btnforgotpass" type="submit" style="margin-top:5px" value="ok">
+
+        </div>
+
+    </form>
+    <form id="changepass">
+
+        <div class="forgotpass">
+
+            <input id="changepassuser" type="text" placeholder="Enter Username" name="uname" required>
+            <input id="oldpass" type="password" placeholder="Enter old password" name="psw" required>
+            <input id="newpass" type="password" placeholder="Enter new password" name="psw" required>
+            <input id="confirmpass" type="password" placeholder="confirm new password" name="psw" required>
+            <input id="btnchangepass" type="submit" style="margin-top:2px" value="ok">
+
+        </div>
+
+    </form>
+
+</body>
+</html>
