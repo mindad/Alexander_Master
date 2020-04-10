@@ -603,6 +603,7 @@ namespace Alexander.Models.DAL
                     smpl.Gravity = (float)dr["Gravity"];
                     smpl.Ph = (float)dr["ph"];
                     smpl.Notes = (string)dr["notes"];
+                    smpl.Row_num = Convert.ToInt32(dr["index"]);
 
 
                     smpl_list.Add(smpl);
@@ -649,6 +650,7 @@ namespace Alexander.Models.DAL
                     prg.Weight = (float)dr["weight"];
                     prg.Num_of_buckets = (float)dr["Num_Of_Buckets"];
                     prg.Notes = (string)dr["notes"];
+                    prg.Row_num = Convert.ToInt32(dr["index"]);
 
 
                     purge_list.Add(prg);
@@ -694,6 +696,7 @@ namespace Alexander.Models.DAL
                     harvest.Temperature = (float)dr["temperature"];
                     harvest.Time_tap_2 = Convert.ToDateTime(dr["timeForTapTwo"]);
                     harvest.Total_Duration = Convert.ToDateTime(dr["total_time"]);
+                    harvest.Row_num = Convert.ToInt32(dr["index"]);
 
                     harvest_list.Add(harvest);
                 }
@@ -738,6 +741,7 @@ namespace Alexander.Models.DAL
                     fr.PressureChange = (float)dr["pressure_change"];
                     fr.Tank_pressure = (float)dr["pressure_tank"];
                     fr.Tank_temperature = (float)dr["tank_temperature"];
+                    fr.Row_num = Convert.ToInt32(dr["index"]);
 
                     fermant_list.Add(fr);
                 }

@@ -17,8 +17,9 @@ namespace Alexander.Models
         private float ph;
         private string notes;
         private int batch_id;
+        private int row_num;
 
-        public sampleDetails(DateTime date, float tank_temp, float sample_temp, float rate, float gravity, float ph, string notes, int batch_id)
+        public sampleDetails(DateTime date, float tank_temp, float sample_temp, float rate, float gravity, float ph, string notes, int batch_id, int row_num)
         {
             this.date = date;
             this.tank_temp = tank_temp;
@@ -28,6 +29,7 @@ namespace Alexander.Models
             this.ph = ph;
             this.notes = notes;
             this.batch_id = batch_id;
+            this.row_num = row_num;
         }
 
         public sampleDetails() { }
@@ -40,6 +42,7 @@ namespace Alexander.Models
         public float Ph { get => ph; set => ph = value; }
         public string Notes { get => notes; set => notes = value; }
         public int Batch_id { get => batch_id; set => batch_id = value; }
+        public int Row_num { get => row_num; set => row_num = value; }
 
         public List<sampleDetails> get_Samples() //int id
         {

@@ -132,10 +132,8 @@
                     pageLength: 5,
                     columns: [
                         {
-                            data: {},//"Batch_id",
-                            render: function (data,type,row) { //
-
-                                console.log(row);
+                            data: "Row_num",
+                            render: function (data) { 
 
                                 let data_for_tbl = "data-Sample-btnId='" + data + "'";
 
@@ -198,7 +196,7 @@
                     pageLength: 5,
                     columns: [
                         {
-                            data:"Batchid",
+                            data:"Row_num",
                             render: function (data, type, row, meta) {
 
                                 let data_for_tbl = "data-Purge-btnId='" + data + "'";
@@ -261,7 +259,7 @@
                     pageLength: 5,
                     columns: [
                         {
-                            data:"Batchid",
+                            data:"Row_num",
                             render: function (data, type, row, meta) {
 
                                 let data_for_tbl = "data-Harvest-btnId='" + data + "'";
@@ -323,7 +321,7 @@
                     pageLength: 5,
                     columns: [
                         {
-                            data:"Batchid",
+                            data:"Row_num",
                             render: function (data, type, row, meta) {
 
                                 let data_for_tbl = "data-Fermantation-btnId='" + data + "'";
