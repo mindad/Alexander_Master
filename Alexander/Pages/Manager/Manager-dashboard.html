@@ -46,6 +46,8 @@
         beerinstock = [];
 
         orders_arr = []; // DO NOT DELETE !!!
+        toasts_arr = [];
+        toast_Count = 0;
 
 
         $(document).ready(function () {
@@ -54,22 +56,20 @@
             
             ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError); //GET BEER IN STOCK
 
-            
             ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError); //GET ORDER
 
-            
             ajaxCall("GET", "../../api/AlertsManager", "", GetAlertSucess, GetAlertError); // get Alerts from manager table
 
-            $('.toast').toast('show'); // Shows toast without event!!! very important!!
-
-            $('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
-               if (confirm('are you sure yow want to delete this alert?')) {
-                    return;
-                }
-                return false; // Toast Not Deleted
-            });
-
             $("#beerSelect").on('change', SetOrderChartValues); // Changes Order Chart Depands on Beer Type
+
+            //$('.toast').toast('show'); // Shows toast without event!!! very important!!
+
+            //$('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
+            //   if (confirm('are you sure yow want to delete this alert?')) {
+            //        return;
+            //    }
+            //    return false; // Toast Not Deleted
+            //});
 
         });
 
@@ -634,16 +634,20 @@
         function GetAlertSucess(Alertdata) {
             console.log('This is alert data:', Alertdata);
 
-            st = "";
+            let st = "";
 
             for (alert of Alertdata) {
 
                 if (alert.Type == 'Boxes Stock' || alert.Type == 'Label Stock') { // only brewmiester alerts
-                    st += `
+                    toasts_arr.push(`
                         <div class="toast" data-autohide="false"><div class="toast-header">
                         <strong class="mr-auto text-primary">${alert.Type}</strong>
                         <small class="text-muted">${alert.Date.substr(0, 10)}</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
-                        </div><div class="toast-body">${alert.Description}</div></div>`
+                        </div><div class="toast-body">${alert.Description}</div></div>`);
+                    toast_Count += 1;
+                }
+                if ( toast_Count == 2 ) {
+                    st = toasts_arr[0] + toasts_arr[1];
                 }
             }
 
@@ -654,8 +658,20 @@
             $('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
                 if (confirm('are you sure yow want to delete this alert?')) {
 
+                    console.log("this is toast coint:", toast_Count);
+                    if (toast_Count > 2) {
+                        $('#toastdiv').html(toasts_arr[toast_Count - 1] + toasts_arr[toast_Count - 2]);
+                        toast_Count -= 1;
+                        toasts_arr.pop();
+                        $(this).remove();
+                        $('.toast').toast('show');
+
+                        ToastEvents();
+                    }
+                    
+                    return;
                 }
-                else return false;
+                return false; // Toast Not Deleted
             });
 
         }
@@ -663,7 +679,27 @@
         function GetAlertError(err) {
             console.log(err);
         }
-            // ** Alert API
+
+        function ToastEvents() {
+            $('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
+                if (confirm('are you sure yow want to delete this alert?')) {
+
+                    console.log("this is toast coint:", toast_Count);
+                    if (toast_Count > 2) {
+                        $('#toastdiv').html(toasts_arr[toast_Count - 1] + toasts_arr[toast_Count - 2]);
+                        toast_Count -= 1;
+                        toasts_arr.pop();
+                        $(this).remove();
+                        $('.toast').toast('show');
+                    }
+
+                    return;
+                }
+                return false; // Toast Not Deleted
+            });
+        }
+
+        // ** Alert API
 
 
     </script>

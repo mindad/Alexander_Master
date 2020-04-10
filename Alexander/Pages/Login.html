@@ -109,8 +109,6 @@
 
         $(document).ready(function () {
 
-
-            //ajaxCall("GET", "../../api/User", "", GetUserSucess, Get_UserError);
             $("#loginform").submit(f1);
 
             $("#btn").click(submitUser);
@@ -180,14 +178,16 @@
                     "newpass": newpass
                 }
 
-
                 console.log(userchange);
 
                 ajaxCall("PUT", "../api/User/Changepass", JSON.stringify(userchange), PutUserSucess, PutUserError);
                 return false;
             }
-            else
+            else {
                 alert("new password and confirm new password must be the same");
+                return false;
+            }
+                
 
 
         }
@@ -197,13 +197,15 @@
         //put user password change
         function PutUserSucess(data) {
             console.log(data);
-            if (data == "Password Changed Successfuly")
+
+            if (data == "Password Changed Successfuly") {
                 alert("Password Changed Successfuly");
+                location.reload();
+            }
 
         }
         function PutUserError(err) {
-            console.log(err);
-            alert("Password Didnt Change");
+            alert("Password Didnt Change,User or Old password incorrect");
         }
 
 
