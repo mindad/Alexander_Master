@@ -220,11 +220,7 @@ namespace Alexander.Models.DAL
                     order.Date = Convert.ToDateTime(dr["SupplyDate"]);
                     order.Beer = new Beer((string)dr["beerType"], Convert.ToInt32(dr["keg_20_amount"]), Convert.ToInt32(dr["keg_30_amount"]), Convert.ToInt32(dr["box_24"]), 0);
 
-                    //order.Keg20_inOrder= (Convert.ToInt32(dr["keg_20_amount"]));
-                    //order.Keg30_inOrder= (Convert.ToInt32(dr["keg_30_amount"]));
-                    //order.Box24_inOrder= (Convert.ToInt32(dr["box_24"]));
-                    //order.BeerType= (string)(dr["beerType"]);
-                
+              
             
          
                     Order_List.Add(order);
