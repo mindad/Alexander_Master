@@ -88,45 +88,6 @@
 
 
 
-        // post batchbotteling
-        //function PostNewBatchBotteling() {
-
-        //    //get max batchbottelingID
-        //    let ID_arr = [];
-        //    for (var i = 0; i < batchbottelingArr.length; i++) {
-        //        ID_arr.push(batchbottelingArr[i].BatchID);
-        //    }
-        //    console.log('this is ID_arr:', ID_arr);
-        //    batchbotteling = {
-        //        batchID: Math.max.apply(null, ID_arr) + 1,
-        //        keg_20_amount: $('#Keg20_amountInput').val(),
-        //        keg_30_amount: $('#Keg30_amountInput').val(),
-        //        bottles_qty: $('#Bottles_qtyInput').val(),
-        //        waste_litter: $('#WasteInput').val(),
-        //        wort_volume: $('#WortInput').val(),
-        //        date: $('#addDate').val(),
-        //        beerType: $('#beerSelect').val(),
-        //        tank: 0,
-
-        //    }
-
-        //    console.log('this is batch to post:', batchbotteling);
-
-
-        //    ajaxCall('POST', "../../api/Batchbotteling", JSON.stringify(batchbotteling), PostBatchbottelingSucess, PostBatchbottelingError);
-        //}
-        //function PostBatchbottelingSucess(data) {
-        //    console.log(data);
-
-        //    $('.collapse').collapse('hide'); // collapse addprodContainer
-
-        //    alert('Batch Added Succefully');
-        //}
-
-        //function PostBatchbottelingError(err) {
-        //    console.log(err);
-        //}
-        // ** Batch API
 
 
         function toggle_add_visibilty() {
@@ -342,31 +303,8 @@
 
     </div>
     <!-- table -->
-    <!-- Add Production -->
-    <!--<div class="container collapse" id="addprodContainer">
-        <div id="addprod">
-            <br />
-            <form>
-                <label>Keg20_amount</label>
-                <input type="text" value="" id="Keg20_amountInput" />
-                <br><br>
-                <label>Keg30_amount</label>
-                <input type="text" value="" id="Keg30_amountInput" />
-                <br><br>
-                <label>Bottles_qty</label>
-                <input type="text" value="" id="Bottles_qtyInput" />
-                <br><br>
-                <label>Waste_Litter</label>
-                <input type="text" value="" id="WasteInput" />
-                <br />
-                <br />
-                <input id="addToBatchBottling" type="submit">
-                <br />
-                <br />
-            </form>
-        </div>
-    </div>-->
-    <!-- Add Production -->
+
+   
     <!--Edit Row In  Table-->
     <div class="container" id="editDiv">
         <form id="editForm">
