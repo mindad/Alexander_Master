@@ -47,26 +47,26 @@ namespace Alexander.Models
         public int insert()
         {
             DBservices dbs = new DBservices();
-            int numEffected = dbs.insert(this); // insert to batch_2020
+            int numEffected = dbs.insert(this); // insert to Batch_2020
 
-            try
+            try // create new row in BatchAfterProd_2020 with the same id
             {
                 dbs = dbs.read("[BatchAfterProd_2020]");
 
-                dbs.dt.Rows.Add(BatchID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); // create new row in BatchAfterProd_2020 with the same id
-                numEffected = dbs.update();
+                dbs.dt.Rows.Add(BatchID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); 
+                numEffected += dbs.update();
             }
             catch (Exception ex)
             {
                 throw ex;
             }
 
-            try
+            try // create new row in BatchAtProd_2020 with the same id
             {
                 dbs = dbs.read("[BatchAtProd_2020]");
 
-                dbs.dt.Rows.Add(BatchID, 0, 0, 0, 0, 0, 0, 0, 0, 0); // create new row in BatchAfterProd_2020 with the same id
-                numEffected = dbs.update();
+                dbs.dt.Rows.Add(BatchID, 0, 0, 0, 0, 0, 0, 0, 0, 0); 
+                numEffected += dbs.update();
             }
             catch (Exception ex)
             {
@@ -101,13 +101,36 @@ namespace Alexander.Models
             return dt;
         }
 
+        // Delete All Batches
         public int delete_line(int row)
         {
             DBservices dbs = new DBservices();
-            dbs = dbs.read("[Batch_2020]");
+            //DBservices dbsA = new DBservices();
+            //DBservices dbsB = new DBservices();
 
             try
             {
+                dbs = dbs.read("[BatchAfterProd_2020]");
+                dbs.dt.Select("batch_id=" + row).First().Delete(); // Delete a line in DataTable
+                dbs.update(); // update the DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            try
+            {
+                dbs = dbs.read("[BatchAtProd_2020]");
+                dbs.dt.Select("batch_id=" + row).First().Delete(); // Delete a line in DataTable
+                dbs.update(); // update the DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            try
+            {
+                dbs = dbs.read("[Batch_2020]");
                 dbs.dt.Select("batch_id=" + row).First().Delete(); // Delete a line in DataTable
                 dbs.update(); // update the DB
             }

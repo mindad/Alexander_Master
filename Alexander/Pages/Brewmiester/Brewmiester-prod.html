@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Brewmiester Production</title>
+    <title>Production</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -32,11 +32,6 @@
 
         $(document).ready(function () {
 
-            //// TODO
-            //// check form validation + make form return false so page wont be rendered
-            /// Select Beer Type ==> add function that will validate the Select tag
-            
-
             $('#editDiv').hide();
 
             $("#ourForm, #editForm").on('submit', f1);
@@ -63,10 +58,6 @@
             console.log('this is cooking data:', Batchdata);
             batchArr = Batchdata;
 
-            ///// Sort the Array by dates!!!!!!!!! TODO TODO TODO
-
-            // Batchdata.sort((a,b)=>a.getTime()-b.getTime());// no work
-
             try {
                 $('#tbl').DataTable({
                     data: Batchdata,
@@ -79,8 +70,8 @@
                                 let data_for_tbl = "data-btnId='" + data + "'";
 
                                 editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
-                                //deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn;// + deleteBtn;
+                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
+                                return editBtn + deleteBtn;
                             }
                         },
                         { data: "BeerType" },  
@@ -163,7 +154,7 @@
 
             $('.collapse').collapse('hide'); // collapse addprodContainer
 
-            window.reload();
+            refresh_table();
         }
 
         function PostBatchError(err) {
@@ -255,19 +246,19 @@
                 populateFields(this.getAttribute('data-btnId')); // fill the form fields according to the selected row
             });
 
-            //$(document).on("click", ".deleteBtn", function () {
+            $(document).on("click", ".deleteBtn", function () {
 
-            //    var batch_id = this.getAttribute('data-btnId');
+                var batch_id = this.getAttribute('data-btnId');
 
-            //    if (confirm("Are You Sure You Want To Delete This Row?")) {
+                if (confirm("Are You Sure You Want To Delete This Row?")) {
 
-            //        ajaxCall("Delete", "../../api/Batch", JSON.stringify(batch_id), DeleteBatchSucess, DeleteBatchError); 
-            //    }
-            //    else {
-            //        console.log("You pressed Cancel!");
-            //    }
+                    ajaxCall("Delete", "../../api/Batch", JSON.stringify(batch_id), DeleteBatchSucess, DeleteBatchError); 
+                }
+                else {
+                    console.log("You pressed Cancel!");
+                }
 
-            //});
+            });
         }
 
         function edit_Batch_table() {
@@ -303,6 +294,10 @@
         function DeleteBatchSucess(data) {
             console.log(data, "Record Deleted");
 
+            if (data != 3) {
+                console.log("some values did not enter the DB");
+            }
+
             refresh_table();
             
         }
@@ -333,16 +328,10 @@
         }
 
         function refresh_table() {
-
-            $('#tbl').DataTable().destroy(); // destory table so it could be refreshed
-            $("#editDiv").hide();
-
-            ajaxCall("GET", "../../api/Batch", "", GetBatchSucess, GetBatchError);
+            location.reload();
         }
 
         function GoToBatch(batch_id) { // Go To Batch.html
-
-            console.log('this is batch id:', batch_id);
 
             window.open(`Batch.html?batch_id=${batch_id}`, '_self');
         }
@@ -403,7 +392,7 @@
 <body>
     <!-- NavBar Template -->
     <div class="header text-center">
-        <nav class="navbar navbar-expand-lg navbar-light border-bottom" style="background-color: #f7f6f6;">
+        <nav class="navbar navbar-expand-sm navbar-light border-bottom" style="background-color: #f7f6f6;">
             <a class="navbar-brand" href="Brewmiester-dashboard.html">Home</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

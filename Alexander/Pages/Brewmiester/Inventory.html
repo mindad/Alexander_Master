@@ -8,9 +8,6 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <!--<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -28,18 +25,13 @@
     <script>
 
         inventoryArr = [];
-        
-        // TODO
-        // form control - validation and return false
-        // Add delete button to delete a product - NOT A Inventory! just prod
-        /// why need of choosing prod type when ADD button clicked (inline add from the right)
 
         $(document).ready(function () {
 
             $("#addDiv").hide();
             $('#editDiv').hide();
             $('#add_prod_Div').hide();
-            $('#BTN_inventory').on('click', Show_Add_prod_Div ); // show add new inventory item DIV
+            $('#BTN_inventory').on('click', Show_Add_prod_Div ); // show add new inventory item DIV 
             $('#editForm').on("submit", edit_Inventory_table);
             $('#addForm').on("submit", submit_Inventory_item);
             $('#add_prod_Form').on("submit", submit_new_product); //  BTN_submit
@@ -144,16 +136,16 @@
             }
 
             return (
-                `<table id="tbl-${d.ProductID}" class="display" border="1" style="width:100%">
-                    <thead style="background-color:cornflowerblue">
-                        <tr>
-                            <th></th>
-                            <th>Amount</th>
-                            <th>Last Arrival Date</th>
-                        </tr>
-                     </thead>
-                    <tbody>
-                    </tbody>
+                `<table id="tbl-${d.ProductID}" class="display" border="1" style="width:100%">\
+                    <thead style="background-color:cornflowerblue">\
+                        <tr>\
+                            <th></th>\
+                            <th>Amount</th>\
+                            <th>Last Arrival Date</th>\
+                        </tr>\
+                     </thead>\
+                    <tbody>\
+                    </tbody>\
                  </table>`
             );
         }
@@ -204,6 +196,8 @@
                 alert(err);
             }
 
+            insertValues_prodType_select(Product_data);
+            
         }
 
         function GetProductError(err) {
@@ -241,6 +235,19 @@
         }
         function post_new_inventory_error(err) {
             console.log(err);
+        }
+
+        function insertValues_prodType_select(Product_data) {
+
+             let UniqueTypes = [...new Set(Product_data.map(d => d.ProductType))];
+
+            let prodTypesOptions = "<option>Select Product Type</option>";
+
+            for (type of UniqueTypes.sort()) {
+                prodTypesOptions += `<option>${type}</option>`;
+            }
+
+            document.getElementById("prod_type_select").innerHTML = prodTypesOptions;
         }
         // ** Product API
 
@@ -297,19 +304,9 @@
                 $("#ph1").val(this.getAttribute('data-prod_Name'));
                 $("#ph2").val(this.getAttribute('data-prod_type'));
 
-                //let UniqueNames= $.unique(inventoryArr.map(function (d) {return d.ProductType;})); // get unique product types
-
-                //// insert values to beerType Select     
-                //prodTypesOptions = "<option>Select Product Type</option>`";
-                //for (name of UniqueNames) {
-                //    prodTypesOptions += `<option>${name}</option>`;
-                //}
-
                 $("#addDiv").show();
                 $("#BTN_inventory_container").hide();
-                //document.getElementById("prod_type_select").innerHTML = prodTypesOptions;
-
-                
+               
             });
 
             // Delete a product from DB   delete_prod_Btn
@@ -431,31 +428,19 @@
         }
 
         function refresh_table() {
-
             location.reload();
         }
 
-           function f1() {
+        function f1() {
             return false; // form submit
         }
 
         function Show_Add_prod_Div() {
 
-            
-            let UniqueTypes= [...new Set(inventoryArr.map(d => d.ProductType))]//  $.unique(inventoryArr.map(d => d.ProductType)); // get unique product types
-            
-            let prodTypesOptions = "<option>Select Product Type</option>";
-
-            for (type of UniqueTypes) {
-                prodTypesOptions += `<option>${type}</option>`;
-            }
-
-            document.getElementById("prod_type_select").innerHTML = prodTypesOptions;
-
             $('#add_prod_Div').show();
             $('#BTN_inventory_container').hide();
-
         }
+
         function Close_Div() {
             $("#addDiv").hide();
             $("#add_prod_Div").hide();
@@ -509,10 +494,6 @@
             width:50%;
             /*bottom add new product button*/
         }
-        /*#btnDiv{
-            /*padding-top:1%;*/
-            width:50%;
-        }*/
     </style>
 
 </head>
@@ -520,7 +501,7 @@
 <body>
     <!-- NavBar Template -->
     <div class="header text-center">
-        <nav class="navbar navbar-expand-lg navbar-light border-bottom" style="background-color: #f7f6f6;">
+        <nav class="navbar navbar-expand-sm navbar-light border-bottom" style="background-color: #f7f6f6;">
             <a class="navbar-brand" href="Brewmiester-dashboard.html">Home</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -540,9 +521,6 @@
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Alerts.html">Alerts</a>
                     </li>
-                    <!-- <li class="nav-item">
-                      <a class="nav-link disabled" href="#">Disabled</a>
-                    </li> -->
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
@@ -638,12 +616,10 @@
     <!--ADD Row -- Product In Table-->
     <div class="container" id="add_prod_Div">
         <button type="button" class="close close_Btn" aria-label="Close">
-            <!--close_add_prod_DivBtn-->
             <span aria-hidden="true">&times;</span>
         </button>
         <form id="add_prod_Form">
             <div class="form-group">
-                <!-- TODO create a select that holds prodType options-->
                 <label for="">Product Name</label>
                 <input type="text" class="form-control" id="TB_name" required />
                 <br />
@@ -651,9 +627,7 @@
                 <input type="text" class="form-control" id="TB_id" required pattern="[0-9]+" />
                 <br />
                 <label for="">Product Type</label>
-                <select id="prod_type_select">
-                </select>
-                <!--<input type="text" class="form-control" id="TB_type" required />-->
+                <select id="prod_type_select" class="form-control"></select>
                 <br />
                 <label for="">Minimum Amount</label>
                 <input type="text" class="form-control" id="TB_minAmount" required pattern="[0-9]+" />
