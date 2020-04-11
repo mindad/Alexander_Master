@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
             crossorigin="anonymous"></script>
@@ -28,9 +29,14 @@
         // add ADD button for each table
         // make EDIT logic for each table
         //
-       
+
 
         batch_id = null; // current batch
+        sampleArr = [];
+        purgeArr = [];
+        harvestArr = [];
+        fermentArr = [];
+
 
         $(document).ready(function () {
 
@@ -38,13 +44,22 @@
 
             batch_id = 3;
 
+            $("#editDiv_sample").hide();
+            $("#editDiv_purge").hide();
+            $("#editDiv_harvest").hide();
+            $("#editDiv_ferment").hide();
+
             ajaxCall('GET', '../../api/Batch_Production', '', GetBatchSuccess, GetBatchError); // check if exist and bring values into tables
             ajaxCall('GET', '../../api/SampleDetails', '', GetSampleSuccess, GetSampleError);// tbl-sample
             ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); //tbl-purge
             ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); //tbl-harvest
             ajaxCall('GET', '../../api/Fermantation', '', GetFermantationSuccess, GetFermantationError); //tbl-Fermant
 
-            //buttonEvents();
+            $("#editForm_sample").on("submit", EditSample);
+            $("#editForm_purge").on("submit",EditPurge);
+            $("#editForm_harvest").on("submit",EditHarvest);
+            $("#editForm_ferment").on("submit",EditFerment);
+            $(".close_Btn").on("click", Close_Edit_Div); 
         });
 
 
@@ -64,37 +79,37 @@
 
             // build simple table as for the excel
             let st = `
-                <tr>
-                    <th colspan="2">Tank #:
-                    <input type="text" class="" value="${batch.Tank}" disabled/>
-                    </th>
-                    <th>Beer Type:
-                    <input type="text" class="" value="${batch.BeerType}" disabled/>
-                    </th>
-                </tr>
-                <tr>
-                    <th colspan="2">Brew Date:
-                    <input type="text" class="" value="${(batch.Date).substr(0, 10)}" disabled/>
-                    </th>
-                    <th>Batch #:
-                    <input type="text" class="" value="${batch.BatchID}" disabled/>
-                    </th>
-                </tr>
-                <tr>
-                    <th>Yeast Cycle: <input type="text" class="" value="${batch.Yeast_cycle}"/> </th>
-                    <th>Pitch Time: <input type="text" class="" value="${batch.PitchTime}"/></th>
-                    <th colspan="2">Pitching Rate: <input type="text" class="" value="${batch.Pitching_rate}"/></th>
-                </tr>
-                <tr>
-                    <th>Cast Vol: <input type="text" class="" value="${batch.Cast_volume}"/></th>
-                    <th>O.G: <input type="text" class="" value="${batch.Og}"/></th>
-                    <th colspan="2">O - Temp - Tank: <input type="text" class="" value="${batch.Tank_temp}"/></th>
-                </tr>
-                <tr>
-                    <th>co2 Vol: <input type="text" class="" value="${batch.Co2_vol}"/></th>
-                    <th>F.G: <input type="text" class="" value="${batch.Fg}"/></th>
-                    <th colspan="2">Set - Temp: <input type="text" class="" value="${batch.Set_temp}"/></th>
-                </tr>`
+                    <tr>\
+                        <th colspan="2">Tank #:\
+                        <input type="text" class="" value="${batch.Tank}" disabled/>\
+                        </th>\
+                        <th>Beer Type:\
+                        <input type="text" class="" value="${batch.BeerType}" disabled/>\
+                        </th>\
+                    </tr>\
+                    <tr>\
+                        <th colspan="2">Brew Date:\
+                        <input type="text" class="" value="${(batch.Date).substr(0, 10)}" disabled/>\
+                        </th>\
+                        <th>Batch #:\
+                        <input type="text" class="" value="${batch.BatchID}" disabled/>\
+                        </th>\
+                    </tr>\
+                    <tr>\
+                        <th>Yeast Cycle: <input type="text" class="" value="${batch.Yeast_cycle}"/> </th>\
+                        <th>Pitch Time: <input type="text" class="" value="${batch.PitchTime}"/></th>\
+                        <th colspan="2">Pitching Rate: <input type="text" class="" value="${batch.Pitching_rate}"/></th>\
+                    </tr>\
+                    <tr>\
+                        <th>Cast Vol: <input type="text" class="" value="${batch.Cast_volume}"/></th>\
+                        <th>O.G: <input type="text" class="" value="${batch.Og}"/></th>\
+                        <th colspan="2">O - Temp - Tank: <input type="text" class="" value="${batch.Tank_temp}"/></th>\
+                    </tr>\
+                    <tr>\
+                        <th>co2 Vol: <input type="text" class="" value="${batch.Co2_vol}"/></th>\
+                        <th>F.G: <input type="text" class="" value="${batch.Fg}"/></th>\
+                        <th colspan="2">Set - Temp: <input type="text" class="" value="${batch.Set_temp}"/></th>\
+                    </tr>`
             $('#batchTBL').html(st);
         }
         function GetBatchError(err) {
@@ -104,19 +119,19 @@
 
         // Sample API
         function GetSampleSuccess(samples) {
-            console.log('sample Details:' ,samples);
+            console.log('sample Details:', samples);
 
             //batch_id = 3;
-            let smp = [];
+            //let smp = [];
 
             for (let sample of samples) {
                 if (sample.Batch_id == batch_id) {
-                    smp.push(sample);
+                    sampleArr.push(sample);
                 }
             }
+            //sampleArr = smp;
 
-            console.log('this is smp:', smp);
-            let blabla = { 1: 1, 2: 2, 3: 3 };
+            console.log('this is sampleArr:', sampleArr);
 
             try {
                 $('#tbl-sample').DataTable({
@@ -124,22 +139,21 @@
                     "ordering": false,
                     "info": false,
                     "searching": false,
-                    data: smp,
+                    data: sampleArr,
                     pageLength: 5,
                     columns: [
                         {
-                            data: {},//"Batch_id",
-                            render: function (data,type,row) { //
-
-                                console.log(row);
+                            data: "Row_num", // row in DB
+                            render: function (data) {
 
                                 let data_for_tbl = "data-Sample-btnId='" + data + "'";
 
                                 editBtn = "<button type='button' class = 'editSampleBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deleteSampleBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn + deleteBtn;
+                                addBtn = "<button type='button' class = 'addSampleBtn btn btn-warning'" + data_for_tbl + "> Add </button>";
+                                return addBtn + editBtn + deleteBtn;
                             }
-                        },  
+                        },
                         {
                             data: "Date",
                             render: function (data) {
@@ -171,16 +185,16 @@
         function GetPurgeSuccess(purges) {
             console.log('purges:', purges);
 
-            batch_id = 3;
-            let prg = [];
+     
+            //let prg = [];
 
             for (let purge of purges) {
                 if (purge.Batchid == batch_id) {
-                    prg.push(purge);
+                    purgeArr.push(purge);
                 }
             }
 
-            console.log('this is prg:', prg);
+            console.log('this is purgeArr:', purgeArr);
 
 
             try {
@@ -189,18 +203,19 @@
                     "ordering": false,
                     "info": false,
                     "searching": false,
-                    data: prg,
+                    data: purgeArr,
                     pageLength: 5,
                     columns: [
                         {
-                            data:"Batchid",
+                            data: "Row_num",
                             render: function (data, type, row, meta) {
 
                                 let data_for_tbl = "data-Purge-btnId='" + data + "'";
 
                                 editBtn = "<button type='button' class = 'editPurgeBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deletePurgeBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn + deleteBtn;
+                                addBtn = "<button type='button' class = 'addPurgeBtn btn btn-warning'" + data_for_tbl + "> Add </button>";
+                                return addBtn + editBtn + deleteBtn;
                             }
                         },
                         {
@@ -209,8 +224,8 @@
                                 return data.substr(0, 10);
                             }
                         },
-                        { data: "Name"},
-                        { data: "Temperature"},
+                        { data: "Name" },
+                        { data: "Temperature" },
                         { data: "Weight" },
                         { data: "Num_of_buckets" },
                         { data: "Notes" },
@@ -234,15 +249,15 @@
         function GetHarvestSuccess(harvests) {
             console.log('Harvests:', harvests);
 
-            let harvest = [];
+            //let harvest = [];
 
             for (let hr of harvests) {
                 if (hr.Batchid == batch_id) {
-                    harvest.push(hr);
+                    harvestArr.push(hr);
                 }
             }
 
-            console.log('this is harvest:', harvest);
+            console.log('this is harvestArr:', harvestArr);
 
 
             try {
@@ -251,18 +266,19 @@
                     "ordering": false,
                     "info": false,
                     "searching": false,
-                    data: harvest,
+                    data: harvestArr,
                     pageLength: 5,
                     columns: [
                         {
-                            data:"Batchid",
+                            data: "Row_num",
                             render: function (data, type, row, meta) {
 
                                 let data_for_tbl = "data-Harvest-btnId='" + data + "'";
 
                                 editBtn = "<button type='button' class = 'editHarvestBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deletHarvestBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn + deleteBtn;
+                                addBtn = "<button type='button' class = 'addHarvestBtn btn btn-warning'" + data_for_tbl + "> Add </button>";
+                                return addBtn + editBtn + deleteBtn;
                             }
                         },
                         {
@@ -271,10 +287,20 @@
                                 return data.substr(0, 10);
                             }
                         },
-                        { data: "Name"},
-                        { data: "Temperature"},
-                        { data: "Time_tap_2" },
-                        { data: "Total_Duration" },
+                        { data: "Name" },
+                        { data: "Temperature" },
+                        {
+                            data: "Time_tap_2",
+                            render: function (data) {
+                                return data.substr(0, 10);
+                            }
+                        },
+                        {
+                            data: "Total_Duration",
+                            render: function (data) {
+                                return data.substr(0, 10);
+                            }
+                        },
                     ]
                 });
             }
@@ -295,15 +321,15 @@
         function GetFermantationSuccess(Fermantation) {
             console.log('Fermantation:', Fermantation);
 
-            let fermant = [];
+            //let fermant = [];
 
             for (let fr of Fermantation) {
                 if (fr.Batchid == batch_id) {
-                    fermant.push(fr);
+                    fermentArr.push(fr);
                 }
             }
 
-            console.log('this is fermant:', fermant);
+            console.log('this is fermentArr:', fermentArr);
 
 
             try {
@@ -312,18 +338,19 @@
                     "ordering": false,
                     "info": false,
                     "searching": false,
-                    data: fermant,
+                    data: fermentArr,
                     pageLength: 5,
                     columns: [
                         {
-                            data:"Batchid",
+                            data: "Row_num",
                             render: function (data, type, row, meta) {
 
                                 let data_for_tbl = "data-Fermantation-btnId='" + data + "'";
 
                                 editBtn = "<button type='button' class = 'editFermantationBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deleteFermantationBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn + deleteBtn;
+                                addBtn = "<button type='button' class = 'addFermantationBtn btn btn-warning'" + data_for_tbl + "> Add </button>";
+                                return addBtn + editBtn + deleteBtn;
                             }
                         },
                         {
@@ -332,7 +359,7 @@
                                 return data.substr(0, 10);
                             }
                         },
-                        { data: "PressureChange"},
+                        { data: "PressureChange" },
                         { data: "Tank_pressure" },
                         { data: "Tank_temperature" }
                     ]
@@ -360,22 +387,27 @@
 
             $(document).on("click", ".editSampleBtn,.editHarvestBtn,.editPurgeBtn,.editFermantationBtn", function () {
 
-                let tbl_name = $(this).attr('class').replace(/^edit/, '').replace(/Btn.+/, ''); 
+                let tbl_name = $(this).attr('class').replace(/^edit/, '').replace(/Btn.+/, '');
+                console.log("tbl_name is:", tbl_name.toLowerCase())
 
-                console.log("tbl_name is:",tbl_name.toLowerCase())
-
-                Edit_Row_In_TBL(this.getAttribute(`data-${tbl_name.toLowerCase()}-btnid`), tbl_name); //
-
-                //populateFields(this.getAttribute('data-btnId')); // fill the form fields according to the selected row
+                Edit_Row_In_TBL(this.getAttribute(`data-${tbl_name.toLowerCase()}-btnid`), tbl_name); 
             });
 
-            $(document).on("click", ".deleteBtn", function () {
+            $(document).on("click", ".deleteSampleBtn,.deleteHarvestBtn,.deletePurgeBtn,.deleteFermantationBtn", function () {
 
-                //var batch_id = this.getAttribute('data-btnId');
+                let tbl_name = $(this).attr('class').replace(/^delete/, '').replace(/Btn.+/, '');
+                console.log("tbl_name is:", tbl_name.toLowerCase());
 
-                let tbl_name = $(this).attr('class').replace(/^delete/, '').replace(/Btn$/, ''); 
+                Delete_Row_In_TBL(this.getAttribute(`data-${tbl_name.toLowerCase()}-btnid`), tbl_name);
 
-                Delete_Row_In_TBL(this, tbl_name);
+            });
+
+            $(document).on("click", ".addSampleBtn,.addHarvestBtn,.addPurgeBtn,.addFermantationBtn", function () {
+
+                let tbl_name = $(this).attr('class').replace(/^add/, '').replace(/Btn.+/, '');
+                console.log("tbl_name is:", tbl_name.toLowerCase());
+
+                Add_Row_In_TBL(this.getAttribute(`data-${tbl_name.toLowerCase()}-btnid`), tbl_name);
 
             });
         }
@@ -388,27 +420,79 @@
 
             if (tbl_name == "Sample") {
 
+                for (var i = 0; i < sampleArr.length; i++) {
+                    if (sampleArr[i].Row_num == row_id) {
+
+                        $("#DateSample").val(sampleArr[i].Date.substr(0,10));
+                        $("#tankTemp").val(sampleArr[i].Tank_temp);
+                        $("#sampleTemp").val(sampleArr[i].Sample_temp);
+                        $("#rate").val(sampleArr[i].Rate);
+                        $("#gravity").val(sampleArr[i].Gravity);
+                        $("#ph").val(sampleArr[i].Ph);
+                        $("#notesSample").val(sampleArr[i].Notes);
+                        $("#editDiv_sample").show();
+                        break;
+                    }
+                }
             }
             if (tbl_name == "Purge") {
 
+                for (var i = 0; i < purgeArr.length; i++) {
+                    if (purgeArr[i].Row_num == row_id) {
+
+                        $("#DatePurge").val(purgeArr[i].Date.substr(0,10));
+                        $("#namePurge").val(purgeArr[i].Name);
+                        $("#temperaturePurge").val(purgeArr[i].Temperature);
+                        $("#weight").val(purgeArr[i].Weight);
+                        $("#buckets").val(purgeArr[i].Num_of_buckets);
+                        $("#notesSample").val(purgeArr[i].Notes);
+                        $("#editDiv_purge").show()
+                        break;
+                    }
+                }
             }
             if (tbl_name == "Harvest") {
 
+                for (var i = 0; i < harvestArr.length; i++) {
+                    if (harvestArr[i].Row_num == row_id) {
+
+                        $("#DateHarvest").val(harvestArr[i].Date.substr(0,10));
+                        $("#nameHarvest").val(harvestArr[i].Name);
+                        $("#temperatureHarvest").val(harvestArr[i].Temperature);
+                        $("#timeTap").val(harvestArr[i].Time_tap_2.substr(0,10));
+                        $("#totalTime").val(harvestArr[i].Total_Duration.substr(0,10));
+                        $("#editDiv_harvest").show();
+                        break;
+                    }
+                }
+                
             }
             if (tbl_name == "Fermantation") {
 
+                for (var i = 0; i < fermentArr.length; i++) {
+                    if (fermentArr[i].Row_num == row_id) {
+
+                        $("#DateFerment").val(fermentArr[i].Date.substr(0,10));
+                        $("#pressChange").val(fermentArr[i].PressureChange);
+                        $("#tankPress").val(fermentArr[i].Tank_pressure);
+                        $("#tankTempFerment").val(fermentArr[i].Tank_temperature);
+                        $("#editDiv_ferment").show();
+                        break;
+                    }
+                }
             }
+            
         }
 
-        function Delete_Row_In_TBL(obj, tbl_name) {
+        function Delete_Row_In_TBL(row_id, tbl_name) {
 
-            console.log('batch id is:' ,obj.getAttribute('data-btnId'));
+            console.log('row_id:', row_id);
 
             if (tbl_name == "Sample") {
 
                 if (confirm("Are You Sure You Want To Delete This Row?")) {
 
-                    //ajaxCall("Delete", "../../api/Batch", JSON.stringify(batch_id), DeleteBatchSucess, DeleteBatchError); 
+                    //ajaxCall("Delete", "../../api/Batch", JSON.stringify(batch_id), DeleteBatchSucess, DeleteBatchError);
                 }
                 else {
                     alert("You pressed Cancel!");
@@ -428,14 +512,49 @@
 
         function Hide_Tables(tbl_name) {
 
-            let tbl_list = ['tbl-sample', 'tbl-purge', 'tbl-harvest', 'tbl-Fermant'];
+            let tbl_list = ['sample_div', 'purge_div', 'harvest_div', 'fermant_div'];
             tbl_list.pop(tbl_name); // removes tbl_name from list
 
             for (tbl of tbl_list) {
-                $(`#${tbl}`).hide(); 
+                $(`#${tbl}`).hide();
             }
-            
+
         }
+
+        function Close_Edit_Div() {
+
+            $("#editDiv_sample").hide();
+            $("#editDiv_purge").hide();
+            $("#editDiv_harvest").hide();
+            $("#editDiv_ferment").hide();
+
+            let tbl_list = ['sample_div', 'purge_div', 'harvest_div', 'fermant_div'];
+
+            for (tbl of tbl_list) {
+                $(`#${tbl}`).show();
+            }
+        }
+
+
+
+        // EDIT DB
+        function EditSample() {
+
+            let item = {
+                "date": $("#DateSample").val(),
+                "tank_temp": $("#tankTemp").val(),
+                "sample_temp": $("#sampleTemp").val(),
+                "rate": $("#rate").val(),
+                "gravity": $("#gravity").val(),
+                "ph": $("#ph").val(),
+                "notes": $("#notesSample").val()
+                "batch_id":,
+                "row_num":
+
+            }
+
+        }
+        // ** EDIT DB
 
     </script>
 
@@ -460,7 +579,7 @@
         }
 
         .container {
-            padding-bottom: 4%;
+            padding-bottom: 1%;
         }
 
         #notes_input {
@@ -483,6 +602,13 @@
         input[type=text] {
             background-color: #f7f6f6;
         }
+        input.form-control[type=text] {
+            background-color: #FFFFFF;
+        }
+        #btnDiv{
+            padding-top:1%;
+            width:50%;
+        }
     </style>
 
 </head>
@@ -490,7 +616,7 @@
 <body>
     <!-- NavBar Template -->
     <div class="header text-center">
-        <nav class="navbar navbar-expand-sm navbar-light border-bottom" style="background-color: #f7f6f6;">
+        <nav class="navbar navbar-expand-lg navbar-light border-bottom" style="background-color: #f7f6f6;">
             <a class="navbar-brand" href="Brewmiester-dashboard.html">Home</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -530,8 +656,8 @@
     </div>
     <!-- table -->
     <!-- table - sample Details-->
-    <div class="container">
-        <!--<h1 class="text-center">Production</h1>-->
+    <div class="container" id="sample_div">
+        <h5 class="text-center">Sample Details</h5>
         <table id="tbl-sample" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
@@ -555,8 +681,8 @@
     </div>
     <!-- table - sample Details-->
     <!--Purge Table-->
-    <div class="container">
-        <!--<h1 class="text-center">Production</h1>-->
+    <div class="container" id="purge_div">
+        <h5 class="text-center">Purge</h5>
         <table id="tbl-purge" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
@@ -571,7 +697,7 @@
             </thead>
             <tbody>
             </tbody>
-            
+
         </table>
 
         <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
@@ -579,8 +705,8 @@
     </div>
     <!--Purge Table-->
     <!--Harvest Table-->
-    <div class="container">
-        <!--<h1 class="text-center">Production</h1>-->
+    <div class="container" id="harvest_div">
+        <h5 class="text-center">Harvest</h5>
         <table id="tbl-harvest" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
@@ -589,12 +715,12 @@
                     <th>Name</th>
                     <th>Temperature</th>
                     <th>Time For Tap 2</th>
-                    <th>Total Time</th>
+                    <th>Total Duration</th>
                 </tr>
             </thead>
             <tbody>
             </tbody>
-            
+
         </table>
 
         <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
@@ -602,8 +728,8 @@
     </div>
     <!--Harvest Table-->
     <!--Fermant Table-->
-    <div class="container">
-        <!--<h1 class="text-center">Production</h1>-->
+    <div class="container" id="fermant_div">
+        <h5 class="text-center">Fermantation</h5>
         <table id="tbl-Fermant" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
@@ -616,14 +742,135 @@
             </thead>
             <tbody>
             </tbody>
-            
+
         </table>
 
         <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
         <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
     </div>
     <!--Fermant Table-->
-
+    <!--Edit Row In A Sample Table-->
+    <div class="container" id="editDiv_sample">
+        <button type="button" class="close close_Btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <form id="editForm_sample">
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" class="form-control" id="DateSample" required />
+                <br />
+                <label>Tank Temperature</label>
+                <input type="text" class="form-control" id="tankTemp" required pattern="[0-9]+" />
+                <br />
+                <label>Sample Temperature</label>
+                <input type="text" class="form-control" id="sampleTemp" required pattern="[0-9]+" />
+                <br />
+                <label>Rate</label>
+                <input type="text" class="form-control" id="rate" required pattern="[0-9]+" />
+                <br />
+                <label>Gravity</label>
+                <input type="text" class="form-control" id="gravity" required pattern="[0-9]+" />
+                <br />
+                <label>PH</label>
+                <input type="text" class="form-control" id="ph" required pattern="[0-9]+" />
+                <br />
+                <label>Notes</label>
+                <input type="text" class="form-control" id="notesSample" required pattern="[0-9]+" />
+                <br />
+                <div id="btnDiv" class="container">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--Edit Row In A Sample Table-->
+    <!--Edit Row In A Purge Table-->
+    <div class="container" id="editDiv_purge">
+        <button type="button" class="close close_Btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <form id="editForm_purge">
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" class="form-control" id="DatePurge" required />
+                <br />
+                <label>Name</label>
+                <input type="text" class="form-control" id="namePurge" required pattern="[0-9]+" />
+                <br />
+                <label>Temperature</label>
+                <input type="text" class="form-control" id="temperaturePurge" required pattern="[0-9]+" />
+                <br />
+                <label>Weight</label>
+                <input type="text" class="form-control" id="weight" required pattern="[0-9]+" />
+                <br />
+                <label># Of Buckets</label>
+                <input type="text" class="form-control" id="buckets" required pattern="[0-9]+" />
+                <br />
+                <label>Notes</label>
+                <input type="text" class="form-control" id="notesPurge" required pattern="[0-9]+" />
+                <br />
+                <div id="btnDiv" class="container">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--Edit Row In A Purge Table-->
+    <!--Edit Row In A Harvest Table-->
+    <div class="container" id="editDiv_harvest">
+        <button type="button" class="close close_Btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <form id="editForm_harvest">
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" class="form-control" id="DateHarvest" required />
+                <br />
+                <label>Name</label>
+                <input type="text" class="form-control" id="nameHarvest" required pattern="[0-9]+" />
+                <br />
+                <label>Temperature</label>
+                <input type="text" class="form-control" id="temperatureHarvest" required pattern="[0-9]+" />
+                <br />
+                <label>Time For Tap 2</label>
+                <input type="text" class="form-control" id="timeTap" required pattern="[0-9]+" />
+                <br />
+                <label>Total Duration</label>
+                <input type="text" class="form-control" id="totalTime" required pattern="[0-9]+" />
+                <br />
+                <div id="btnDiv" class="container">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--Edit Row In A Harvest Table-->
+    <!--Edit Row In A Fermantation Table-->
+    <div class="container" id="editDiv_ferment">
+        <button type="button" class="close close_Btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <form id="editForm_ferment">
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" class="form-control" id="DateFerment" required />
+                <br />
+                <label>Pressure Change</label>
+                <input type="text" class="form-control" id="pressChange" required pattern="[0-9]+" />
+                <br />
+                <label>Tank Pressure</label>
+                <input type="text" class="form-control" id="tankPress" required pattern="[0-9]+" />
+                <br />
+                <label>Tank Temperature</label>
+                <input type="text" class="form-control" id="tankTempFerment" required pattern="[0-9]+" />
+                <br />
+                <div id="btnDiv" class="container">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--Edit Row In A Fermantation Table-->
 </body>
 
 </html>

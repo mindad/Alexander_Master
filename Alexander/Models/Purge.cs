@@ -16,8 +16,9 @@ namespace Alexander.Models
         // make sure no needed other type of units
         private float num_of_buckets;
         private string notes;
+        private int row_num;
 
-        public Purge(DateTime date, string name, float temperature, float weight, float num_of_buckets, string notes, int batchid)
+        public Purge(DateTime date, string name, float temperature, float weight, float num_of_buckets, string notes, int batchid, int row_num)
         {
             this.date = date;
             this.name = name;
@@ -26,6 +27,7 @@ namespace Alexander.Models
             this.num_of_buckets = num_of_buckets;
             this.notes = notes;
             this.batchid = batchid;
+            this.Row_num = row_num;
         }
 
         public Purge() { }
@@ -37,6 +39,7 @@ namespace Alexander.Models
         public float Num_of_buckets { get => num_of_buckets; set => num_of_buckets = value; }
         public string Notes { get => notes; set => notes = value; }
         public int Batchid { get => batchid; set => batchid = value; }
+        public int Row_num { get => row_num; set => row_num = value; }
 
         public List<Purge> get_Purge()
         {

@@ -14,8 +14,9 @@ namespace Alexander.Models
         private float temperature;
         private DateTime time_tap_2;
         private DateTime total_Duration;
+        private int row_num;
 
-        public Harvest(int batchid, DateTime date, string name, float temperature, DateTime time_tap_2, DateTime total_Duration)
+        public Harvest(int batchid, DateTime date, string name, float temperature, DateTime time_tap_2, DateTime total_Duration, int row_num)
         {
             this.batchid = batchid;
             this.date = date;
@@ -23,6 +24,7 @@ namespace Alexander.Models
             this.temperature = temperature;
             this.time_tap_2 = time_tap_2;
             this.total_Duration = total_Duration;
+            this.Row_num = row_num;
         }
 
         public Harvest() { }
@@ -33,7 +35,7 @@ namespace Alexander.Models
         public float Temperature { get => temperature; set => temperature = value; }
         public DateTime Time_tap_2 { get => time_tap_2; set => time_tap_2 = value; }
         public DateTime Total_Duration { get => total_Duration; set => total_Duration = value; }
-
+        public int Row_num { get => row_num; set => row_num = value; }
 
         public List<Harvest> get_Harvest()
         {
