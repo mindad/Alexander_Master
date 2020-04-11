@@ -105,31 +105,31 @@
 
             });
 
-            $(document).on("click", ".deleteBtn", function () {
+            //$(document).on("click", ".deleteBtn", function () {
 
-                var batch_id = this.getAttribute('data-btnId');
+            //    var batch_id = this.getAttribute('data-btnId');
 
-                if (confirm("Are You Sure You Want To Delete This Row?")) {
+            //    if (confirm("Are You Sure You Want To Delete This Row?")) {
 
-                    ajaxCall("Delete", "../../api/Batch_Botteling", JSON.stringify(batch_id), DeleteBatch_BottelingSucess, DeleteBatch_BottelingError);
-                }
-                else {
-                    console.log("You pressed Cancel!");
-                }
+            //        ajaxCall("Delete", "../../api/Batch_Botteling", JSON.stringify(batch_id), DeleteBatch_BottelingSucess, DeleteBatch_BottelingError);
+            //    }
+            //    else {
+            //        console.log("You pressed Cancel!");
+            //    }
 
-            });
+            //});
         }
         //////// DeleteBatch
-        function DeleteBatch_BottelingSucess(data) {
-            console.log(data, "Record Deleted");
+        //function DeleteBatch_BottelingSucess(data) {
+        //    console.log(data, "Record Deleted");
 
-            location.reload();
+        //    location.reload();
 
-        }
+        //}
 
-        function DeleteBatch_BottelingError(err) {
-            console.log(err);
-        }
+        //function DeleteBatch_BottelingError(err) {
+        //    console.log(err);
+        //}
 
         // Edit Batch
         function Put_success(data) {
@@ -165,7 +165,7 @@
         function submitEdit() {
 
 
-            let batch = {
+            let product = {
                 batchID: $('#batchID_header_edit').html().replace(/[^0-9]/g, ''), // gets batch id from <h1>
                 tank: 0,
                 wort_volume: 0,
@@ -177,9 +177,9 @@
                 waste_percent: 0,
             }
 
-            console.log('batch to PUT:', batch);
+            console.log('product to PUT:', product);
 
-            ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(batch), Put_success, Put_Error);
+            ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(product), Put_success, Put_Error);
 
             // refresh_table();
 

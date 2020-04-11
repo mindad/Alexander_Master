@@ -51,10 +51,11 @@
 
 
         $(document).ready(function () {
-            
-            ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError); //GET manager_products
-            
+
             ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError); //GET BEER IN STOCK
+
+            ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError); //GET manager_products
+   
 
             ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError); //GET ORDER
 
@@ -388,7 +389,7 @@
             var dd = String(today.getDate()).padStart(2, '0');
             var mm = String(today.getMonth() + 1).padStart(2, '0');
             var yyyy = today.getFullYear();
-            console.log(today);
+          
             today = mm + '/' + dd + '/' + yyyy;
 
             const firstDate = new Date(yyyy, mm, dd);
@@ -413,7 +414,7 @@
                 if ((firstDate - secondDate) < 0)///only if the date didnt passed enter
                 {
                     var diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));//check how many days between 2 dates
-                    console.log(diffDays);
+                   
                     if (diffDays < closestdate)///take the closest date
                     {
                         closestdate = diffDays;
@@ -551,7 +552,7 @@
             }
             //console.log(Beers_arr);
             //////////////////////make array backgroud colors dinamicly/////////////////
-            console.log(data.length);
+         
             for (var i = 0; i < data.length; i++) {
                 kegs20_backgroudColor[i] = "rgba(255, 99, 132, 0.6)";
                 kegs20_borderColor[i] = "rgba(255, 99, 132, 1)";
@@ -585,7 +586,7 @@
                 var dd = String(today.getDate()).padStart(2, '0');
                 var mm = String(today.getMonth() + 1).padStart(2, '0');
                 var yyyy = today.getFullYear();
-                console.log(today);
+         
                 today = mm + '/' + dd + '/' + yyyy;
 
                 const firstDate = new Date(yyyy, mm, dd);
@@ -597,7 +598,7 @@
                 if ((firstDate - secondDate) < 0)///only if the date didnt passed enter
                 {
                     let diffDays2 = Math.round(Math.abs((firstDate - secondDate) / oneDay));//check how many days between 2 dates
-                    console.log(diffDays2);
+         
                     if (diffDays2 < closedate)///take the closest date
                     {
                         closedate = diffDays2;
@@ -605,7 +606,7 @@
                     }
                 }
             }
-            console.log("the order id", closeorderid);
+           
 
             return closeorderid;
             // end check Date
