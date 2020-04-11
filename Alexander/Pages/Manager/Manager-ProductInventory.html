@@ -50,12 +50,13 @@
                     pageLength: 7,
                     columns: [
                         {
-                            data: "ProdName",
+                            data:{},
                             render: function (data, type, row, meta) {
 
-                                let data_for_tbl = "data-btnId='" + data + "'";
+                                let data_for_tbl = "data-btnId='" + data.ProdID + "'";
+                                let data_for_tbl1 = "data-btnName='" + data.ProdName + "'";
 
-                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
+                                editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + data_for_tbl1+ "> Edit </button>";
                                 //deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
                                 return editBtn /*+ deleteBtn*/;
                             }
@@ -98,10 +99,11 @@
             $(document).on("click", ".editBtn", function () {
 
                 console.log('batch id is:', this.getAttribute('data-btnId'));
+                console.log('batch Name is:', this.getAttribute('data-btnName'));
 
                 $('#editDiv').show();
 
-                populateFields(this.getAttribute('data-btnId')); // fill the form fields according to the selected row
+                populateFields(this.getAttribute('data-btnId'), this.getAttribute('data-btnName')); // fill the form fields according to the selected row
 
             });
 
@@ -132,6 +134,49 @@
         //}
 
         // Edit Batch
+
+        function populateFields(prodID,ProdName) {
+
+            let prod;
+         
+            for (let item of ManagerInventoryArr) { // find batch_id clicked on in 'Batch_BottelingArr'
+               
+                if ((item.ProdName == ProdName) && (item.ProdID == prodID) ) {
+                    prod = item;
+                    break;
+                }
+            }
+
+            console.log('this is product', prod);
+
+            $('#ProdID_header_edit').html('ProdID : '+ prod.ProdID);
+            $('#ProdName_header_edit').html('ProdName:'+ prod.ProdName);
+            $('#amountInput_edit').val(prod.amountInput);
+            $('#MinInStockInput_edit').val(prod.MinInStockInput);
+         
+        }
+
+        function submitEdit() {
+
+
+            let product = {
+                prodID: $('#ProdID_header_edit').html().replace(/[^0-9]/g, ''), // gets prodID RegEX
+                prodName: $('#ProdName_header_edit').html().replace(/^ProdName:/g , ''), // gets prodName  RegEX
+           
+                amount: $('#amountInput_edit').val(),
+                min_in_stock: $('#MinInStockInput_edit').val(),
+        
+            }
+
+            console.log('product to PUT:', product);
+
+            ajaxCall("PUT", "../../api/managerproducts", JSON.stringify(product), Put_success, Put_Error);
+
+            refresh_table();
+
+        }
+        // ** Edit Batch
+
         function Put_success(data) {
             console.log(data);
 
@@ -142,49 +187,7 @@
             console.log(err);
         }
 
-        function populateFields(batch_id) {
 
-            let batch;
-
-            for (let item of ManagerInventoryArr) { // find batch_id clicked on in 'Batch_BottelingArr'
-                if (item.BatchID == batch_id) {
-                    batch = item;
-                    break;
-                }
-            }
-
-            console.log('this is batch', batch);
-
-            $('#batchID_header_edit').html('Batch ID: ' + batch_id);
-            $('#Keg20_amountInput_edit').val(batch.Keg20_amount);
-            $('#Keg30_amountInput_edit').val(batch.Keg30_amount);
-            $('#Bottles_qtyInput_edit').val(batch.Bottels_qty);
-            $('#WasteInput_edit').val(batch.Waste_litter);
-        }
-
-        function submitEdit() {
-
-
-            let product = {
-                batchID: $('#batchID_header_edit').html().replace(/[^0-9]/g, ''), // gets batch id from <h1>
-                tank: 0,
-                wort_volume: 0,
-                beerType: '',
-                keg20_amount: $('#Keg20_amountInput_edit').val(),
-                keg30_amount: $('#Keg30_amountInput_edit').val(),
-                bottels_qty: $('#Bottles_qtyInput_edit').val(),
-                waste_litter: $('#WasteInput_edit').val(),
-                waste_percent: 0,
-            }
-
-            console.log('product to PUT:', product);
-
-            ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(product), Put_success, Put_Error);
-
-            // refresh_table();
-
-        }
-        // ** Edit Batch
 
         function f1() {
             return false;
@@ -295,18 +298,16 @@
     <div class="container" id="editDiv">
         <form id="editForm">
             <div class="form-group">
-                <h2 id="batchID_header_edit"></h2><br />
-                <label>Keg20_amount</label>
-                <input type="text" value="" id="Keg20_amountInput_edit" />
+
+                <h2 id="ProdID_header_edit"></h2><br />
+                <h2 id="ProdName_header_edit"></h2><br />
+                <label>Amount</label>
+                <input type="number" value="" id="amountInput_edit" />
                 <br>
-                <label>Keg30_amount</label>
-                <input type="text" value="" id="Keg30_amountInput_edit" />
+                <label>Minimum In Stock</label>
+                <input type="number" value="" id="MinInStockInput_edit" />
                 <br>
-                <label>Bottles_qty</label>
-                <input type="text" value="" id="Bottles_qtyInput_edit" />
-                <br>
-                <label>Waste_Litter</label>
-                <input type="text" value="" id="WasteInput_edit" />
+        
             </div>
             <button id="submit_edit">Submit</button>
         </form>
