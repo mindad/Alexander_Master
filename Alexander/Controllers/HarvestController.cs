@@ -15,5 +15,48 @@ namespace Alexander.Controllers
             Harvest harvest = new Harvest();
             return harvest.get_Harvest();
         }
+
+        [HttpPut]
+        public HttpResponseMessage Put([FromBody]Harvest harvest)
+        {
+            int numEffected = 0;
+
+            try
+            {
+                numEffected = harvest.Update();
+
+                if (numEffected > 0)
+                    return Request.CreateResponse(HttpStatusCode.OK, numEffected);
+                else
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not Found");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+        }
+
+        [HttpDelete]
+        public HttpResponseMessage Delete([FromBody]string row_num) // row = row number in DB
+        {
+            int numEffected = 0;
+            Harvest harv = new Harvest();
+
+            try
+            {
+                numEffected = harv.delete_line(Convert.ToInt32(row_num));
+
+                if (numEffected > 0)
+                    return Request.CreateResponse(HttpStatusCode.OK, numEffected);
+                else
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not Found");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+        }
     }
 }

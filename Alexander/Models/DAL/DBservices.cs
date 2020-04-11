@@ -782,6 +782,7 @@ namespace Alexander.Models.DAL
                     fr.PressureChange = (float)dr["pressure_change"];
                     fr.Tank_pressure = (float)dr["pressure_tank"];
                     fr.Tank_temperature = (float)dr["tank_temperature"];
+                    fr.Ferment = (float)dr["ferment"];
                     fr.Row_num = Convert.ToInt32(dr["index"]);
 
 

@@ -149,6 +149,7 @@ create table Fermantation_2020(
 	[pressure_change] real,
 	[pressure_tank] real,
 	[tank_temperature] real,
+	[ferment] real,
 	Primary key ([index])
 )
 create table Harvest_2020(

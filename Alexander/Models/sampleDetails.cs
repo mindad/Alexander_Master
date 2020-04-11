@@ -1,6 +1,7 @@
 ﻿using Alexander.Models.DAL;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -52,5 +53,54 @@ namespace Alexander.Models
 
             return smpl_arr;
         }
+        
+        public int Update()
+        {
+            int effected = 0;
+            DBservices dbs = new DBservices();
+
+            dbs = dbs.read("[SampleDetails_2020]");
+
+            try
+            {
+                DataRow dr = dbs.dt.Select("[index]=" + row_num).First(); // ProductType Holds the original date to look in table
+
+                dr["date"] = date;
+                dr["Tank_temp"] = tank_temp;
+                dr["Sample_Temp"] = sample_temp;
+                dr["Rate"] = rate;
+                dr["Gravity"] = gravity;
+                dr["ph"] = ph;
+                dr["notes"] = notes;
+
+                effected = dbs.update(); // update DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return effected;
+        }
+        
+
+        public int delete_line(int row) //
+        {
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[SampleDetails_2020]");
+
+            try
+            {
+                dbs.dt.Select("[index]=" + row).First().Delete(); // 
+                dbs.update(); // update the DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return 1;
+        }
+
     }
 }

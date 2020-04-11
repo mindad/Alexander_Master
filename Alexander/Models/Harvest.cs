@@ -1,6 +1,7 @@
 ﻿using Alexander.Models.DAL;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -44,6 +45,52 @@ namespace Alexander.Models
             List<Harvest> harvest_arr = dbs.get_HarvestDB();
 
             return harvest_arr;
+        }
+
+
+        public int Update()
+        {
+            int effected = 0;
+            DBservices dbs = new DBservices();
+
+            dbs = dbs.read("[Harvest_2020]");
+
+            try
+            {
+                DataRow dr = dbs.dt.Select("[index]=" + row_num).First(); // ProductType Holds the original date to look in table
+
+                dr["date"] = date;
+                dr["name"] = name;
+                dr["temperature"] = temperature;
+                dr["timeForTapTwo"] = time_tap_2;
+                dr["total_time"] = total_Duration;
+
+                effected = dbs.update(); // update DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return effected;
+        }
+
+        public int delete_line(int row) //
+        {
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[Harvest_2020]");
+
+            try
+            {
+                dbs.dt.Select("[index]=" + row).First().Delete(); // 
+                dbs.update(); // update the DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return 1;
         }
     }
 }

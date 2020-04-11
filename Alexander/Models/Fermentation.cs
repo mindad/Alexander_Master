@@ -1,6 +1,7 @@
 ﻿using Alexander.Models.DAL;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -44,6 +45,50 @@ namespace Alexander.Models
             List<Fermentation> fermant_arr = dbs.get_FermentDB();
 
             return fermant_arr;
+        }
+
+        public int Update()
+        {
+            int effected = 0;
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[Fermantation_2020]");
+
+            try
+            {
+                DataRow dr = dbs.dt.Select("[index]=" + row_num).First(); // ProductType Holds the original date to look in table
+
+                dr["date"] = date;
+                dr["pressure_change"] = pressureChange;
+                dr["pressure_tank"] = tank_pressure;
+                dr["tank_temperature"] = tank_temperature;
+                dr["ferment"] = ferment;
+
+                effected = dbs.update(); // update DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return effected;
+        }
+
+        public int delete_line(int row) 
+        {
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[Fermantation_2020]");
+
+            try
+            {
+                dbs.dt.Select("[index]=" + row).First().Delete(); 
+                dbs.update(); // update the DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return 1;
         }
     }
 }

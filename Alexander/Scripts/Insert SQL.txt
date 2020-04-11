@@ -275,14 +275,14 @@ select * from WasteAlert_2020
 ################################################
 *************INSERT  Fermantation_2020 TABLE*******************
 
-INSERT INTO Fermantation_2020 (batch_id, date,pressure_change,pressure_tank,tank_temperature)
-VALUES (1,'2020-01-01',13.2,12.1,10);
+INSERT INTO Fermantation_2020 (batch_id, date,pressure_change,pressure_tank,tank_temperature, ferment)
+VALUES (1,'2020-01-01',13.2,12.1,10, 2.3);
 
-INSERT INTO Fermantation_2020 (batch_id, date,pressure_change,pressure_tank,tank_temperature)
-VALUES (2,'2020-01-01',13.2,12.1,10);
+INSERT INTO Fermantation_2020 (batch_id, date,pressure_change,pressure_tank,tank_temperature, ferment)
+VALUES (2,'2020-01-01',13.2,12.1,10, 2.3);
 
-INSERT INTO Fermantation_2020 (batch_id, date,pressure_change,pressure_tank,tank_temperature)
-VALUES (3,'2020-01-01',13.2,12.1,10);
+INSERT INTO Fermantation_2020 (batch_id, date,pressure_change,pressure_tank,tank_temperature, ferment)
+VALUES (3,'2020-01-01',13.2,12.1,10, 2.3);
 
 select * from Fermantation_2020
 
