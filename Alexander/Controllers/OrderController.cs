@@ -17,6 +17,27 @@ namespace Alexander.Controllers
             return order.get_Orders();
         }
 
+        [HttpPut] // edit 
+        public HttpResponseMessage Put(Order Order_or)
+        {
+            int numEffected = 0;
+
+            try
+            {
+                numEffected = Order_or.Update();
+
+                if (numEffected > 0)
+                    return Request.CreateResponse(HttpStatusCode.OK, numEffected);
+                else
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not Found");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+        }
+
 
     }
 }

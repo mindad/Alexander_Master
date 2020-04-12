@@ -109,7 +109,7 @@
             $(document).on("click", ".editBtn", function () {
 
                 console.log('batch id is:', this.getAttribute('data-btnId'));
-                console.log('data-btnBeerType is:', this.getAttribute('data-btnBeerTypee'));
+                console.log('data-btnBeerType is:', this.getAttribute('data-btnBeerType'));
 
                 $('#editDiv').show();
 
@@ -153,34 +153,38 @@
 
                 if ((item.OrderID == orderID) && (item.Beer.BeerType == beertype)) {
                     order = item;
+              
                     break;
                 }
             }
 
             console.log('this is order', order);
             ///to continue
-            $('#ProdID_header_edit').html('ProdID : ' + prod.ProdID);
-            $('#ProdName_header_edit').html('ProdName:' + prod.ProdName);
-            $('#amountInput_edit').val(prod.amountInput);
-            $('#MinInStockInput_edit').val(prod.MinInStockInput);
+            $('#OrderID_header_edit').html('OrderID : ' + order.OrderID);
+            $('#BeerTypeName_header_edit').html('BeerType:' + order.Beer.BeerType);
+            $('#Kegs20amountInput_edit').val(order.Beer.Keg20_amount);
+            $('#Kegs30amountInput_edit').val(order.Beer.Keg30_amount);
+            $('#bottleamountInput_edit').val(order.Beer.BottleCase_amount);
 
         }
 
         function submitEdit() {
 
-
-            let product = {
-                prodID: $('#ProdID_header_edit').html().replace(/[^0-9]/g, ''), // gets prodID RegEX
-                prodName: $('#ProdName_header_edit').html().replace(/^ProdName:/g, ''), // gets prodName  RegEX
-
-                amount: $('#amountInput_edit').val(),
-                min_in_stock: $('#MinInStockInput_edit').val(),
+            let beer = {
+                keg20_amount: $('#Kegs20amountInput_edit').val(),
+                keg30_amount: $('#Kegs30amountInput_edit').val(),
+                bottleCase_amount: $('#bottleamountInput_edit').val(),
+                beerType: $('#BeerTypeName_header_edit').html().replace(/^BeerType:/g,''), // gets BeerType  RegEX
+            }
+            let Order = {
+                orderID: $('#OrderID_header_edit').html().replace(/[^0-9]/g, ''), // gets OrderID RegEX         
+                beer,
 
             }
 
-            console.log('product to PUT:', product);
-
-            ajaxCall("PUT", "../../api/managerproducts", JSON.stringify(product), Put_success, Put_Error);
+            console.log('Order to PUT:', Order);
+            ajaxCall("PUT", "../../api/Order", JSON.stringify(Order), Put_success, Put_Error);
+          
 
             refresh_table();
 
@@ -310,13 +314,16 @@
         <form id="editForm">
             <div class="form-group">
 
-                <h2 id="ProdID_header_edit"></h2><br />
-                <h2 id="ProdName_header_edit"></h2><br />
-                <label>Amount</label>
-                <input type="number" value="" id="amountInput_edit" />
+                <h2 id="OrderID_header_edit"></h2><br />
+                <h2 id="BeerTypeName_header_edit"></h2><br />
+                <label>Kegs 20 amount</label>
+                <input type="number" value="" id="Kegs20amountInput_edit" />
                 <br>
-                <label>Minimum In Stock</label>
-                <input type="number" value="" id="MinInStockInput_edit" />
+                <label>Kegs 30 amount</label>
+                <input type="number" value="" id="Kegs30amountInput_edit" />
+                <br>
+                <label>bottle Boxes</label>
+                <input type="number" value="" id="bottleamountInput_edit" />
                 <br>
 
             </div>

@@ -1,6 +1,7 @@
 ﻿using Alexander.Models.DAL;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -25,8 +26,8 @@ namespace Alexander.Models
         public DateTime Date { get => date; set => date = value; }
         public Beer Beer { get => beer; set => beer = value; }
 
-
-
+        
+        //get
 
         public List<Order> get_Orders()
         {
@@ -38,6 +39,40 @@ namespace Alexander.Models
         }
 
         // getters + setters
+
+
+        //edit
+        //edit Order
+        public int Update()
+        {
+            int effected = 0;
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[order_2020]");
+            
+            try
+            {
+
+                DataRow[] dr = dbs.dt.Select("Order_id='" + OrderID + "' AND beerType='" + Beer.BeerType + "'"); // 
+                if (dr.Length != 0)
+                {
+                    dr[0]["keg_20_amount"] = Beer.Keg20_amount;
+                    dr[0]["keg_30_amount"] = Beer.Keg30_amount;
+                    dr[0]["box_24"] = Beer.BottleCase_amount;
+
+                    effected = dbs.update(); // update DB
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+
+
+            return effected;
+        }
+
 
 
     }
