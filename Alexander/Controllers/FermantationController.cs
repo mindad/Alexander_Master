@@ -16,8 +16,13 @@ namespace Alexander.Controllers
             return fermant.get_Fermant();
         }
 
-        [HttpPut] // 
-        public HttpResponseMessage Put([FromBody]Fermentation ferm) // 
+        public int Post([FromBody]Fermentation fr)
+        {
+            return fr.insert();
+        }
+
+        [HttpPut] 
+        public HttpResponseMessage Put([FromBody]Fermentation ferm) 
         {
             int numEffected = 0;
 

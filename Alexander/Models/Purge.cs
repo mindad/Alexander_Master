@@ -51,6 +51,26 @@ namespace Alexander.Models
             return purge_arr;
         }
 
+        public int insert() // insert new row into Product_2020
+        {
+            int numEffected = 0;
+            DBservices dbs = new DBservices();
+
+            try
+            {
+                dbs = dbs.read("[Purge_2020]");
+
+                dbs.dt.Rows.Add(-1, batchid, date, name, temperature, weight, num_of_buckets, notes);
+                numEffected = dbs.update();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return numEffected;
+        }
+
 
         public int Update()
         {

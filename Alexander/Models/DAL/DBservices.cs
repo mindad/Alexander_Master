@@ -41,7 +41,7 @@ namespace Alexander.Models.DAL
 
             cmd.CommandText = CommandSTR;      // can be Select, Insert, Update, Delete 
 
-            cmd.CommandTimeout = 20;           // Time to wait for the execution' The default is 30 seconds
+            cmd.CommandTimeout = 480;           // Time to wait for the execution' The default is 30 seconds
 
             cmd.CommandType = System.Data.CommandType.Text; // the type of the command, can also be stored procedure
 
@@ -107,6 +107,7 @@ namespace Alexander.Models.DAL
 
                 String query = "SELECT * FROM [Batch_2020]";
                 SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480;
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -263,6 +264,7 @@ namespace Alexander.Models.DAL
 
                 String query = "SELECT * FROM [Recipe_2020]";
                 SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -328,6 +330,7 @@ namespace Alexander.Models.DAL
                 String query = "select  [Batch_2020].[batch_id],[Batch_2020].[date],[Batch_2020].[tank],[Batch_2020].[wort_volume],[Batch_2020].[beer_type],[dbo].[BatchAfterProd_2020].[keg_20_amount] , [dbo].[BatchAfterProd_2020].[keg_30_amount] , [dbo].[BatchAfterProd_2020].[bottles_qty] , [dbo].[BatchAfterProd_2020].[waste_litter] ,[dbo].[BatchAfterProd_2020].[purge_amount] , [dbo].[BatchAfterProd_2020].[prod_waste] ,[dbo].[BatchAfterProd_2020].[harvest_amount] ,[dbo].[BatchAfterProd_2020].[beer_req_litter] ,[dbo].[BatchAfterProd_2020].[filling_hose] ,[dbo].[BatchAfterProd_2020].[tank_leftover]   from [dbo].[BatchAfterProd_2020]  right JOIN  [dbo].[Batch_2020] ON [BatchAfterProd_2020].batch_id=[Batch_2020].batch_id";
 
                 SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -396,6 +399,7 @@ namespace Alexander.Models.DAL
 
                 String query = "SELECT * FROM [BeerInStock_2020]";
                 SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -441,6 +445,7 @@ namespace Alexander.Models.DAL
 
                 String query = "SELECT * FROM [Product_2020]";
                 SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -486,6 +491,7 @@ namespace Alexander.Models.DAL
 
                 String query = "SELECT * FROM [Inventory_Product_2020]";
                 SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -534,6 +540,7 @@ namespace Alexander.Models.DAL
 
                 String query = "SELECT * FROM [Alert_2020]";
                 SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -578,6 +585,7 @@ namespace Alexander.Models.DAL
 
                 String query = "SELECT * FROM [Batch_2020] join [BatchAtProd_2020] ON [Batch_2020].batch_id=[BatchAtProd_2020].batch_id;";
                 SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -632,6 +640,7 @@ namespace Alexander.Models.DAL
 
                 String query = "SELECT * FROM [SampleDetails_2020]";
                 SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -679,6 +688,7 @@ namespace Alexander.Models.DAL
 
                 String query = "SELECT * FROM [Purge_2020]";
                 SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -725,6 +735,7 @@ namespace Alexander.Models.DAL
 
                 String query = "SELECT * FROM [Harvest_2020]";
                 SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -770,6 +781,7 @@ namespace Alexander.Models.DAL
 
                 String query = "SELECT * FROM [Fermantation_2020]";
                 SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 

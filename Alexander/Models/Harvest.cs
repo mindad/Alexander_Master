@@ -48,6 +48,26 @@ namespace Alexander.Models
         }
 
 
+        public int insert() // insert new row into Product_2020
+        {
+            int numEffected = 0;
+            DBservices dbs = new DBservices();
+
+            try
+            {
+                dbs = dbs.read("[Harvest_2020]");
+
+                dbs.dt.Rows.Add(-1, batchid, date, name, temperature, time_tap_2, total_Duration);
+                numEffected = dbs.update();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return numEffected;
+        }
+
         public int Update()
         {
             int effected = 0;

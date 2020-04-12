@@ -16,6 +16,11 @@ namespace Alexander.Controllers
             return sample.get_Samples();
         }
 
+        public int Post([FromBody]sampleDetails sample)
+        {
+            return sample.insert();
+        }
+
 
         [HttpPut] // 
         public HttpResponseMessage Put([FromBody]sampleDetails sample) // 

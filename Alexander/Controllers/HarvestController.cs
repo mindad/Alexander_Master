@@ -16,6 +16,11 @@ namespace Alexander.Controllers
             return harvest.get_Harvest();
         }
 
+        public int Post([FromBody]Harvest harv)
+        {
+            return harv.insert();
+        }
+
         [HttpPut]
         public HttpResponseMessage Put([FromBody]Harvest harvest)
         {

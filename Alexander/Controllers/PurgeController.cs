@@ -16,6 +16,11 @@ namespace Alexander.Controllers
             return prg.get_Purge();
         }
 
+        public int Post([FromBody]Purge prg)
+        {
+            return prg.insert();
+        }
+
         [HttpPut] 
         public HttpResponseMessage Put([FromBody]Purge purge) 
         {

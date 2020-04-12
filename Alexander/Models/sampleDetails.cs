@@ -53,7 +53,27 @@ namespace Alexander.Models
 
             return smpl_arr;
         }
-        
+
+        public int insert() // insert new row into Product_2020
+        {
+            int numEffected = 0;
+            DBservices dbs = new DBservices();
+
+            try
+            {
+                dbs = dbs.read("[SampleDetails_2020]");
+
+                dbs.dt.Rows.Add(-1, batch_id, date, tank_temp, sample_temp, rate, gravity, ph, notes); // -1 is for identity col
+                numEffected = dbs.update();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return numEffected;
+        }
+
         public int Update()
         {
             int effected = 0;

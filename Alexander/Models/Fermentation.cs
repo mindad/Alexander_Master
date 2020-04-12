@@ -47,6 +47,26 @@ namespace Alexander.Models
             return fermant_arr;
         }
 
+        public int insert() // insert new row into Product_2020
+        {
+            int numEffected = 0;
+            DBservices dbs = new DBservices();
+
+            try
+            {
+                dbs = dbs.read("[Fermantation_2020]");
+
+                dbs.dt.Rows.Add(-1, batchid, date, pressureChange, tank_pressure, tank_temperature, ferment);
+                numEffected = dbs.update();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return numEffected;
+        }
+
         public int Update()
         {
             int effected = 0;

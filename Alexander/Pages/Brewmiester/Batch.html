@@ -24,11 +24,6 @@
 
     <script>
 
-        //TODO
-        // add ADD button for each table outside of table
-
-
-
         batch_id = null; // current batch
         sampleArr = [];
         purgeArr = [];
@@ -40,26 +35,44 @@
 
             batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
 
-            batch_id = 2;
-
+            // Hide Edit Divs
             $("#editDiv_sample").hide();
             $("#editDiv_purge").hide();
             $("#editDiv_harvest").hide();
             $("#editDiv_ferment").hide();
+            $("#addDiv_sample").hide();
+            $("#addDiv_purge").hide();
+            $("#addDiv_harvest").hide();
+            $("#addDiv_ferment").hide();
 
+            // APIs
             ajaxCall('GET', '../../api/Batch_Production', '', GetBatchSuccess, GetBatchError); // check if exist and bring values into tables
             ajaxCall('GET', '../../api/SampleDetails', '', GetSampleSuccess, GetSampleError);// tbl-sample
             ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); //tbl-purge
             ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); //tbl-harvest
             ajaxCall('GET', '../../api/Fermantation', '', GetFermantationSuccess, GetFermantationError); //tbl-Fermant
 
-            buttonEvents();
+            buttonEvents(); // edit + delete buttons
 
+            // edit forms submit
             $("#editForm_sample").on("submit", EditSample);
             $("#editForm_purge").on("submit", EditPurge);
             $("#editForm_harvest").on("submit", EditHarvest);
             $("#editForm_ferment").on("submit", EditFerment);
 
+            // Show Forms e
+            $("#AddSample").on("click", showSample);
+            $("#AddPurge").on("click", showPurge);
+            $("#AddHarvest").on("click", showHarvest);
+            $("#AddFermantation").on("click", showFermantation);
+
+            // Submit Form e
+            $("#addForm_sample").on("submit", AddSample);
+            $("#addForm_purge").on("submit", AddPurge);
+            $("#addForm_harvest").on("submit", AddHarvest);
+            $("#addForm_ferment").on("submit", AddFermantation);
+
+            // Close button logic
             $(".close_Btn").on("click", Close_Edit_Div); 
         });
 
@@ -77,6 +90,13 @@
                     break;
                 }
             }
+
+            // Iterate over JSON Object
+            //var keys = Object.keys(batch); 
+            //keys.forEach( function(key) {
+            //    var values = batch[key];
+            //    console.log(values);
+            //})
 
             // build simple table as for the excel
             let st = `
@@ -122,15 +142,11 @@
         function GetSampleSuccess(samples) {
             console.log('sample Details:', samples);
 
-            //batch_id = 3;
-            //let smp = [];
-
             for (let sample of samples) {
                 if (sample.Batch_id == batch_id) {
                     sampleArr.push(sample);
                 }
             }
-            //sampleArr = smp;
 
             console.log('this is sampleArr:', sampleArr);
 
@@ -151,8 +167,7 @@
 
                                 editBtn = "<button type='button' class = 'editSampleBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deleteSampleBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                addBtn = "<button type='button' class = 'addSampleBtn btn btn-warning'" + data_for_tbl + "> Add </button>";
-                                return addBtn + editBtn + deleteBtn;
+                                return editBtn + deleteBtn;
                             }
                         },
                         {
@@ -187,6 +202,40 @@
             refresh_table();
         }
         function PutSampleError(err) {
+            console.log(err);
+        }
+
+        function showSample() {
+
+            Hide_Tables("sample"); // hide all tables but sample
+            $("#addDiv_sample").show();
+        }
+
+        function AddSample() {
+
+            let item = {
+                "date": $("#addDateSample").val(),
+                "tank_temp": $("#addtankTemp").val(),
+                "sample_temp": $("#addsampleTemp").val(),
+                "rate": $("#addrate").val(),
+                "gravity": $("#addgravity").val(),
+                "ph": $("#addPH").val(),
+                "notes": $("#addnotesSample").val(),
+                "batch_id":batch_id
+            }
+
+            console.log("this is item to POST", item);
+
+            ajaxCall("POST", "../../api/SampleDetails", JSON.stringify(item), postSampleSuccess, postSampleError);
+
+            return false;
+        }
+
+        function postSampleSuccess(data) {
+            console.log(data);
+            refresh_table();
+        }
+        function postSampleError(err) {
             console.log(err);
         }
         // ** Sample API
@@ -224,8 +273,7 @@
 
                                 editBtn = "<button type='button' class = 'editPurgeBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deletePurgeBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                addBtn = "<button type='button' class = 'addPurgeBtn btn btn-warning'" + data_for_tbl + "> Add </button>";
-                                return addBtn + editBtn + deleteBtn;
+                                return editBtn + deleteBtn;
                             }
                         },
                         {
@@ -247,7 +295,6 @@
                 alert(err);
             }
 
-            //buttonEvents();
         }
         function GetPurgeError(err) {
             console.log(err);
@@ -259,6 +306,39 @@
             refresh_table();
         }
         function PutPurgeError(err) {
+            console.log(err);
+        }
+
+        function showPurge() {
+
+            Hide_Tables("purge"); // hide all tables but sample
+            $("#addDiv_purge").show();
+        }
+
+        function AddPurge() {
+
+            let item = {
+                "date": $("#addDatePurge").val(),
+                "name": $("#addnamePurge").val(),
+                "temperature": $("#addtemperaturePurge").val(),
+                "weight": $("#addweight").val(),
+                "num_of_buckets": $("#addbuckets").val(),
+                "notes": $("#addnotesPurge").val(),
+                "batchid":batch_id
+            }
+
+            console.log("this is item to POST", item);
+
+            ajaxCall("POST", "../../api/Purge", JSON.stringify(item), postPurgeSuccess, postPurgeError);
+
+            return false;
+        }
+
+        function postPurgeSuccess(data) {
+            console.log(data);
+            refresh_table();
+        }
+        function postPurgeError(err) {
             console.log(err);
         }
         // ** Purge API
@@ -296,8 +376,7 @@
 
                                 editBtn = "<button type='button' class = 'editHarvestBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deleteHarvestBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                addBtn = "<button type='button' class = 'addHarvestBtn btn btn-warning'" + data_for_tbl + "> Add </button>";
-                                return addBtn + editBtn + deleteBtn;
+                                return editBtn + deleteBtn;
                             }
                         },
                         {
@@ -343,7 +422,37 @@
             console.log(err);
         }
 
+        function showHarvest() {
 
+            Hide_Tables("harvest"); // hide all tables but sample
+            $("#addDiv_harvest").show();
+        }
+
+        function AddHarvest() {
+
+            let item = {
+                "date": $("#addDateHarvest").val(),
+                "name": $("#addnameHarvest").val(),
+                "temperature": $("#addtemperatureHarvest").val(),
+                "time_tap_2": $("#addtimeTap").val(),
+                "total_Duration": $("#addtotalTime").val(),
+                "batchid":batch_id
+            }
+
+            console.log("this is item to POST", item);
+
+            ajaxCall("POST", "../../api/Harvest", JSON.stringify(item), postHarvestSuccess, postHarvestError);
+
+            return false;
+        }
+
+        function postHarvestSuccess(data) {
+            console.log(data);
+            refresh_table();
+        }
+        function postHarvestError(err) {
+            console.log(err);
+        }
         // ** Harvest API
 
         // Fermantation API
@@ -378,8 +487,7 @@
 
                                 editBtn = "<button type='button' class = 'editFermantationBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deleteFermantationBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                addBtn = "<button type='button' class = 'addFermantationBtn btn btn-warning'" + data_for_tbl + "> Add </button>";
-                                return addBtn + editBtn + deleteBtn;
+                                return editBtn + deleteBtn;
                             }
                         },
                         {
@@ -399,9 +507,8 @@
             catch (err) {
                 alert(err);
             }
-
-            //buttonEvents();
         }
+
         function GetFermantationError(err) {
             console.log(err);
         }
@@ -415,6 +522,37 @@
             console.log(err);
         }
 
+        function showFermantation() {
+
+            Hide_Tables("fermant"); // hide all tables but sample
+            $("#addDiv_ferment").show();
+        }
+
+        function AddFermantation() {
+
+            let item = {
+                "date": $("#addDateFerment").val(),
+                "pressureChange": $("#addpressChange").val(),
+                "tank_pressure": $("#addtankPress").val(),
+                "tank_temperature": $("#addtankTempFerment").val(),
+                "ferment": $("#addferment").val(),
+                "batchid":batch_id
+            }
+
+            console.log("this is item to POST", item);
+
+            ajaxCall("POST", "../../api/Fermantation", JSON.stringify(item), postFermantationSuccess, postFermantationError);
+
+            return false;
+        }
+
+        function postFermantationSuccess(data) {
+            console.log(data);
+            refresh_table();
+        }
+        function postFermantationError(err) {
+            console.log(err);
+        }
         // ** Fermantation API
 
 
@@ -427,7 +565,6 @@
             $(document).on("click", ".editSampleBtn,.editHarvestBtn,.editPurgeBtn,.editFermantationBtn", function () {
 
                 let tbl_name = $(this).attr('class').replace(/^edit/, '').replace(/Btn.+/, '');
-                
 
                 Edit_Row_In_TBL(this.getAttribute(`data-${tbl_name.toLowerCase()}-btnid`), tbl_name.toLowerCase()); 
             });
@@ -441,14 +578,6 @@
 
             });
 
-            $(document).on("click", ".addSampleBtn,.addHarvestBtn,.addPurgeBtn,.addFermantationBtn", function () {
-
-                let tbl_name = $(this).attr('class').replace(/^add/, '').replace(/Btn.+/, '');
-                console.log("tbl_name is:", tbl_name.toLowerCase());
-
-                Add_Row_In_TBL(this.getAttribute(`data-${tbl_name.toLowerCase()}-btnid`), tbl_name);
-
-            });
         }
 
         function Edit_Row_In_TBL(row_id, tbl_name) {
@@ -782,6 +911,10 @@
             padding-top:1%;
             width:50%;
         }
+        .btn-warning{
+            width:10%;
+            border:solid;
+        }
     </style>
 
 </head>
@@ -809,9 +942,6 @@
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Alerts.html">Alerts</a>
                     </li>
-                    <!-- <li class="nav-item">
-                      <a class="nav-link disabled" href="#">Disabled</a>
-                    </li> -->
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
@@ -831,6 +961,7 @@
     <!-- table - sample Details-->
     <div class="container" id="sample_div">
         <h5 class="text-center">Sample Details</h5>
+        <button id="AddSample" class="btn btn-warning">Add</button>
         <table id="tbl-sample" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
@@ -848,14 +979,12 @@
             </tbody>
 
         </table>
-
-        <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
-        <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
     </div>
     <!-- table - sample Details-->
     <!--Purge Table-->
     <div class="container" id="purge_div">
         <h5 class="text-center">Purge</h5>
+        <button id="AddPurge" class="btn btn-warning">Add</button>
         <table id="tbl-purge" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
@@ -872,14 +1001,12 @@
             </tbody>
 
         </table>
-
-        <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
-        <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
     </div>
     <!--Purge Table-->
     <!--Harvest Table-->
     <div class="container" id="harvest_div">
         <h5 class="text-center">Harvest</h5>
+        <button id="AddHarvest" class="btn btn-warning">Add</button>
         <table id="tbl-harvest" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
@@ -895,15 +1022,14 @@
             </tbody>
 
         </table>
-
-        <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
-        <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
     </div>
     <!--Harvest Table-->
     <!--Fermant Table-->
     <div class="container" id="fermant_div">
         <h5 class="text-center">Fermantation</h5>
+        <button id="AddFermantation" class="btn btn-warning">Add</button>
         <table id="tbl-Fermant" class="display" border="1" style="width:100%">
+
             <thead style="background-color:cornflowerblue">
                 <tr>
                     <th></th> <!--edit/delete buttons-->
@@ -918,9 +1044,6 @@
             </tbody>
 
         </table>
-
-        <!--<button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'>Add</button>-->
-        <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
     </div>
     <!--Fermant Table-->
     <!--Edit Row In A Sample Table-->
@@ -949,7 +1072,7 @@
                 <input type="text" class="form-control" id="PH" pattern="[0-9,\.]+" />
                 <br />
                 <label>Notes</label>
-                <input type="text" class="form-control" id="notesSample"/>
+                <input type="text" class="form-control" id="notesSample" />
                 <br />
                 <div id="btnDiv" class="container">
                     <button type="submit" class="btn btn-primary btn-block">Submit</button>
@@ -969,7 +1092,7 @@
                 <input type="date" class="form-control" id="DatePurge" required />
                 <br />
                 <label>Name</label>
-                <input type="text" class="form-control" id="namePurge" required pattern="[0-9a-zA-Z]+"/>
+                <input type="text" class="form-control" id="namePurge" required pattern="[0-9a-zA-Z]+" />
                 <br />
                 <label>Temperature</label>
                 <input type="text" class="form-control" id="temperaturePurge" pattern="[0-9,\.]+" />
@@ -981,7 +1104,7 @@
                 <input type="text" class="form-control" id="buckets" pattern="[0-9,\.]+" />
                 <br />
                 <label>Notes</label>
-                <input type="text" class="form-control" id="notesPurge"/>
+                <input type="text" class="form-control" id="notesPurge" />
                 <br />
                 <div id="btnDiv" class="container">
                     <button type="submit" class="btn btn-primary btn-block">Submit</button>
@@ -1049,6 +1172,131 @@
     </div>
     <!--Edit Row In A Fermantation Table-->
     <div id="ph" hidden></div>
+    <!--Add Row In A Sample Table-->
+    <div class="container" id="addDiv_sample">
+        <button type="button" class="close close_Btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <form id="addForm_sample">
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" class="form-control" id="addDateSample" required />
+                <br />
+                <label>Tank Temperature</label>
+                <input type="text" class="form-control" id="addtankTemp" pattern="[0-9,\.]+" />
+                <br />
+                <label>Sample Temperature</label>
+                <input type="text" class="form-control" id="addsampleTemp" pattern="[0-9,\.]+" />
+                <br />
+                <label>Rate</label>
+                <input type="text" class="form-control" id="addrate" pattern="[0-9,\.]+" />
+                <br />
+                <label>Gravity</label>
+                <input type="text" class="form-control" id="addgravity" pattern="[0-9,\.]+" />
+                <br />
+                <label>PH</label>
+                <input type="text" class="form-control" id="addPH" pattern="[0-9,\.]+" />
+                <br />
+                <label>Notes</label>
+                <input type="text" class="form-control" id="addnotesSample" />
+                <br />
+                <div id="btnDiv" class="container">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--Add Row In A Sample Table-->
+    <!--Add Row In A Purge Table-->
+    <div class="container" id="addDiv_purge">
+        <button type="button" class="close close_Btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <form id="addForm_purge">
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" class="form-control" id="addDatePurge" required />
+                <br />
+                <label>Name</label>
+                <input type="text" class="form-control" id="addnamePurge" required pattern="[0-9a-zA-Z]+" />
+                <br />
+                <label>Temperature</label>
+                <input type="text" class="form-control" id="addtemperaturePurge" pattern="[0-9,\.]+" />
+                <br />
+                <label>Weight</label>
+                <input type="text" class="form-control" id="addweight" pattern="[0-9,\.]+" />
+                <br />
+                <label># Of Buckets</label>
+                <input type="text" class="form-control" id="addbuckets" pattern="[0-9,\.]+" />
+                <br />
+                <label>Notes</label>
+                <input type="text" class="form-control" id="addnotesPurge" />
+                <br />
+                <div id="btnDiv" class="container">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--Add Row In A Purge Table-->
+    <!--Add Row In A Harvest Table-->
+    <div class="container" id="addDiv_harvest">
+        <button type="button" class="close close_Btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <form id="addForm_harvest">
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" class="form-control" id="addDateHarvest" required />
+                <br />
+                <label>Name</label>
+                <input type="text" class="form-control" id="addnameHarvest" required pattern="[0-9a-zA-Z]+" />
+                <br />
+                <label>Temperature</label>
+                <input type="text" class="form-control" id="addtemperatureHarvest" pattern="[0-9,\.]+" />
+                <br />
+                <label>Time For Tap 2</label>
+                <input type="date" class="form-control" id="addtimeTap" />
+                <br />
+                <label>Total Duration</label>
+                <input type="date" class="form-control" id="addtotalTime" />
+                <br />
+                <div id="btnDiv" class="container">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--Add Row In A Harvest Table-->
+    <!--Add Row In A Fermantation Table-->
+    <div class="container" id="addDiv_ferment">
+        <button type="button" class="close close_Btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <form id="addForm_ferment">
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" class="form-control" id="addDateFerment" required />
+                <br />
+                <label>Pressure Change</label>
+                <input type="text" class="form-control" id="addpressChange" pattern="[0-9,\.]+" />
+                <br />
+                <label>Tank Pressure</label>
+                <input type="text" class="form-control" id="addtankPress" pattern="[0-9,\.]+" />
+                <br />
+                <label>Tank Temperature</label>
+                <input type="text" class="form-control" id="addtankTempFerment" pattern="[0-9,\.]+" />
+                <br />
+                <label>Fermantation</label>
+                <input type="text" class="form-control" id="addferment" pattern="[0-9,\.]+" />
+                <br />
+                <div id="btnDiv" class="container">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--Add Row In A Fermantation Table-->
 </body>
 
 </html>
