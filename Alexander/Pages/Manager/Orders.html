@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>Manager Production</title>
+    <title>Orders</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -57,8 +57,8 @@
                                 let data_for_tbl1 = "data-btnBeerType='" + data.Beer.BeerType + "'";
 
                                 editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + data_for_tbl1+ "> Edit </button>";
-                                //deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn /*+ deleteBtn*/;
+                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + data_for_tbl1+ "> Delete </button>";
+                                return editBtn + deleteBtn;
                             }
                         },
                         { data: "OrderID" },
@@ -104,7 +104,8 @@
         }
 
 
-        function buttonEvents() {
+        function buttonEvents()
+        {
 
             $(document).on("click", ".editBtn", function () {
 
@@ -117,33 +118,50 @@
 
             });
 
-            //$(document).on("click", ".deleteBtn", function () {
+            ///
 
-            //    var batch_id = this.getAttribute('data-btnId');
 
-            //    if (confirm("Are You Sure You Want To Delete This Row?")) {
 
-            //        ajaxCall("Delete", "../../api/Batch_Botteling", JSON.stringify(batch_id), DeleteBatch_BottelingSucess, DeleteBatch_BottelingError);
-            //    }
-            //    else {
-            //        console.log("You pressed Cancel!");
-            //    }
+///
 
-            //});
+            $(document).on("click", ".deleteBtn", function ()
+            {
+
+                
+                let beer = {
+              
+                    beerType: this.getAttribute('data-btnBeerType')
+                }
+                let Order = {
+                    orderID: this.getAttribute('data-btnId'),      
+                    beer,
+
+                }
+                console.log("order to delete" ,Order);
+
+                if (confirm("Are You Sure You Want To Delete This Row?")) {
+
+                    ajaxCall("Delete", "../../api/Order", JSON.stringify(Order), DeleteOrderSucess, DeleteOrderError);
+                }
+                else {
+                    console.log("You pressed Cancel!");
+                }
+
+            });
         }
-        //////// DeleteBatch
-        //function DeleteBatch_BottelingSucess(data) {
-        //    console.log(data, "Record Deleted");
+        ////// DeleteOrder
+        function DeleteOrderSucess(data) {
+            console.log(data, "Record Deleted");
 
-        //    location.reload();
+            location.reload();
 
-        //}
+        }
 
-        //function DeleteBatch_BottelingError(err) {
-        //    console.log(err);
-        //}
+        function DeleteOrderError(err) {
+            console.log(err);
+        }
 
-        // Edit Batch
+        // Edit Order
 
         function populateFields(orderID, beertype) {
 

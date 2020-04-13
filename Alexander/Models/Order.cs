@@ -73,7 +73,35 @@ namespace Alexander.Models
             return effected;
         }
 
+        //delete order row
 
+        public int delete_or()
+        {
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[order_2020]");
+
+
+
+            try // Delete from inventory
+            {
+                foreach (DataRow row in dbs.dt.Select("Order_id='" + OrderID + "' AND beerType='" + Beer.BeerType + "'"))
+                {
+                    row.Delete();
+                }
+                dbs.update();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
+            return 1;
+        }
+
+
+        //
 
     }
 }
