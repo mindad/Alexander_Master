@@ -1,6 +1,7 @@
 ﻿using Alexander.Models.DAL;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -23,6 +24,37 @@ namespace Alexander.Models
 
             return Manager_products_arr;
         }
+
+        //edit manager_products
+         public int Update()
+        {
+            int effected = 0;
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[manager_products_2020]");
+     
+            try
+            {
+
+                DataRow[] dr = dbs.dt.Select("prodID='" + ProdID + "' AND prodName='" + ProdName + "'"); // 
+                if (dr.Length != 0)
+                {
+                    dr[0]["amount"] = Amount;
+                    dr[0]["min_In_Stock"] = Min_in_stock;
+
+                    effected = dbs.update(); // update DB
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+       
+
+            return effected;
+        }
+
 
 
         public managerproducts(string prodName, int prodID, string beerType, int amount, int min_in_stock)

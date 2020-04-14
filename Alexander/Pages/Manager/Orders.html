@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>Manager Inventory</title>
+    <title>Orders</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -17,7 +17,7 @@
     <script src="../../Scripts/ajaxCalls.js"></script>
 
     <script>
-       ManagerInventoryArr = [];
+        OrderArr = [];
 
         $(document).ready(function () {
 
@@ -25,8 +25,8 @@
             $('#submit_edit').on('click', submitEdit);
             $('#editDiv').on('submit', f1);
 
-            //GET manager_products
-            ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError);
+
+            ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError); //GET ORDER
 
 
             buttonEvents();
@@ -36,12 +36,12 @@
         });
         //Batch_Botteling  API
 
-        function GetmanagerproductsSucess(data) {
+        function GetOrderSucess(data) {
 
-            console.log('this is Batch_Botteling_data:', data);
+            console.log('this is OrderArr:', data);
 
-            ManagerInventoryArr = data;
-
+            OrderArr = data;
+            console.log(OrderArr);
             try {
                 $('#tbl').DataTable({
 
@@ -50,25 +50,35 @@
                     pageLength: 7,
                     columns: [
                         {
-                            data:{},
+                            data: {},
                             render: function (data, type, row, meta) {
 
-                                let data_for_tbl = "data-btnId='" + data.ProdID + "'";
-                                let data_for_tbl1 = "data-btnName='" + data.ProdName + "'";
+                                let data_for_tbl = "data-btnId='" + data.OrderID + "'";
+                                let data_for_tbl1 = "data-btnBeerType='" + data.Beer.BeerType + "'";
 
                                 editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + data_for_tbl1+ "> Edit </button>";
-                                //deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn /*+ deleteBtn*/;
+                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + data_for_tbl1+ "> Delete </button>";
+                                return editBtn + deleteBtn;
                             }
                         },
-                        { data: "ProdName" },
-                        { data: "ProdID" },
+                        { data: "OrderID" },
+                      
+                        {
+                            data: "Date",
+                            render: function (data) {
+                                return data.substr(0, 10);
+                            }
 
+                        },
+                    
+                        { data: "Beer.BeerType" },
+                        { data: "Beer.Keg20_amount" },
+                        { data: "Beer.Keg30_amount" },
+                        { data: "Beer.BottleCase_amount" },
+                
 
-                        { data: "BeerType" },
+                     
 
-                        { data: "Amount" },
-                        { data: "Min_in_stock" },
 
                     ]
                 });
@@ -80,7 +90,7 @@
 
         }
 
-        function GetmanagerproductsError(err) {
+        function GetOrderError(err) {
             console.log(err);
         }
 
@@ -94,83 +104,105 @@
         }
 
 
-        function buttonEvents() {
+        function buttonEvents()
+        {
 
             $(document).on("click", ".editBtn", function () {
 
                 console.log('batch id is:', this.getAttribute('data-btnId'));
-                console.log('batch Name is:', this.getAttribute('data-btnName'));
+                console.log('data-btnBeerType is:', this.getAttribute('data-btnBeerType'));
 
                 $('#editDiv').show();
 
-                populateFields(this.getAttribute('data-btnId'), this.getAttribute('data-btnName')); // fill the form fields according to the selected row
+                populateFields(this.getAttribute('data-btnId'), this.getAttribute('data-btnBeerType')); // fill the form fields according to the selected row
 
             });
 
-            //$(document).on("click", ".deleteBtn", function () {
+            ///
 
-            //    var batch_id = this.getAttribute('data-btnId');
 
-            //    if (confirm("Are You Sure You Want To Delete This Row?")) {
 
-            //        ajaxCall("Delete", "../../api/Batch_Botteling", JSON.stringify(batch_id), DeleteBatch_BottelingSucess, DeleteBatch_BottelingError);
-            //    }
-            //    else {
-            //        console.log("You pressed Cancel!");
-            //    }
+///
 
-            //});
+            $(document).on("click", ".deleteBtn", function ()
+            {
+
+                
+                let beer = {
+              
+                    beerType: this.getAttribute('data-btnBeerType')
+                }
+                let Order = {
+                    orderID: this.getAttribute('data-btnId'),      
+                    beer,
+
+                }
+                console.log("order to delete" ,Order);
+
+                if (confirm("Are You Sure You Want To Delete This Row?")) {
+
+                    ajaxCall("Delete", "../../api/Order", JSON.stringify(Order), DeleteOrderSucess, DeleteOrderError);
+                }
+                else {
+                    console.log("You pressed Cancel!");
+                }
+
+            });
         }
-        //////// DeleteBatch
-        //function DeleteBatch_BottelingSucess(data) {
-        //    console.log(data, "Record Deleted");
+        ////// DeleteOrder
+        function DeleteOrderSucess(data) {
+            console.log(data, "Record Deleted");
 
-        //    location.reload();
+            location.reload();
 
-        //}
+        }
 
-        //function DeleteBatch_BottelingError(err) {
-        //    console.log(err);
-        //}
+        function DeleteOrderError(err) {
+            console.log(err);
+        }
 
-        // Edit Batch
+        // Edit Order
 
-        function populateFields(prodID,ProdName) {
+        function populateFields(orderID, beertype) {
 
-            let prod;
-         
-            for (let item of ManagerInventoryArr) { // find batch_id clicked on in 'Batch_BottelingArr'
-               
-                if ((item.ProdName == ProdName) && (item.ProdID == prodID) ) {
-                    prod = item;
+            let order;
+
+            for (let item of OrderArr) { // find batch_id clicked on in 'Batch_BottelingArr'
+
+                if ((item.OrderID == orderID) && (item.Beer.BeerType == beertype)) {
+                    order = item;
+              
                     break;
                 }
             }
 
-            console.log('this is product', prod);
+            console.log('this is order', order);
+            ///to continue
+            $('#OrderID_header_edit').html('OrderID : ' + order.OrderID);
+            $('#BeerTypeName_header_edit').html('BeerType:' + order.Beer.BeerType);
+            $('#Kegs20amountInput_edit').val(order.Beer.Keg20_amount);
+            $('#Kegs30amountInput_edit').val(order.Beer.Keg30_amount);
+            $('#bottleamountInput_edit').val(order.Beer.BottleCase_amount);
 
-            $('#ProdID_header_edit').html('ProdID : '+ prod.ProdID);
-            $('#ProdName_header_edit').html('ProdName:'+ prod.ProdName);
-            $('#amountInput_edit').val(prod.amountInput);
-            $('#MinInStockInput_edit').val(prod.MinInStockInput);
-         
         }
 
         function submitEdit() {
 
+            let beer = {
+                keg20_amount: $('#Kegs20amountInput_edit').val(),
+                keg30_amount: $('#Kegs30amountInput_edit').val(),
+                bottleCase_amount: $('#bottleamountInput_edit').val(),
+                beerType: $('#BeerTypeName_header_edit').html().replace(/^BeerType:/g,''), // gets BeerType  RegEX
+            }
+            let Order = {
+                orderID: $('#OrderID_header_edit').html().replace(/[^0-9]/g, ''), // gets OrderID RegEX         
+                beer,
 
-            let product = {
-                prodID: $('#ProdID_header_edit').html().replace(/[^0-9]/g, ''), // gets prodID RegEX
-                prodName: $('#ProdName_header_edit').html().replace(/^ProdName:/g , ''), // gets prodName  RegEX
-           
-                amount: $('#amountInput_edit').val(),
-                min_in_stock: $('#MinInStockInput_edit').val(),
-        
             }
 
-            console.log('product to PUT:', product);
-
-            ajaxCall("PUT", "../../api/managerproducts", JSON.stringify(product), Put_success, Put_Error);
+            console.log('Order to PUT:', Order);
+            ajaxCall("PUT", "../../api/Order", JSON.stringify(Order), Put_success, Put_Error);
+          
 
             refresh_table();
 
@@ -195,6 +227,7 @@
         function refresh_table() {
             location.reload();
         }
+
 
     </script>
 
@@ -277,11 +310,12 @@
             <thead style="background-color:cornflowerblue">
                 <tr>
                     <th></th> <!--edit/delete buttons-->
-                    <th>prodName</th>
-                    <th>prodID</th>
-                    <th>beerType</th>
-                    <th>amount</th>
-                    <th>min_In_Stock</th>
+                    <th>Order ID</th>
+                    <th>Supply Date</th>
+                    <th>Beer Type</th>
+                    <th>Kegs 20 Amount</th>
+                    <th>Kegs 30 Amount</th>
+                    <th>bottles box24</th>
 
                 </tr>
             </thead>
@@ -290,21 +324,23 @@
         </table>
     </div>
     <!-- table -->
-
     <!--Edit Row In  Table-->
     <div class="container" id="editDiv">
         <form id="editForm">
             <div class="form-group">
 
-                <h2 id="ProdID_header_edit"></h2><br />
-                <h2 id="ProdName_header_edit"></h2><br />
-                <label>Amount</label>
-                <input type="number" value="" id="amountInput_edit" />
+                <h2 id="OrderID_header_edit"></h2><br />
+                <h2 id="BeerTypeName_header_edit"></h2><br />
+                <label>Kegs 20 amount</label>
+                <input type="number" value="" id="Kegs20amountInput_edit" />
                 <br>
-                <label>Minimum In Stock</label>
-                <input type="number" value="" id="MinInStockInput_edit" />
+                <label>Kegs 30 amount</label>
+                <input type="number" value="" id="Kegs30amountInput_edit" />
                 <br>
-        
+                <label>bottle Boxes</label>
+                <input type="number" value="" id="bottleamountInput_edit" />
+                <br>
+
             </div>
             <button id="submit_edit">Submit</button>
         </form>
