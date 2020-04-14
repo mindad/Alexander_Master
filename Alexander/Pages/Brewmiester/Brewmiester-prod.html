@@ -32,7 +32,7 @@
 
             ajaxCall("GET", "../../api/Cooking", "", GetBrewSucess, GetBrewError); // get all Brews
 
-            $("#ourForm, #editForm").on('submit', f1);
+            $("#ourForm, #editForm").on('submit', f1); // form control
 
             $('#add_new_cook').on('click', toggle_add_visibilty); 
 
@@ -64,7 +64,6 @@
                             render: function (data, type, row, meta) {
 
                                 let data_for_tbl = "data-btnId='" + data + "'";
-
                                 editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + "> Edit </button>";
                                 deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
                                 return editBtn + deleteBtn;
@@ -175,7 +174,6 @@
         // ** Batch API
 
         // BREW API
-        //GetBrewSucess
         function GetBrewSucess(data) {
             console.log("Brew data:",data);
 
