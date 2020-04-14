@@ -84,9 +84,59 @@ namespace Alexander.Models
             DBservices dbs = new DBservices();
             dbs = dbs.read("[Batch_2020]");
 
-            dbs.dt = edit(dbs.dt, this.batchID);
+            try
+            {
+                dbs.dt = edit(dbs.dt, this.batchID); // edit date & beer type
+                effected += dbs.update(); // update DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            try // edit brew tbl
+            {
+                dbs = dbs.read("[Brew_2020]");
+                DataRow dr = dbs.dt.Select("batch_id=" + batchID).First();
 
-            effected = dbs.update(); // update DB
+                string st = "";
+
+                foreach (Product prd in recipe_for_this_batch.Products_in_recipe) 
+                {
+                    /// Create prod string
+                    if (recipe_for_this_batch.Products_in_recipe.IndexOf(prd) == recipe_for_this_batch.Products_in_recipe.Count - 1) // Last item in iteration
+                    {
+                        st += prd.ProductName + ":" + prd.Amount;
+                        break;
+                    }
+                    st += prd.ProductName + ":" + prd.Amount + ",";
+                }
+
+                dr["prodItems"] = st;
+                effected += dbs.update(); // update DB
+
+                dbs = dbs.read("[Brew_2020]"); // read Again After Edit
+
+                foreach (Product prd in recipe_for_this_batch.Products_in_recipe)
+                {
+                    float am = 0;
+                    try /// Update amounts in Batch_2020
+                    {
+                        am = prd.Calc_inventory_amounts(prd.ProductName);
+                        am -= prd.Calc_Brew_Amounts(prd.ProductName);
+                        prd.Update_Product_Total_Amount(am, prd.ProductName);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+
+                }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
 
             return effected;
         }

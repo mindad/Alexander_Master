@@ -75,19 +75,19 @@ namespace Alexander.Models
                 throw ex;
             }
 
-            float am = Calc_inventory_amounts();
+            float am = Calc_inventory_amounts(ProductName);
             am -= Calc_Brew_Amounts(ProductName);
-            Update_Product_Total_Amount(am);
+            Update_Product_Total_Amount(am, ProductName);
 
             return numEffected;
         }
 
-        public float Calc_inventory_amounts()
+        public float Calc_inventory_amounts(string prd_name)
         {
             DBservices dbs = new DBservices();
             dbs = dbs.read("[Inventory_Product_2020]");
 
-            DataRow[] data_rows = dbs.dt.Select("prodName='" + ProductName + "'");
+            DataRow[] data_rows = dbs.dt.Select("prodName='" + prd_name + "'");
 
             float res = 0;
 
@@ -100,7 +100,7 @@ namespace Alexander.Models
         }
 
 
-        private float Calc_Brew_Amounts(string prod_name)
+        public float Calc_Brew_Amounts(string prod_name)
         {
             float res = 0;
             DBservices dbs = new DBservices();
@@ -121,7 +121,7 @@ namespace Alexander.Models
             return res;
         }
 
-        private void Update_Product_Total_Amount(float am)
+        public void Update_Product_Total_Amount(float am, string prd_name)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace Alexander.Models
                 DBservices dbs = new DBservices();
                 dbs = dbs.read("[Product_2020]");
 
-                DataRow dr = dbs.dt.Select("prodName='" + ProductName + "'").First();
+                DataRow dr = dbs.dt.Select("prodName='" + prd_name + "'").First();
                 dr["amount"] = am;
                 dbs.update();
             }
@@ -272,9 +272,9 @@ namespace Alexander.Models
                 throw ex;
             }
 
-            float am = Calc_inventory_amounts();
+            float am = Calc_inventory_amounts(ProductName);
             am -= Calc_Brew_Amounts(ProductName);
-            Update_Product_Total_Amount(am);
+            Update_Product_Total_Amount(am, ProductName);
 
             return effected;
         }
@@ -294,7 +294,7 @@ namespace Alexander.Models
                 {
                     DataRow dr = dbs.dt.Select("prodName='" + prod.ProductName + "'").First();
 
-                    Update_Product_Total_Amount(prod.amount);
+                    Update_Product_Total_Amount(prod.amount, prod.ProductName);
 
                     effected += dbs.update(); // update DB
                 }
@@ -303,10 +303,7 @@ namespace Alexander.Models
                     throw ex;
                 }
             }
-            
 
-
-            
             return effected;
         }
 

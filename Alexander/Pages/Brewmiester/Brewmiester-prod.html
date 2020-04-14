@@ -8,9 +8,6 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <!--<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -85,10 +82,10 @@
 
                                         for (var j = 0; j < BrewArr[i].Prod_list.length; j++) { 
                                             if (j == BrewArr[i].Prod_list.length - 1) {
-                                                st += BrewArr[i].Prod_list[j].ProductType + ':' + BrewArr[i].Prod_list[j].Amount;
+                                                st += BrewArr[i].Prod_list[j].ProductName + ':' + BrewArr[i].Prod_list[j].Amount;
                                                 continue;
                                             }
-                                            st += BrewArr[i].Prod_list[j].ProductType + ':' + BrewArr[i].Prod_list[j].Amount +', ';
+                                            st += BrewArr[i].Prod_list[j].ProductName + ':' + BrewArr[i].Prod_list[j].Amount +', ';
                                         }
                                         return st;
                                     }
@@ -153,7 +150,7 @@
                         for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) {
                             let st = {
                                 "productName": recipeArr[i].Products_in_recipe[j].ProductType,
-                                "amount": $(`#${recipeArr[i].Products_in_recipe[j].ProductType}`).val()
+                                "amount": $(`#${(recipeArr[i].Products_in_recipe[j].ProductType).replace(" ","\\ ")}`).val()
                             }
                             products.push(st);
                         }
@@ -166,11 +163,10 @@
                 "prod_list": products
             }
 
-            console.log("st to post to Brew:", brew)
+            console.log("st to post to Brew:", brew);
 
             ajaxCall('POST', "../../api/Cooking", JSON.stringify(brew), PostBrewSucess, PostBrewError);
-            
-            refresh_table();
+           
         }
 
         function PostBatchError(err) {
@@ -193,6 +189,8 @@
 
         function PostBrewSucess(data) {
             console.log(data);
+
+            refresh_table();
         }
         function PostBrewError(err) {
             console.log(err);
@@ -255,7 +253,7 @@
 
                             st += `<label>${recipeArr[i].Products_in_recipe[j].ProductType}</label>\
                                     <input type="number" min="0" value="${recipeArr[i].Products_in_recipe[j].Amount}"\
-                                    class="text-center form-control" id="${recipeArr[i].Products_in_recipe[j].ProductType}"/><br>`
+                                    class="form-control" id="${recipeArr[i].Products_in_recipe[j].ProductType}"/><br>`
                         }
                         break;
                     }
@@ -263,9 +261,10 @@
                 $("#inForm").append(st); 
         }
 
-        function Set_Edit_Form_Values(){
+        function Set_Edit_Form_Values(){ // set input for each product in recipe
 
-            let batch_id = $("#edit_batch_header").val().match(/[0-9]+/);
+            //let sr_str = $("#edit_batch_header").html().match(/[0-9]+/);
+            let batch_id = $("#edit_batch_header").html().match(/[0-9]+/)[0]; // match batch_id
 
             $("#inEditForm").html(''); // clear inForm div
 
@@ -277,9 +276,9 @@
 
                     for (var j = 0; j < BrewArr[i].Prod_list.length; j++) {
 
-                        st += `<label>${BrewArr[i].Prod_list[j].ProductType}</label>\
-                                    <input type="number" min="0" value="${BrewArr[i].Prod_list[j].Amount}"\
-                                    class="text-center form-control" id="${BrewArr[i].Prod_list[j].ProductType}"/><br>`
+                        st += `<label>${BrewArr[i].Prod_list[j].ProductName}</label>\
+                               <input type="number" min="0" value="${BrewArr[i].Prod_list[j].Amount}"\
+                               class="form-control" id="${BrewArr[i].Prod_list[j].ProductName}"/><br>`
                     }
                     break;
                 }
@@ -300,7 +299,7 @@
 
                 $('#btnDiv').hide(); // add To table button 
 
-                console.log('batch id is:' ,this.getAttribute('data-btnId'));
+                //console.log('batch id is:' ,this.getAttribute('data-btnId'));
 
                 populateFields(this.getAttribute('data-btnId')); // fill the form fields according to the selected row
             });
@@ -324,12 +323,29 @@
 
             let id_in_batchArr = $('#ph').val();
 
+            let prod_inRecipe = [];
+            for (var i = 0; i < BrewArr.length; i++) {
+                if (batchArr[id_in_batchArr].BatchID == BrewArr[i].Batch_id) {
+
+                    for (let prd of BrewArr[i].Prod_list) {
+                        prd.Amount = $(`#${prd.ProductName}`).val(); // update amounts
+                    }
+
+                    prod_inRecipe = BrewArr[i].Prod_list; // prod arr to update
+                }
+            }
+
             let batch = {
                 batchID: batchArr[id_in_batchArr].BatchID,
                 date: $("#batchDateInput").val(), 
                 beerType: $('#beerTypeInput').val(),
                 tank:0,
-                wort_volume:0
+                wort_volume: 0,
+                recipe_for_this_batch: {
+                    beerType: "",
+                    creationDate: "",
+                    products_in_recipe: prod_inRecipe
+                }
             }
 
             console.log('this is batch that will be sent to PUT', batch);
@@ -379,7 +395,6 @@
             }
 
             $('#ph').val(id_in_arr); // saves id for later use
-            
             
             $("#editDiv").show();
             $('#edit_batch_header').html(`Batch #: ${btnID}`); // shows batch_id in edit form header
@@ -558,10 +573,9 @@
                 <br />
                 <label for="fromDate">Date</label>
                 <input type="date" class="form-control" id="batchDateInput" required />
-                <div id="inEditForm"></div>
+                <br /><div id="inEditForm"></div>
                 <div id="btnDiv" class="container">
                     <button class="btn btn-primary btn-block" type="submit">Submit</button>
-                    <!--id="submit_edit"-->
                 </div>
             </div>
         </form>

@@ -114,6 +114,12 @@ namespace Alexander.Models.DAL
 
                     br.Batch_id = Convert.ToInt32(dr["batch_id"]);
 
+                    if ( (string)dr["prodItems"] == "" ) // No Recipe For batch Exception
+                    {
+                        brew_list.Add(br);
+                        continue;
+                    }
+
                     string[] parsed_items_in_recipe = ((string)dr["prodItems"]).Split(',');
                     List<Product> prd_lst = new List<Product>();
 
@@ -121,7 +127,7 @@ namespace Alexander.Models.DAL
                     {
                         Product prod = new Product();
 
-                        prod.ProductType = parsed_items_in_recipe[i].Split(':')[0];
+                        prod.ProductName = parsed_items_in_recipe[i].Split(':')[0];
                         prod.Amount = (float)Convert.ToDouble(parsed_items_in_recipe[i].Split(':')[1]);
                         prod.Min_amount = 0;
 
