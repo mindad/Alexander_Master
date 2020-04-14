@@ -3,6 +3,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--///////////////////////style/////////-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -85,9 +87,8 @@
     </style>
     <!--///////////////////////style/////////-->
     <meta charset="utf-8" />
-    <title>Manager Production</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Login</title>
+
     <!--<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>-->
@@ -187,7 +188,7 @@
                 alert("new password and confirm new password must be the same");
                 return false;
             }
-                
+
 
 
         }
@@ -220,7 +221,7 @@
 
         }
 
-         //end  show function
+        //end  show function
 
         //post forgot password
         function PostUserForgotSucess(password) {
@@ -236,7 +237,7 @@
         /// ** end post Forgot passowrd User
 
 
-           //post Login user
+        //post Login user
         function PostUserSucess(user) {
             console.log(user);
 
@@ -255,7 +256,7 @@
         function PostUserError(err) {
             console.log(err);
         }
-        // ** end post Login User
+            // ** end post Login User
 
     </script>
 
