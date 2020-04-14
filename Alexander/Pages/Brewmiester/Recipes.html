@@ -27,11 +27,11 @@
 
             ajaxCall("GET", "../../api/Recipe", "", GetRecipeSucess, GetRecipeError); // get all recipes
 
-            //$('#submit_edit').on("click", edit_Alert_table);
+            $('#addBtn').on("click", OpenAddDiv);
 
-            //buttonEvents();
+            buttonEvents();
 
-            //$("#close_editDiv_Btn").on("click", CloseEditDiv)
+            //$("#close_editDiv_Btn").on("click", CloseEditDiv);
 
             //$("#submit_edit", "#editForm").submit(f1);
 
@@ -64,7 +64,6 @@
                         {
                             data: "Products_in_recipe",
                             render: function (data) {
-                                console.log(data);
                                 let st = '';
                                 for (var i = 0; i < data.length; i++) {
                                     st += `${data[i].ProductType}:${data[i].Amount},`
@@ -98,19 +97,20 @@
 
             $(document).on("click", ".editBtn", function () {
 
-                $("#editDiv").show();
-                console.log('alert id is:', this.getAttribute('data-btnId'));
+                OpenEditDiv();
+
+                console.log('beer Type is:', this.getAttribute('data-btnId'));
 
                 $('#ph').val(this.getAttribute('data-btnId')); // saves alert ID for later use
             });
 
             $(document).on("click", ".deleteBtn", function () {
 
-                var alert_id = this.getAttribute('data-btnId');
+                let beer_type = this.getAttribute('data-btnId');
 
                 if (confirm("Are You Sure You Want To Delete This Row?")) {
 
-                    ajaxCall("Delete", "../../api/Recipe", JSON.stringify(alert_id), DeleteAlertSucess, DeleteAlertError);
+                    ajaxCall("Delete", "../../api/Recipe", JSON.stringify(beer_type), DeleteRecipeSucess, DeleteRecipeError);
                 }
                 else {
                     console.log("You pressed Cancel!");
@@ -118,54 +118,41 @@
             });
         }
 
-        function edit_Alert_table() {
 
-            console.log('this is notes_input value:', $('notes_input').val());
+        function DeleteRecipeSucess(data) {
+            console.log(data);
+        }
+        function DeleteRecipeError(err) {
+            console.log(err.responseText);
+            alert("Unable To Delete Recipe");
+        }
 
-            if ($('#notes_input').val() == '') {
-                return;
-            }
+        //function edit_Alert_table() {
 
-            let alert_id_and_notes = [
-                $('#ph').val(), // holds Alert ID 
-                $('#notes_input').val()
-            ]
+        //    console.log('this is notes_input value:', $('notes_input').val());
+
+        //    if ($('#notes_input').val() == '') {
+        //        return;
+        //    }
+
+        //    let alert_id_and_notes = [
+        //        $('#ph').val(), // holds Alert ID 
+        //        $('#notes_input').val()
+        //    ]
                
-            ajaxCall("PUT", "../../api/Alert", JSON.stringify(alert_id_and_notes), editAlertSucess, editAlertError); // JSON.stringify(alert_id_and_notes)
-        }
+        //    ajaxCall("PUT", "../../api/Alert", JSON.stringify(alert_id_and_notes), editAlertSucess, editAlertError); // JSON.stringify(alert_id_and_notes)
+        //}
 
-        //////// editAlert
-        function editAlertSucess(data) {
-            console.log(data, 'record changed succefully');
+        
 
-            refresh_table();
-
-        }
-        function editAlertError(err) {
-            console.log(err);
-        }
-        //****** editAlert
-
-        //////// Delete Alert
-        function DeleteAlertSucess(data) {
-            console.log(data, "Record Deleted");
-
-            refresh_table();
-
-        }
-
-        function DeleteAlertError(err) {
-            console.log(err);
-        }
-        //****** Delete Alert
-
+        // Global functions
 
         function refresh_table() {
 
             location.reload();
         }
 
-        function f1(e) {
+        function f1() {
             return false;
         }
 
@@ -173,6 +160,12 @@
             $("#editDiv").hide();
         }
 
+        function OpenEditDiv() {
+            $("#editDiv").show();
+        }
+        function OpenAddDiv() {
+            $("#addDiv").show();
+        }
 
     </script>
 
@@ -240,7 +233,7 @@
     <!-- NavBar Template -->
     <!-- table -->
     <div class="container">
-        <h1 class="text-center">Production</h1>
+        <h1 class="text-center">Recipes</h1>
         <table id="tbl" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
@@ -250,16 +243,58 @@
                     <th>Creation Date</th>
                 </tr>
             </thead>
-            <tbody>
-            </tbody>
         </table>
 
         <div id="btnDiv" class="container">
-            <button id="add" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' class="btn btn-primary btn-block">Add New Recipe</button>
+            <button id="addBtn" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' class="btn btn-primary btn-block">Add New Recipe</button>
             <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
         </div>
 
     </div>
     <!-- table -->
+    <!--Edit Row In Table-->
+    <div class="container" id="editDiv">
+        <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <form id="editForm">
+            <h4 id="edit_batch_header"></h4>
+            <div class="form-group">
+                <label for="">Beer Type</label>
+                <input type="text" class="form-control" id="beerTypeInput" required pattern="[a-zA-Z]+" />
+                <br />
+                <label for="fromDate">Date</label>
+                <input type="date" class="form-control" id="batchDateInput" required />
+                <br /><div id="inEditForm"></div>
+                <div id="btnDiv" class="container">
+                    <button class="btn btn-primary btn-block" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--Edit Row In Table-->
+    <!-- Add Recipe -->
+    <div class="container collapse" id="addDiv">
+        <div id="addprod">
+            <form id="ourForm">
+                <div class="form-group">
+                    <label>Beer Type</label>
+                    <select name="Beer" id="beerSelect" class="form-control"></select>
+                    <br>
+                    <label>Date</label>
+                    <input type="date" name="date" id="addDate" class="form-control" required>
+                    <br>
+
+                    <div id="inAddForm"></div>
+
+                    <div id="btnDiv" class="container">
+                        <button id="addToBatch" type="submit" class="btn btn-primary btn-block">Submit</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Add Product -->
 </body>
 </html>

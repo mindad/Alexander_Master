@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Alexander.Models.DAL;
-
+using System.Collections;
 
 namespace Alexander.Models
 {
@@ -19,7 +19,22 @@ namespace Alexander.Models
 
         public int CreateRecipe() // need to implement
         {
-            return 0;
+            DBservices dbs = new DBservices();
+            int numEffected = 0;
+
+            try // create new row in BatchAfterProd_2020 with the same id
+            {
+                dbs = dbs.read("[Recipe_2020]");
+
+                dbs.dt.Rows.Add(beerType, creationDate, products_in_recipe);
+                numEffected += dbs.update();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return numEffected;
         }
 
         public List<Recipe> get_Recipes()
@@ -30,8 +45,26 @@ namespace Alexander.Models
 
             return recipe_arr;
         }
+
+        public int delete_line(string beer_type)
+        {
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[Recipe_2020]");
+            int res = 0;
+
+            try
+            {
+                dbs.dt.Select("[beerType]=" + beer_type).First().Delete(); 
+                res = dbs.update(); // update the DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return res;
+        }
+
+
     }
-
-
-    
 }

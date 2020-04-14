@@ -62,7 +62,12 @@
                             }
                         },
                         { data: "Type" },
-                        { data: "Date" },
+                        {
+                            data: "Date",
+                            render: function (data) {
+                                return data.substr(0, 10);
+                            }
+                        },
                         { data: "Description" },
                         { data: "Notes" }
                     ]
