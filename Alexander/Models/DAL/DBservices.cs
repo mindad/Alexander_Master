@@ -91,7 +91,62 @@ namespace Alexander.Models.DAL
             return 1;
         }
 
+        ///
+        public List<Brew> get_BrewDB()
+        {
+            List<Brew> brew_list = new List<Brew>();
+            SqlConnection con = null;
 
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT * FROM [Brew_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480;
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+
+                    Brew br = new Brew();
+
+                    br.Batch_id = Convert.ToInt32(dr["batch_id"]);
+
+                    string[] parsed_items_in_recipe = ((string)dr["prodItems"]).Split(',');
+                    List<Product> prd_lst = new List<Product>();
+
+                    for (int i = 0; i < parsed_items_in_recipe.Length; i++)
+                    {
+                        Product prod = new Product();
+
+                        prod.ProductType = parsed_items_in_recipe[i].Split(':')[0];
+                        prod.Amount = (float)Convert.ToDouble(parsed_items_in_recipe[i].Split(':')[1]);
+                        prod.Min_amount = 0;
+
+                        prd_lst.Add(prod);
+                    }
+
+                    br.Prod_list = prd_lst;
+
+                    brew_list.Add(br);
+                }
+
+                return brew_list;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
 
         /// 
         /// GET all Batches

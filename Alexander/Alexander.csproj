@@ -161,6 +161,7 @@
     <Compile Include="Controllers\Batch_BottelingController.cs" />
     <Compile Include="Controllers\Batch_ProductionController.cs" />
     <Compile Include="Controllers\BeerController.cs" />
+    <Compile Include="Controllers\CookingController.cs" />
     <Compile Include="Controllers\FermantationController.cs" />
     <Compile Include="Controllers\HarvestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Models\Batch_Production.cs" />
     <Compile Include="Models\Beer.cs" />
     <Compile Include="Models\Box.cs" />
+    <Compile Include="Models\Brew.cs" />
     <Compile Include="Models\DAL\DBservices.cs" />
     <Compile Include="Models\Fermentation.cs" />
     <Compile Include="Models\Harvest.cs" />
@@ -253,7 +255,6 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\Sql_DB_Scripts.txt" />
     <Content Include="Scripts\sql_tables.txt" />
-    <Content Include="Scripts\waste.py" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

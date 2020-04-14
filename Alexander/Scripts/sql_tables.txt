@@ -18,6 +18,7 @@ create table Product_2020(
 	[prodType] nvarchar(50) NOT NULL,
 	[prodID] int,
 	[minimum_amount] int not null,
+	[amount] int,
 	Primary key ([prodName],[prodID])
 )
 create table Inventory_Product_2020(
@@ -30,6 +31,12 @@ create table Inventory_Product_2020(
 	Primary key ([tbl_index]),
 	FOREIGN KEY ([prodName],[prodID]) REFERENCES Product_2020([prodName],[prodID])
 )
+create table Brew_2020(
+	[batch_id] int NOT NULL,
+	[prodItems] nvarchar(256),
+	Primary key ([batch_id])
+)
+
 **********************
 create table label_2020(
 	[prodType] nvarchar(50) NOT NULL,

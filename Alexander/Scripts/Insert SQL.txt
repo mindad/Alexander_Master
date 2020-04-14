@@ -30,50 +30,48 @@ select * from BeerInStock_2020
 ###############################
 *************INSERT  Recipe_2020  TABLE*******************
 INSERT INTO Recipe_2020 (beerType, creationDate, prods_in_recipe)
-VALUES ('Ambree', '2020-02-01', 'kshutA:200,kshutB:200,Kshutc:100');
-
-
-INSERT INTO Recipe_2020 (beerType, creationDate, prods_in_recipe)
-VALUES ('Ambree', '2020-03-03', 'kshutA:200,kshutB:200,Kshutc:100');
-
+VALUES ('Ambree', '2020-02-01', 'A:200,ab:200,bb:100');
 
 INSERT INTO Recipe_2020 (beerType, creationDate, prods_in_recipe)
-VALUES ('Black', '2020-01-02', 'kshutA:200,kshutB:200,Kshutc:100');
+VALUES ('BLACK', '2020-01-02', 'Kshut C:200,B:200,bb:100');
+
+INSERT INTO Recipe_2020 (beerType, creationDate, prods_in_recipe)
+VALUES ('BLAZER', '2020-01-02', 'Kshut C:200,cd A:200,C:100');
 
 
 select * from Recipe_2020
 ###################################################
 *************INSERT  Product_2020  TABLE*******************
 
-INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount)
-VALUES ('Kshut A','Hops','1','100');
+INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount, amount)
+VALUES ('Kshut A','Hops','1','100', 0);
 
-INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount)
-VALUES ('Kshut C','Hops','2','230');
+INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount, amount)
+VALUES ('Kshut C','Hops','2','230', 0);
 
-INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount)
-VALUES ('abra kadabra','Malt','3','150');
+INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount, amount)
+VALUES ('abra kadabra','Malt','3','150', 0);
 
-INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount)
-VALUES ('ab','Malt','4','150');
+INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount, amount)
+VALUES ('ab','Malt','4','150', 0);
 
-INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount)
-VALUES ('cd A','Malt','5','150');
+INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount, amount)
+VALUES ('cd A','Malt','5','150', 0);
 
-INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount)
-VALUES ('A','yeast','6','150');
+INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount, amount)
+VALUES ('A','yeast','6','150', 0);
 
-INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount)
-VALUES ('B','yeast','7','100');
+INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount, amount)
+VALUES ('B','yeast','7','100', 0);
 
-INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount)
-VALUES ('C','yeast','8','10');
+INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount, amount)
+VALUES ('C','yeast','8','10', 0);
 
-INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount)
-VALUES ('aa','Minerals','9','80');
+INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount, amount)
+VALUES ('aa','Minerals','9','80', 0);
 
-INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount)
-VALUES ('bb','Minerals','10','200');
+INSERT INTO Product_2020 (prodName, prodType, prodID, minimum_amount, amount)
+VALUES ('bb','Minerals','10','200', 0);
 
 
 

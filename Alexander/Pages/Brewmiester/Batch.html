@@ -35,15 +35,8 @@
 
             batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
 
-            // Hide Edit Divs
-            $("#editDiv_sample").hide();
-            $("#editDiv_purge").hide();
-            $("#editDiv_harvest").hide();
-            $("#editDiv_ferment").hide();
-            $("#addDiv_sample").hide();
-            $("#addDiv_purge").hide();
-            $("#addDiv_harvest").hide();
-            $("#addDiv_ferment").hide();
+            // Hide ADD & Edit Divs
+            hideDivs();
 
             // APIs
             ajaxCall('GET', '../../api/Batch_Production', '', GetBatchSuccess, GetBatchError); // check if exist and bring values into tables
@@ -856,6 +849,17 @@
 
         function refresh_table() {
             location.reload();
+        }
+
+        function hideDivs() {
+            $("#editDiv_sample").hide();
+            $("#editDiv_purge").hide();
+            $("#editDiv_harvest").hide();
+            $("#editDiv_ferment").hide();
+            $("#addDiv_sample").hide();
+            $("#addDiv_purge").hide();
+            $("#addDiv_harvest").hide();
+            $("#addDiv_ferment").hide();
         }
 
     </script>

@@ -75,9 +75,47 @@ namespace Alexander.Models
                 throw ex;
             }
 
+            float am = Calc_inventory_amounts();
+
+            Update_Product_Total_Amount(am);
+
             return numEffected;
         }
-        
+
+        public float Calc_inventory_amounts()
+        {
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[Inventory_Product_2020]");
+
+            DataRow[] data_rows = dbs.dt.Select("prodName='" + ProductName + "'");
+
+            float res = 0;
+
+            foreach (var dr in data_rows)
+            {
+                res += Convert.ToInt32(dr["amount"]);
+            }
+
+            return res;
+        }
+
+        private void Update_Product_Total_Amount(float am)
+        {
+            try
+            {
+                // Increase Product Amount 
+                DBservices dbs = new DBservices();
+                dbs = dbs.read("[Product_2020]");
+
+                DataRow dr = dbs.dt.Select("prodName='" + ProductName + "'").First();
+                dr["amount"] = am;
+                dbs.update();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
         // returns products with sum amount + latest inventory date
@@ -156,12 +194,11 @@ namespace Alexander.Models
             return 1;
         }
 
+        // delete Product Completley from Product_2020 & Inventory_Product_2020
         public int delete_prod()
         {
             DBservices dbs = new DBservices();
             dbs = dbs.read("[Inventory_Product_2020]");
-            
-            
 
             try // Delete from inventory
             {
@@ -173,7 +210,6 @@ namespace Alexander.Models
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
 
@@ -207,14 +243,48 @@ namespace Alexander.Models
 
                 dr["amount"] = amount;
                 dr["last_supply_date"] = Last_arrivalTime;
+                effected = dbs.update(); // update DB
             }
             catch (Exception ex)
             {
                 throw ex;
             }
 
+            float am = Calc_inventory_amounts();
+
+            Update_Product_Total_Amount(am);
+
+            return effected;
+        }
+
+
+        /// this is just a copy ==== add logic
+        public int Decrease_Amounts(List<Product> prod_list)
+        {
+            int effected = 0;
+            DBservices dbs = new DBservices();
+            dbs = dbs.read("[Product_2020]");
+
+
+            foreach (var prod in prod_list)
+            {
+                try
+                {
+                    DataRow dr = dbs.dt.Select("prodName='" + prod.ProductName + "'").First();
+
+                    Update_Product_Total_Amount(prod.amount);
+
+                    effected += dbs.update(); // update DB
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
             
-            effected = dbs.update(); // update DB
+
+
+            
             return effected;
         }
 

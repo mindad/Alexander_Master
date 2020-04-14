@@ -23,8 +23,8 @@ namespace Alexander.Controllers
         }
 
 
-        [HttpPut] // 
-        public HttpResponseMessage Put([FromBody]Product prod) // 
+        [HttpPut] 
+        public HttpResponseMessage Put([FromBody]Product prod) 
         {
             int numEffected = 0;
 
