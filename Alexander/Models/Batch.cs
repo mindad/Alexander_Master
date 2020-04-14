@@ -130,6 +130,16 @@ namespace Alexander.Models
             }
             try
             {
+                dbs = dbs.read("[Brew_2020]");
+                dbs.dt.Select("batch_id=" + row).First().Delete(); // Delete a line in DataTable
+                dbs.update(); // update the DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            try
+            {
                 dbs = dbs.read("[Batch_2020]");
                 dbs.dt.Select("batch_id=" + row).First().Delete(); // Delete a line in DataTable
                 dbs.update(); // update the DB

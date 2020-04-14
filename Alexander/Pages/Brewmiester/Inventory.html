@@ -285,8 +285,6 @@
                      productID: 0
                 }
 
-                //console.log('this is DELETE prod_id:', prod_TO_delete);
-
                 if (confirm("Are You Sure You Want To Delete This Row?")) {
 
                     ajaxCall("Delete", "../../api/Inventory", JSON.stringify(prod_TO_delete), DeleteInventorySucess, DeleteInventoryError); 
@@ -516,6 +514,9 @@
                         <a class="nav-link" href="Inventory.html">Inventory</a>
                     </li>
                     <li class="nav-item active px-2">
+                        <a class="nav-link" href="Recipes.html">Recipes</a>
+                    </li>
+                    <li class="nav-item active px-2">
                         <a class="nav-link" href="#">Waste</a>
                     </li>
                     <li class="nav-item active px-2">
@@ -590,8 +591,6 @@
                     <button id="submit_edit" type="submit" class="btn btn-primary btn-block">Submit</button>
                 </div>
             </div>
-            <!--<button id="submit_edit" type="submit">Submit</button>-->
-
         </form>
     </div>
     <!--Edit Row In  Table-->
@@ -642,7 +641,7 @@
     <div id="ph"></div>
     <div id="ph1"></div>
     <div id="ph2"></div>
-    
+
 </body>
 
 </html>

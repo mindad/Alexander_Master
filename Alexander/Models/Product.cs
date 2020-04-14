@@ -76,7 +76,7 @@ namespace Alexander.Models
             }
 
             float am = Calc_inventory_amounts();
-
+            am -= Calc_Brew_Amounts(ProductName);
             Update_Product_Total_Amount(am);
 
             return numEffected;
@@ -94,6 +94,28 @@ namespace Alexander.Models
             foreach (var dr in data_rows)
             {
                 res += Convert.ToInt32(dr["amount"]);
+            }
+
+            return res;
+        }
+
+
+        private float Calc_Brew_Amounts(string prod_name)
+        {
+            float res = 0;
+            DBservices dbs = new DBservices();
+
+            List<Brew> brewList = dbs.get_BrewDB();
+
+            foreach (var brew in brewList)
+            {
+                foreach (var prd in brew.Prod_list)
+                {
+                    if (prod_name == prd.ProductName)
+                    {
+                        res += prd.Amount;
+                    }
+                }
             }
 
             return res;
@@ -251,7 +273,7 @@ namespace Alexander.Models
             }
 
             float am = Calc_inventory_amounts();
-
+            am -= Calc_Brew_Amounts(ProductName);
             Update_Product_Total_Amount(am);
 
             return effected;

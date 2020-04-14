@@ -1,10 +1,8 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-
+<html>
 <head>
     <meta charset="utf-8" />
-    <title>Brewmiester Production</title>
+    <title>Recipes</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -19,39 +17,40 @@
     <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="../../Scripts/ajaxCalls.js"></script>
 
-
-
     <script>
+
+        RecipeArr = [];
 
         $(document).ready(function () { 
 
-            $('#editDiv').hide();
+            //$('#editDiv').hide();
 
-            ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError); // get all recipes
+            ajaxCall("GET", "../../api/Recipe", "", GetRecipeSucess, GetRecipeError); // get all recipes
 
-            $('#submit_edit').on("click", edit_Alert_table);
+            //$('#submit_edit').on("click", edit_Alert_table);
 
-            buttonEvents();
+            //buttonEvents();
 
-            $("#close_editDiv_Btn").on("click", CloseEditDiv)
+            //$("#close_editDiv_Btn").on("click", CloseEditDiv)
 
-            $("#submit_edit", "#editForm").submit(f1);
+            //$("#submit_edit", "#editForm").submit(f1);
 
         });
 
-        // Alert API
-        function GetAlertSucess(Alertdata) {
+        // Recipe API
+        function GetRecipeSucess(Recipedata) {
 
-            console.log('this is Alert data:', Alertdata);
+            console.log('this is Recipe data:', Recipedata);
+            RecipeArr = Recipedata;
 
             try {
                 $('#tbl').DataTable({
 
-                    data: Alertdata,
+                    data: Recipedata,
                     pageLength: 8,
                     columns: [
                         {
-                            data:"AlertID",
+                            data:"BeerType",
                             render: function (data, type, row, meta) {
 
                                 let data_for_tbl = "data-btnId='" + data + "'";
@@ -61,10 +60,24 @@
                                 return editBtn + deleteBtn;
                             }
                         },
-                        { data: "Type" },
-                        { data: "Date" },
-                        { data: "Description" },
-                        { data: "Notes" }
+                        { data: "BeerType" },
+                        {
+                            data: "Products_in_recipe",
+                            render: function (data) {
+                                console.log(data);
+                                let st = '';
+                                for (var i = 0; i < data.length; i++) {
+                                    st += `${data[i].ProductType}:${data[i].Amount},`
+                                }
+                                return st.slice(0,-1);
+                            } 
+                        },
+                        {
+                            data: "CreationDate",
+                            render: function (data) {
+                                    return data.substr(0, 10);
+                                } 
+                        }
                     ]
                 });
             }
@@ -74,7 +87,7 @@
             }
         }
 
-        function GetAlertError(err) {
+        function GetRecipeError(err) {
             console.log(err);
         }
 
@@ -97,7 +110,7 @@
 
                 if (confirm("Are You Sure You Want To Delete This Row?")) {
 
-                    ajaxCall("Delete", "../../api/Alert", JSON.stringify(alert_id), DeleteAlertSucess, DeleteAlertError);
+                    ajaxCall("Delete", "../../api/Recipe", JSON.stringify(alert_id), DeleteAlertSucess, DeleteAlertError);
                 }
                 else {
                     console.log("You pressed Cancel!");
@@ -149,12 +162,7 @@
 
         function refresh_table() {
 
-            $('#tbl').DataTable().destroy(); // destory table so it could be refreshed
-            $('#notes_input').val('');
-
-            $("#editDiv").hide();
-
-            ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError); // get all Alerts
+            location.reload();
         }
 
         function f1(e) {
@@ -165,9 +173,8 @@
             $("#editDiv").hide();
         }
 
+
     </script>
-
-
 
     <style>
         body {
@@ -190,14 +197,12 @@
         .container {
             padding-bottom: 4%;
         }
-        #notes_input{
-            height: 15%;
-            width:80%;
+        #btnDiv{
+            padding-top:1%;
+            width:50%;
         }
     </style>
-
 </head>
-
 <body>
     <!-- NavBar Template -->
     <div class="header text-center">
@@ -235,39 +240,26 @@
     <!-- NavBar Template -->
     <!-- table -->
     <div class="container">
-        <h1 class="text-center">Alerts</h1>
+        <h1 class="text-center">Production</h1>
         <table id="tbl" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
                 <tr>
                     <th></th> <!--edit/delete buttons-->
-                    <th>Type</th>
-                    <th>Time</th>
-                    <th>Description</th>
-                    <th>Notes</th>
+                    <th>Beer Type</th>
+                    <th>Items in Recipe</th>
+                    <th>Creation Date</th>
                 </tr>
             </thead>
             <tbody>
             </tbody>
-
         </table>
+
+        <div id="btnDiv" class="container">
+            <button id="add" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' class="btn btn-primary btn-block">Add New Recipe</button>
+            <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
+        </div>
+
     </div>
     <!-- table -->
-    <!--Edit Row In  Table-->
-    <div class="container" id="editDiv">
-        <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <form id="editForm">
-            <div class="form-group">
-                <label for="">Add Notes Here:</label>
-                <textarea id="notes_input" class="form-control" required></textarea>
-
-                <button id="submit_edit">Submit</button>
-            </div>
-        </form>
-    </div>
-    <!--Edit Row In  Table-->
-    <div id="ph" hidden></div>
 </body>
-
 </html>

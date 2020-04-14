@@ -23,8 +23,6 @@
     <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="../../Scripts/ajaxCalls.js"></script>
 
-
-
     <script>
 
         recipeArr = [];
@@ -40,8 +38,6 @@
             $("#ourForm, #editForm").on('submit', f1);
 
             $('#add_new_cook').on('click', toggle_add_visibilty); 
-
-            ajaxCall("GET", "../../api/Recipe", "", GetRecipeSucess, GetRecipeError); // get all recipes
 
             $("#beerSelect").on('change', SetFormValues); // set form values when add batch to table
 
@@ -79,24 +75,9 @@
                         },
                         { data: "BeerType" },  
                         {
-                            data: "BatchID",//"BeerType",
+                            data: "BatchID",
                             render: function (data, type, row, meta) {
 
-                                //for (var i = 0; i < recipeArr.length; i++) { // sets the relavent recipe for each beer type
-                                //    if (recipeArr[i].BeerType == data) {
-
-                                //        let st = ''; // will hold 'prod:amount' key value pairs
-
-                                //        for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) { 
-                                //            if (j == recipeArr[i].Products_in_recipe.length -1) {
-                                //                st += recipeArr[i].Products_in_recipe[j].ProductType + ':' + recipeArr[i].Products_in_recipe[j].Amount;
-                                //                continue;
-                                //            }
-                                //            st += recipeArr[i].Products_in_recipe[j].ProductType + ':' + recipeArr[i].Products_in_recipe[j].Amount +', ';
-                                //        }
-                                //        return st;
-                                //    }
-                                //}
                                 for (var i = 0; i < BrewArr.length; i++) { // sets the relavent recipe for each beer type
                                     if (BrewArr[i].Batch_id == data) {
 
@@ -203,6 +184,8 @@
             console.log("Brew data:",data);
 
             BrewArr = data;
+
+            ajaxCall("GET", "../../api/Recipe", "", GetRecipeSucess, GetRecipeError); // get all recipes
         }
         function GetBrewError(err) {
             console.log(err);
@@ -278,7 +261,31 @@
                     }
                 }
                 $("#inForm").append(st); 
+        }
+
+        function Set_Edit_Form_Values(){
+
+            let batch_id = $("#edit_batch_header").val().match(/[0-9]+/);
+
+            $("#inEditForm").html(''); // clear inForm div
+
+            let st = '';
+
+            for (var i = 0; i < BrewArr.length; i++) {
+
+                if ((BrewArr[i].Batch_id) == batch_id) {
+
+                    for (var j = 0; j < BrewArr[i].Prod_list.length; j++) {
+
+                        st += `<label>${BrewArr[i].Prod_list[j].ProductType}</label>\
+                                    <input type="number" min="0" value="${BrewArr[i].Prod_list[j].Amount}"\
+                                    class="text-center form-control" id="${BrewArr[i].Prod_list[j].ProductType}"/><br>`
+                    }
+                    break;
+                }
             }
+            $("#inEditForm").append(st); 
+        }
         
 
         function f1(e) {
@@ -325,7 +332,7 @@
                 wort_volume:0
             }
 
-            console.log('this is batch that will send to PUT', batch);
+            console.log('this is batch that will be sent to PUT', batch);
           
             ajaxCall("PUT", "../../api/Batch", JSON.stringify(batch), editBatchSucess, editBatchError);
         }
@@ -373,10 +380,13 @@
 
             $('#ph').val(id_in_arr); // saves id for later use
             
+            
             $("#editDiv").show();
             $('#edit_batch_header').html(`Batch #: ${btnID}`); // shows batch_id in edit form header
             $("#beerTypeInput").val(batchArr[id_in_arr].BeerType);
-            $("#batchDateInput").val(batchArr[id_in_arr].Date.substr(0,10));
+            $("#batchDateInput").val(batchArr[id_in_arr].Date.substr(0, 10));
+
+            Set_Edit_Form_Values(); // set form values and input fields based on certain recipe
         }
 
         function refresh_table() {
@@ -465,6 +475,9 @@
                         <a class="nav-link" href="Inventory.html">Inventory</a>
                     </li>
                     <li class="nav-item active px-2">
+                        <a class="nav-link" href="Recipes.html">Recipes</a>
+                    </li>
+                    <li class="nav-item active px-2">
                         <a class="nav-link" href="#">Waste</a>
                     </li>
                     <li class="nav-item active px-2">
@@ -545,7 +558,7 @@
                 <br />
                 <label for="fromDate">Date</label>
                 <input type="date" class="form-control" id="batchDateInput" required />
-
+                <div id="inEditForm"></div>
                 <div id="btnDiv" class="container">
                     <button class="btn btn-primary btn-block" type="submit">Submit</button>
                     <!--id="submit_edit"-->
