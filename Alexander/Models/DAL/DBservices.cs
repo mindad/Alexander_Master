@@ -13,7 +13,6 @@ namespace Alexander.Models.DAL
     {
         public SqlDataAdapter da;
         public DataTable dt;
-        private DBNull outputParam;
 
         public DBservices()
         {
