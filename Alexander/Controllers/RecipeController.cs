@@ -36,26 +36,27 @@ namespace Alexander.Controllers
             
         }
 
-        //[HttpPut]
-        //public HttpResponseMessage Put([FromBody]Recipe recipe)
-        //{
-        //    int numEffected = 0;
+        [HttpPut]
+        public HttpResponseMessage Put([FromBody]Recipe recipe)
+        
+        {
+            int numEffected = 0;
 
-        //    try
-        //    {
-        //        numEffected = recipe.Update();
+            try
+            {
+                numEffected = recipe.Update();
 
-        //        if (numEffected > 0)
-        //            return Request.CreateResponse(HttpStatusCode.OK, numEffected);
-        //        else
-        //            return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not Found");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
-        //    }
+                if (numEffected > 0)
+                    return Request.CreateResponse(HttpStatusCode.OK, numEffected);
+                else
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not Found");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
 
-        //}
+        }
 
 
         [HttpDelete]

@@ -155,8 +155,6 @@ namespace Alexander.Models
         public int delete_line(int row)
         {
             DBservices dbs = new DBservices();
-            //DBservices dbsA = new DBservices();
-            //DBservices dbsB = new DBservices();
 
             try
             {

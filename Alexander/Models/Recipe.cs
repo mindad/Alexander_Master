@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Alexander.Models.DAL;
 using System.Collections;
+using System.Data;
 
 namespace Alexander.Models
 {
@@ -16,6 +17,16 @@ namespace Alexander.Models
         public string BeerType { get => beerType; set => beerType = value; }
         public DateTime CreationDate { get => creationDate; set => creationDate = value; }
         public List<Product> Products_in_recipe { get => products_in_recipe; set => products_in_recipe = value; }
+
+        public List<Recipe> get_Recipes()
+        {
+            DBservices dbs = new DBservices();
+
+            List<Recipe> recipe_arr = dbs.get_RecipesDB();
+
+            return recipe_arr;
+        }
+
 
         public int CreateRecipe() // need to implement
         {
@@ -37,14 +48,41 @@ namespace Alexander.Models
             return numEffected;
         }
 
-        public List<Recipe> get_Recipes()
+        public int Update()
         {
+            int effected = 0;
             DBservices dbs = new DBservices();
+            dbs = dbs.read("[Recipe_2020]");
+            string st = "";
 
-            List<Recipe> recipe_arr = dbs.get_RecipesDB();
+            foreach (Product prod in products_in_recipe)
+            {
+                if (products_in_recipe.IndexOf(prod) == products_in_recipe.Count - 1) // Last item in iteration
+                {
+                    st += prod.ProductName + ":" + prod.Amount;
+                    break;
+                }
+                st += prod.ProductName + ":" + prod.Amount + ",";
+            }
 
-            return recipe_arr;
+            try
+            {
+                DataRow dr = dbs.dt.Select("[beerType]='" + BeerType + "'").First(); // ProductType Holds the original date to look in table
+
+                dr["creationDate"] = CreationDate;
+                dr["prods_in_recipe"] = st;
+                
+
+                effected = dbs.update(); // update DB
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return effected;
         }
+
 
         public int delete_line(string beer_type)
         {

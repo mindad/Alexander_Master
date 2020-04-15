@@ -344,7 +344,7 @@ namespace Alexander.Models.DAL
                     {
                         Product prod = new Product();
 
-                        prod.ProductType = parsed_items_in_recipe[i].Split(':')[0];
+                        prod.ProductName = parsed_items_in_recipe[i].Split(':')[0]; // this was prod.ProductType
                         prod.Amount = (float)Convert.ToDouble(parsed_items_in_recipe[i].Split(':')[1]);
                         prod.Min_amount = 0;
                         
