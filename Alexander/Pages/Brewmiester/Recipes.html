@@ -40,6 +40,9 @@
 
             $("#editForm").on("submit", EditRecipe);
 
+            $("#addForm").on("submit", AddRecipe);
+            
+
             $("#appProd").on("click", addProds);
 
             $("#submit_edit", "#editForm").submit(f1);
@@ -75,9 +78,9 @@
                             render: function (data) {
                                 let st = '';
                                 for (var i = 0; i < data.length; i++) {
-                                    st += `${data[i].ProductName}:${data[i].Amount},`
+                                    st += `${data[i].ProductName}:${data[i].Amount}, `
                                 }
-                                return st.slice(0,-1);
+                                return st.slice(0,-2);
                             } 
                         },
                         {
@@ -151,7 +154,7 @@
                 }
             }
 
-            let newProds = GetNewProds($("#beerTypeInput").val()); // Create another arr of new prods
+            let newProds = GetNewProds();//GetNewProds($("#beerTypeInput").val()); // Create another arr of new prods
 
             for (let pr of newProds) { // insert more prods to products arr 
                 products.push(pr);
@@ -171,29 +174,24 @@
             return false; // form control
         }
 
-        function GetNewProds(beer_name) { // Add Values into RecipeArr
+        function GetNewProds() { // Get New Products arr
 
             let prods = [];
 
-            for (var i = 0; i < RecipeArr.length; i++) {
+            for (var i = 0; i < 20; i++) { // 20 is the maximum of products in recipe
 
-                if ((RecipeArr[i].BeerType) == beer_name) {
+                if ($(`#new_prod${i}`).val()) { //  >= 0 
 
-                    for (var i = 0; i < 20; i++) { // 20 is the maximum of products in recipe
-
-                        if ( $(`#new_prod${i}`).val() ) { //  >= 0 
-
-                            prods.push({ // RecipeArr[i].Products_in_recipe
-                                "ProductName": $(`#new_prod${i}`).val(),
-                                "Amount": $(`#new_prod_amount${i}`).val()
-                            });
-                        }
-                        else {
-                            break;
-                        }
-                    }
+                    prods.push({ // RecipeArr[i].Products_in_recipe
+                        "ProductName": $(`#new_prod${i}`).val(),
+                        "Amount": $(`#new_prod_amount${i}`).val()
+                    });
+                }
+                else {
+                    break;
                 }
             }
+    
             return prods;
         }
 
@@ -208,6 +206,8 @@
 
         function DeleteRecipeSucess(data) {
             console.log(data);
+
+            refresh_table();
         }
         function DeleteRecipeError(err) {
             console.log(err.responseText);
@@ -215,8 +215,6 @@
         }
 
         
-
-
         // Beer API
         function GetBeerSucess(data) {
             console.log(data);
@@ -277,11 +275,14 @@
 
 
         function addProds() {
+
+            $("#inEditForm").append(""); 
+
             let n_of_products = prompt("How many products would you like to add?");
             let st = '';
 
             if (n_of_products && n_of_products < 20) {
-                for (var i = 0; i < n_of_products; i++) { ///////////// TODO  name Most !! Be !! Select and not input text
+                for (var i = 0; i < n_of_products; i++) { 
 
                     st += `<div class="row">\
                             <div class="col">\
@@ -304,7 +305,71 @@
                 }
             }
         }
-       
+        
+        function OpenAddDiv() {
+            $("#addDiv").show();
+            $("#addBtn").hide();
+
+            $("#inAddForm").html('');
+
+            let num_products_in_new_recipe = prompt("How Many Products Included In The Recipe?");
+
+            let st = '';
+
+            if (num_products_in_new_recipe && num_products_in_new_recipe < 20) {
+                for (var i = 0; i < num_products_in_new_recipe; i++) {
+
+                    st += `<div class="row">\
+                            <div class="col">\
+                                <label>Product Name</label>
+                                <select name="prd" id="new_prod${i}" class="form-control">${ProductTypesSelect}</select>
+                            </div>\
+                           <div class="col">
+                                <label>Amount</label>
+                                <input type="number" min="0" class="form-control" id="new_prod_amount${i}" required/>
+                            </div></div>`;
+                }
+
+                $("#inAddForm").append(st); 
+            }
+            else {
+                if (num_products_in_new_recipe == null) {
+                    $("#inAddForm").html('');
+                    Close_Div();
+                    return;
+                }
+                alert("Please enter a valid number of products !");
+            }
+        }
+
+        // Post Recipe
+        function AddRecipe() {
+
+            let recipe = {
+                beerType: $("#beerSelect").val(),
+                creationDate: $("#addDate").val(),
+                products_in_recipe: GetNewProds()
+            }
+
+            console.log("this is recipe to post:", recipe);
+
+            ajaxCall("POST", "../../api/Recipe", JSON.stringify(recipe), PostRecipeSucess, PostRecipeError);
+
+            return false;
+        }
+
+        function PostRecipeSucess(data) {
+            console.log(data);
+
+            refresh_table();
+        }
+        function PostRecipeError(data) {
+            console.log(data);
+        }
+
+        
+        // ** Post Recipe
+
 
         // Global functions
 
@@ -317,10 +382,6 @@
         function OpenEditDiv() {
             $("#editDiv").show();
             $("#appProd").show();
-            $("#addBtn").hide();
-        }
-        function OpenAddDiv() {
-            $("#addDiv").show();
             $("#addBtn").hide();
         }
         function Close_Div() {
@@ -437,7 +498,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
         <div id="addprod">
-            <form id="ourForm">
+            <form id="addForm">
                 <div class="form-group">
                     <label>Beer Type</label>
                     <select name="Beer" id="beerSelect" class="form-control"></select>
@@ -449,7 +510,7 @@
                     <div id="inAddForm"></div>
 
                     <div id="btnDiv" class="container">
-                        <button id="addToBatch" type="submit" class="btn btn-primary btn-block">Submit</button>
+                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
                     </div>
 
                 </div>

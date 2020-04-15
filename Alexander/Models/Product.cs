@@ -45,7 +45,7 @@ namespace Alexander.Models
             {
                 dbs = dbs.read("[Product_2020]");
 
-                dbs.dt.Rows.Add(ProductName, ProductType, ProductID, Min_amount);
+                dbs.dt.Rows.Add(ProductName, ProductType, ProductID, Min_amount, 0);
                 numEffected = dbs.update(); 
             }
             catch (Exception ex)
@@ -82,67 +82,10 @@ namespace Alexander.Models
             return numEffected;
         }
 
-        public float Calc_inventory_amounts(string prd_name)
-        {
-            DBservices dbs = new DBservices();
-            dbs = dbs.read("[Inventory_Product_2020]");
-
-            DataRow[] data_rows = dbs.dt.Select("prodName='" + prd_name + "'");
-
-            float res = 0;
-
-            foreach (var dr in data_rows)
-            {
-                res += Convert.ToInt32(dr["amount"]);
-            }
-
-            return res;
-        }
-
-
-        public float Calc_Brew_Amounts(string prod_name)
-        {
-            float res = 0;
-            DBservices dbs = new DBservices();
-
-            List<Brew> brewList = dbs.get_BrewDB();
-
-            foreach (var brew in brewList)
-            {
-                foreach (var prd in brew.Prod_list)
-                {
-                    if (prod_name == prd.ProductName)
-                    {
-                        res += prd.Amount;
-                    }
-                }
-            }
-
-            return res;
-        }
-
-        public void Update_Product_Total_Amount(float am, string prd_name)
-        {
-            try
-            {
-                // Increase Product Amount 
-                DBservices dbs = new DBservices();
-                dbs = dbs.read("[Product_2020]");
-
-                DataRow dr = dbs.dt.Select("prodName='" + prd_name + "'").First();
-                dr["amount"] = am;
-                dbs.update();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-
         // returns products with sum amount + latest inventory date
         public List<Product> get_Products() 
         {
+
             DBservices dbs = new DBservices();
             DBservices dbs_second = new DBservices();
             
@@ -154,7 +97,7 @@ namespace Alexander.Models
             {
                 foreach (var prod in prod_list)
                 {
-                    float am = 0;
+                    //float am = 0;
                     DateTime dt = new DateTime(2008, 3, 1);
 
                     foreach (DataRow item in dbs_second.dt.Rows) // 
@@ -167,14 +110,14 @@ namespace Alexander.Models
                             {
                                 dt = last_arrival_time;
                             }
-
-                            am += Convert.ToInt32(item["amount"]);
                         }
                     }
 
                     prod.Last_arrivalTime = dt;
-                    prod.Amount = am;
 
+                    float am = Calc_inventory_amounts(prod.ProductName);
+                    am -= Calc_Brew_Amounts(prod.ProductName);
+                    Update_Product_Total_Amount(am, prod.ProductName);
                 }
             }
             catch (Exception ex)
@@ -210,6 +153,18 @@ namespace Alexander.Models
             }
             catch (Exception ex)
             {
+                throw ex;
+            }
+
+            try // Update product amounts in Batch
+            {                  
+                float am = Calc_inventory_amounts(ProductName);
+                am -= Calc_Brew_Amounts(ProductName);
+                Update_Product_Total_Amount(am, ProductName);
+            }
+            catch (Exception ex)
+            {
+
                 throw ex;
             }
 
@@ -279,33 +234,62 @@ namespace Alexander.Models
             return effected;
         }
 
-
-        /// this is just a copy ==== add logic
-        public int Decrease_Amounts(List<Product> prod_list)
+        public float Calc_inventory_amounts(string prd_name)
         {
-            int effected = 0;
             DBservices dbs = new DBservices();
-            dbs = dbs.read("[Product_2020]");
+            dbs = dbs.read("[Inventory_Product_2020]");
 
+            DataRow[] data_rows = dbs.dt.Select("prodName='" + prd_name + "'");
 
-            foreach (var prod in prod_list)
+            float res = 0;
+
+            foreach (var dr in data_rows)
             {
-                try
-                {
-                    DataRow dr = dbs.dt.Select("prodName='" + prod.ProductName + "'").First();
+                res += Convert.ToInt32(dr["amount"]);
+            }
 
-                    Update_Product_Total_Amount(prod.amount, prod.ProductName);
+            return res;
+        }
 
-                    effected += dbs.update(); // update DB
-                }
-                catch (Exception ex)
+
+        public float Calc_Brew_Amounts(string prod_name)
+        {
+            float res = 0;
+            DBservices dbs = new DBservices();
+
+            List<Brew> brewList = dbs.get_BrewDB();
+
+            foreach (var brew in brewList)
+            {
+                foreach (var prd in brew.Prod_list)
                 {
-                    throw ex;
+                    if (prod_name == prd.ProductName)
+                    {
+                        res += prd.Amount;
+                    }
                 }
             }
 
-            return effected;
+            return res;
         }
+
+        public void Update_Product_Total_Amount(float am, string prd_name)
+        {
+            try
+            {
+                DBservices dbs = new DBservices();
+                dbs = dbs.read("[Product_2020]");
+
+                DataRow dr = dbs.dt.Select("prodName='" + prd_name + "'").First();
+                dr["amount"] = am;
+                dbs.update();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 }

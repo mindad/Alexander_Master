@@ -33,11 +33,13 @@ namespace Alexander.Models
             DBservices dbs = new DBservices();
             int numEffected = 0;
 
+            string st = prod_String_for_DB(products_in_recipe);
+
             try // create new row in BatchAfterProd_2020 with the same id
             {
                 dbs = dbs.read("[Recipe_2020]");
 
-                dbs.dt.Rows.Add(beerType, creationDate, products_in_recipe);
+                dbs.dt.Rows.Add(beerType, creationDate, st);
                 numEffected += dbs.update();
             }
             catch (Exception ex)
@@ -53,17 +55,8 @@ namespace Alexander.Models
             int effected = 0;
             DBservices dbs = new DBservices();
             dbs = dbs.read("[Recipe_2020]");
-            string st = "";
-
-            foreach (Product prod in products_in_recipe)
-            {
-                if (products_in_recipe.IndexOf(prod) == products_in_recipe.Count - 1) // Last item in iteration
-                {
-                    st += prod.ProductName + ":" + prod.Amount;
-                    break;
-                }
-                st += prod.ProductName + ":" + prod.Amount + ",";
-            }
+            
+            string st = prod_String_for_DB(products_in_recipe);
 
             try
             {
@@ -92,7 +85,7 @@ namespace Alexander.Models
 
             try
             {
-                dbs.dt.Select("[beerType]=" + beer_type).First().Delete(); 
+                dbs.dt.Select("[beerType]='" + beer_type + "'").First().Delete(); 
                 res = dbs.update(); // update the DB
             }
             catch (Exception ex)
@@ -104,5 +97,19 @@ namespace Alexander.Models
         }
 
 
+        public string prod_String_for_DB(List<Product> prd_list)
+        {
+            string st = "";
+            foreach (Product prod in prd_list)
+            {
+                if (prd_list.IndexOf(prod) == prd_list.Count - 1) // Last item in iteration
+                {
+                    st += prod.ProductName + ":" + prod.Amount;
+                    break;
+                }
+                st += prod.ProductName + ":" + prod.Amount + ",";
+            }
+            return st;
+        }
     }
 }

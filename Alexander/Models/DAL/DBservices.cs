@@ -518,6 +518,7 @@ namespace Alexander.Models.DAL
                     prod.ProductType = (string)dr["prodType"];
                     prod.ProductID = Convert.ToInt32(dr["prodID"]);
                     prod.Min_amount = Convert.ToInt32(dr["minimum_amount"]);
+                    prod.Amount = Convert.ToInt32(dr["amount"]);
 
                     prod_list.Add(prod);
                 }
