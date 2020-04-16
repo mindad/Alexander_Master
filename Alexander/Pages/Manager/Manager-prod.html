@@ -48,7 +48,9 @@
 
                     pageLength: 7,
                     columns: [
+
                         {
+                              
                             data: "BatchID",
                             render: function (data, type, row, meta) {
 
@@ -120,7 +122,7 @@
                         {
                             data: {},
                             render: function (data, type, row, meta) {
-                                console.log(data.Waste_litter)
+                             
                                 if (data.tank > 60)
                                     return (data.Waste_litter / 6000).toFixed(2)
                                 else if (data.tank > 40)
@@ -195,7 +197,7 @@
         function Put_success(data) {
             console.log(data);
 
-            return false;
+            refresh_table();
         }
 
         function Put_Error(err) {
@@ -239,8 +241,10 @@
 
             console.log('batch to PUT:', batch);
 
-            ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(batch), Put_success, Put_Error);
-            refresh_table();
+            ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(batch), Put_success , Put_Error);
+
+
+            return false;
 
             // refresh_table();
 
@@ -248,6 +252,7 @@
         // ** Edit Batch
 
         function f1() {
+            Put_success
             return false;
         }
         function refresh_table() {
@@ -281,7 +286,11 @@
             padding-bottom: 4%;
         }
         .container-fluid {
-            width:90%;
+            width: 90%;
+           
+        }
+        #tbl {
+            width: 70%;
         }
  
     
@@ -324,9 +333,9 @@
     </div>
     <!-- NavBar Template -->
     <!-- table -->
-    <div class="container-fluid">
+    <div class="container-fluid" >
         <h1 class="text-center">Manager Production</h1>
-        <table id="tbl" class="display" border="1" style="width:90%">
+        <table id="tbl" class="display"  border="1" style="width:90%">
             <thead style="background-color:cornflowerblue">
                 <tr>
                     <th></th> <!--edit/delete buttons-->
