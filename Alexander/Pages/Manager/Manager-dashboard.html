@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
             crossorigin="anonymous"></script>
@@ -51,10 +50,9 @@
 
             ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError); //GET BEER IN STOCK
 
-            ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError); //GET manager_products
+            //ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError); //GET manager_products
    
-
-            ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError); //GET ORDER
+            //ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError); //GET ORDER
 
             ajaxCall("GET", "../../api/AlertsManager", "", GetAlertSucess, GetAlertError); // get Alerts from manager table
 
@@ -68,6 +66,8 @@
             //    }
             //    return false; // Toast Not Deleted
             //});
+            document.querySelector("body").style.visibility = "hidden"; 
+            document.querySelector("#loader").style.visibility = "visible"; 
 
         });
 
@@ -194,6 +194,9 @@
                     }
                 }
             });
+
+            ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError); //GET manager_products
+
         }
 
         function GetBeerError(err) {
@@ -369,6 +372,8 @@
                 }
             });
 
+            ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError); //GET ORDER
+
         }
 
         function GetmanagerproductsError(err) {
@@ -538,6 +543,10 @@
                     },
                 }
             });
+
+            document.querySelector( "#loader").style.display = "none";
+            document.querySelector("body").style.visibility = "visible";
+
         }
 
         // ** Orders API
@@ -757,11 +766,34 @@
         .toast {
             height: 80px;
         }
+        #loader { 
+            border: 12px solid #f3f3f3; 
+            border-radius: 50%; 
+            border-top: 12px solid #444444; 
+            width: 70px; 
+            height: 70px; 
+            animation: spin 1s linear infinite; 
+        } 
+          
+        @keyframes spin { 
+            100% { 
+                transform: rotate(360deg); 
+            } 
+        } 
+        .centerLoader { 
+            position: absolute; 
+            top: 0; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            margin: auto; 
+        } 
     </style>
 
 </head>
 
 <body>
+    <div id="loader" class="centerLoader"></div>
     <!-- NavBar Template -->
     <div class="header text-center">
         <!-- <h2>Manager Dashboard</h2> -->
@@ -785,9 +817,6 @@
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Alerts_Manager.html">Alerts</a>
                     </li>
-                    <!-- <li class="nav-item">
-              <a class="nav-link disabled" href="#">Disabled</a>
-            </li> -->
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
@@ -806,7 +835,7 @@
             <div class="col-4" id="toastdiv">
 
             </div>
-        <!-- toast Div -->
+            <!-- toast Div -->
             <div class="col-3"></div>
 
             <div class="col-4">
