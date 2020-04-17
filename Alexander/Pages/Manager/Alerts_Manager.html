@@ -36,6 +36,10 @@
 
             $("#submit_edit", "#editForm").submit(f1);
 
+
+            $("#close_editDiv_Btn").on("click", CloseEditDiv) //close edit div
+
+
         });
 
         // Alert API
@@ -165,6 +169,14 @@
             return false;
         }
 
+
+        //close edit div function
+        function CloseEditDiv() {
+            $("#editDiv").hide();
+            $("#notes_input").val("");
+        }
+
+        //End close edit div function
     </script>
 
 
@@ -253,7 +265,11 @@
     </div>
     <!-- table -->
     <!--Edit Row In  Table-->
+
     <div class="container" id="editDiv">
+        <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
         <form id="editForm">
             <div class="form-group">
                 <label for="">Add Notes Here:</label>
@@ -263,6 +279,7 @@
             </div>
         </form>
     </div>
+
     <!--Edit Row In  Table-->
     <div id="ph" hidden></div>
 </body>

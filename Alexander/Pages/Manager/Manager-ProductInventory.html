@@ -25,6 +25,8 @@
             $('#submit_edit').on('click', submitEdit);
             $('#editDiv').on('submit', f1);
 
+            $("#close_editDiv_Btn").on("click", CloseEditDiv) //close edit div
+
             //GET manager_products
             ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError);
 
@@ -151,8 +153,8 @@
 
             $('#ProdID_header_edit').html('ProdID : '+ prod.ProdID);
             $('#ProdName_header_edit').html('ProdName:'+ prod.ProdName);
-            $('#amountInput_edit').val(prod.amountInput);
-            $('#MinInStockInput_edit').val(prod.MinInStockInput);
+            $('#amountInput_edit').val(prod.Amount);
+            $('#MinInStockInput_edit').val(prod.Min_in_stock);
          
         }
 
@@ -196,6 +198,14 @@
             location.reload();
         }
 
+        //close edit div function
+        function CloseEditDiv() {
+            $("#editDiv").hide();
+            $("#notes_input").val("");
+        }
+
+        //End close edit div function
+
     </script>
 
     <style>
@@ -233,6 +243,9 @@
         .container {
             padding-bottom: 4%;
         }
+        #ProdID_header_edit, #ProdName_header_edit {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -260,8 +273,8 @@
                         <a class="nav-link" href="Alerts_Manager.html">Alerts</a>
                     </li>
                     <!-- <li class="nav-item">
-              <a class="nav-link disabled" href="#">Disabled</a>
-            </li> -->
+                      <a class="nav-link disabled" href="#">Disabled</a>
+                    </li> -->
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
@@ -291,9 +304,8 @@
         </table>
     </div>
     <!-- table -->
-
     <!--Edit Row In  Table-->
-    <div class="container" id="editDiv">
+    <!--<div class="container" id="editDiv">
         <form id="editForm">
             <div class="form-group">
 
@@ -305,11 +317,34 @@
                 <label>Minimum In Stock</label>
                 <input type="number" value="" id="MinInStockInput_edit" />
                 <br>
-        
+
             </div>
             <button id="submit_edit">Submit</button>
         </form>
+    </div>-->
+    <div class="container" id="editDiv">
+        <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <form id="editForm">
+            <h4 id="ProdID_header_edit"></h4>
+            <h4 id="ProdName_header_edit"></h4>
+            <div class="form-group">
+                <label for="">Amount</label>
+                <input type="number" class="form-control" id="amountInput_edit" />
+                <br />
+                <label for="">Minimum In Stock</label>
+                <input type="number" class="form-control" id="MinInStockInput_edit" />
+              
+                <br /><div id="inEditForm"></div>
+                <div id="btnDiv" class="container">
+                    <button id="submit_edit" class="btn btn-primary btn-block" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
     </div>
+
+
     <!--Edit Row In  Table-->
 </body>
 </html>

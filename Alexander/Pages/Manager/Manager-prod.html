@@ -26,6 +26,7 @@
             $('#editDiv').on('submit', f1);
 
             ajaxCall("GET", "../../api/Batch_Botteling", "", GetBatch_BottelingSucess, GetBatch_BottelingError);
+            $("#close_editDiv_Btn").on("click", CloseEditDiv) //close edit div
 
 
             buttonEvents();
@@ -259,6 +260,14 @@
             location.reload();
         }
 
+
+        //close edit div function
+        function CloseEditDiv() {
+            $("#editDiv").hide();
+      
+        }
+                //End close edit div function
+
     </script>
 
     <style>
@@ -292,7 +301,9 @@
         #tbl {
             width: 70%;
         }
- 
+        #batchID_header_edit{
+            text-align:center;
+        }
     
     </style>
 </head>
@@ -321,8 +332,8 @@
                         <a class="nav-link" href="Alerts_Manager.html">Alerts</a>
                     </li>
                     <!-- <li class="nav-item">
-              <a class="nav-link disabled" href="#">Disabled</a>
-            </li> -->
+                      <a class="nav-link disabled" href="#">Disabled</a>
+                    </li> -->
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
@@ -333,9 +344,9 @@
     </div>
     <!-- NavBar Template -->
     <!-- table -->
-    <div class="container-fluid" >
+    <div class="container-fluid">
         <h1 class="text-center">Manager Production</h1>
-        <table id="tbl" class="display"  border="1" style="width:90%">
+        <table id="tbl" class="display" border="1" style="width:90%">
             <thead style="background-color:cornflowerblue">
                 <tr>
                     <th></th> <!--edit/delete buttons-->
@@ -364,10 +375,13 @@
 
     </div>
     <!-- table -->
-
     <!--Edit Row In  Table-->
-    <div class="container" id="editDiv">
+    <!--<div class="container" id="editDiv">
+        <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
         <form id="editForm">
+
             <div class="form-group">
                 <h2 id="batchID_header_edit"></h2><br />
                 <label>Keg20_amount</label>
@@ -383,6 +397,31 @@
                 <input type="number" value="" id="WasteInput_edit" />
             </div>
             <button id="submit_edit">Submit</button>
+        </form>
+    </div>-->
+    <div class="container" id="editDiv">
+        <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <form id="editForm">
+            <h4 id="batchID_header_edit"></h4>
+            <div class="form-group">
+                <label for="">Keg20_amount</label>
+                <input type="number" class="form-control" id="Keg20_amountInput_edit" />
+                <br />
+                <label for="">Keg30_amount</label>
+                <input type="number" class="form-control" id="Keg30_amountInput_edit" />
+                <br />
+                <label for="">Bottles_qty</label>
+                <input type="number" class="form-control" id="Bottles_qtyInput_edit" />
+                <br />
+                <label for="">Waste_Litter</label>
+                <input type="number" class="form-control" id="WasteInput_edit" />
+                <br /><div id="inEditForm"></div>
+                <div id="btnDiv" class="container">
+                    <button id="submit_edit" class="btn btn-primary btn-block" type="submit">Submit</button>
+                </div>
+            </div>
         </form>
     </div>
     <!--Edit Row In  Table-->
