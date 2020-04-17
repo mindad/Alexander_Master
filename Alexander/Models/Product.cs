@@ -100,7 +100,7 @@ namespace Alexander.Models
                     //float am = 0;
                     DateTime dt = new DateTime(2008, 3, 1);
 
-                    foreach (DataRow item in dbs_second.dt.Rows) // 
+                    foreach (DataRow item in dbs_second.dt.Rows) 
                     {
                         if ((string)item["prodName"] == prod.productName)
                         {
@@ -259,15 +259,22 @@ namespace Alexander.Models
 
             List<Brew> brewList = dbs.get_BrewDB();
 
-            foreach (var brew in brewList)
+            try
             {
-                foreach (var prd in brew.Prod_list)
+                foreach (var brew in brewList)
                 {
-                    if (prod_name == prd.ProductName)
+                    foreach (var prd in brew.Prod_list)
                     {
-                        res += prd.Amount;
+                        if (prod_name == prd.ProductName)
+                        {
+                            res += prd.Amount;
+                        }
                     }
                 }
+            }
+            catch (NullReferenceException)
+            {
+                return res;
             }
 
             return res;

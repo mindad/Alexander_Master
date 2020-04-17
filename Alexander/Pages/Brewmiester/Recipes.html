@@ -42,7 +42,6 @@
 
             $("#addForm").on("submit", AddRecipe);
             
-
             $("#appProd").on("click", addProds);
 
             $("#submit_edit", "#editForm").submit(f1);
@@ -414,6 +413,7 @@
             width:50%;
         }
     </style>
+
 </head>
 <body>
     <!-- NavBar Template -->
@@ -465,7 +465,8 @@
         </table>
 
         <div id="btnDiv" class="container">
-            <button id="addBtn" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' class="btn btn-primary btn-block">Add New Recipe</button>
+            <button id="addBtn" class="btn btn-primary btn-block">Add New Recipe</button>
+            <!--data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'-->
             <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
         </div>
     </div>
@@ -482,8 +483,8 @@
                 <input type="text" class="form-control" id="beerTypeInput" disabled />
                 <br />
                 <label>Date</label>
-                <input type="date" class="form-control" id="recipeDateInput" required />
-                <br /><div id="inEditForm"></div>
+                <input type="date" class="form-control" id="recipeDateInput" required /><br />
+                <div id="inEditForm"></div>
                 <div id="btnDiv" class="container">
                     <button id="appProd" type="button" class="btn btn-success btn-block">Add Product</button>
                     <button class="btn btn-primary btn-block" type="submit">Submit</button>
@@ -504,15 +505,13 @@
                     <select name="Beer" id="beerSelect" class="form-control"></select>
                     <br>
                     <label>Date</label>
-                    <input type="date" name="date" id="addDate" class="form-control" required>
-                    <br>
-
+                    <input type="date" name="date" id="addDate" class="form-control" required><br>
+                    
                     <div id="inAddForm"></div>
 
                     <div id="btnDiv" class="container">
                         <button type="submit" class="btn btn-primary btn-block">Submit</button>
                     </div>
-
                 </div>
             </form>
         </div>

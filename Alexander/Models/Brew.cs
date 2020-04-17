@@ -38,15 +38,21 @@ namespace Alexander.Models
             DBservices dbs = new DBservices();
             string st="";
 
-            
-            foreach (var prod in prod_list)
+
+            try
             {
-                if (prod_list.IndexOf(prod) == prod_list.Count - 1) // Last item in iteration
+                foreach (var prod in prod_list)
                 {
-                    st += prod.ProductName + ":" + prod.Amount;
-                    break;
+                    if (prod_list.IndexOf(prod) == prod_list.Count - 1) // Last item in iteration
+                    {
+                        st += prod.ProductName + ":" + prod.Amount;
+                        break;
+                    }
+                    st += prod.ProductName + ":" + prod.Amount + ",";
                 }
-                st += prod.ProductName + ":" + prod.Amount + ",";
+            }
+            catch (Exception ex)
+            {
             }
 
             try

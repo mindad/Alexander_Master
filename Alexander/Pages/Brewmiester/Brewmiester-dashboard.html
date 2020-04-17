@@ -122,7 +122,7 @@
                     responsive: true,
                     scales: {
                         xAxes: [{
-                            stacked: true,
+                            stacked: true
                         }],
                         yAxes: [{
                             stacked: true
@@ -143,7 +143,7 @@
 
                 if (alert.Type == 'Product Stock' || alert.Type == 'Stock') { // only brewmiester alerts
                     toasts_arr.push(
-                     `<div class="toast" data-autohide="false" id="${toast_Count}"><div class="toast-header">\
+                    `<div class="toast" data-autohide="false" id="${toast_Count}"><div class="toast-header">\
                     <strong class="mr-auto text-primary"><a href="Alerts.html">${alert.Type}</a></strong>\
                     <small class="text-muted">${alert.Date.substr(0, 10)}</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>\
                     </div><div class="toast-body">${alert.Description}</div></div>`);
@@ -241,7 +241,7 @@
             let val = (data.length / max_batch)*100;
             let month = new Date().toLocaleString('default', { month: 'long' }); // get month name
 
-            let st = `<h4 class="text-center" id="month">${month} # Of Batches</h4>\
+            let st = `<h4 class="text-center" id="month">${month} Batches</h4>\
                       <div class="progress">\
                       <div class="progress-bar w-${val}" role="progressbar" style="width: ${val}%;"\
                       aria-valuenow="${val}"
@@ -326,21 +326,18 @@
         <!-- toast Div -->
         <div class="row" id="headerRow">
             <div class="col-4" id="toastdiv">
-
             </div>
-            <!-- toast Div -->
+        <!-- toast Div -->
 
             <div class="col-3"></div>
 
             <!--progress bar div-->
-            <div class="col-4" id="prog">
-            </div>
+            <div class="col-4" id="prog"></div>
             <!--progress bar div-->
 
         </div>
-        <!--Header-->
     </div><br>
-
+    <!--Header-->
 
     <div class="container">
         <div class="row">

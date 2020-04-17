@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
             crossorigin="anonymous"></script>
@@ -30,6 +29,8 @@
 
             $('#editDiv').hide();
 
+            ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
+
             ajaxCall("GET", "../../api/Cooking", "", GetBrewSucess, GetBrewError); // get all Brews
 
             $("#ourForm, #editForm").on('submit', f1); // form control
@@ -44,7 +45,7 @@
 
             buttonEvents(); // edit+delete buttons
 
-            $("#close_editDiv_Btn").on("click", CloseEditDiv); // Close button
+            $(".close_Btn").on("click", Close_Div); // exit btn for add & edit divs
 
         });
 
@@ -73,8 +74,8 @@
                         {
                             data: "BatchID",
                             render: function (data, type, row, meta) {
-
-                                for (var i = 0; i < BrewArr.length; i++) { // sets the relavent recipe for each beer type
+                                try {
+                                    for (var i = 0; i < BrewArr.length; i++) { // sets the relavent recipe for each beer type
                                     if (BrewArr[i].Batch_id == data) {
 
                                         let st = ''; // will hold 'prod:amount' key value pairs
@@ -89,6 +90,10 @@
                                         return st;
                                     }
                                 }
+                                } catch (e) {
+                                    return "No Details";
+                                }
+                                
                                 return "no recipe for this beer";
                             }
                         }, 
@@ -119,7 +124,7 @@
 
         function PostNewBatch() {
 
-            if ($("#beerSelect").val() == "Select Beer Type") {
+            if ($("#beerSelect").val() == "Select Beer Type") { // form control
                 alert("Please Select Beer Type");
                 return;
             }
@@ -148,13 +153,18 @@
 
                         for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) {
                             let st = {
-                                "productName": recipeArr[i].Products_in_recipe[j].ProductType,
-                                "amount": $(`#${(recipeArr[i].Products_in_recipe[j].ProductType).replace(" ","\\ ")}`).val()
+                                "productName": recipeArr[i].Products_in_recipe[j].ProductName,
+                                "amount": $(`#${(recipeArr[i].Products_in_recipe[j].ProductName).replace(" ","\\ ")}`).val()
                             }
                             products.push(st);
                         }
                         break;
                     }
+            }
+
+            // Set Recipe deafult in case there is no recipe 
+            if (products.length < 1) {
+                products = "";
             }
 
             let brew = {
@@ -186,7 +196,6 @@
         }
 
         function PostBrewSucess(data) {
-            console.log(data);
 
             refresh_table();
         }
@@ -228,7 +237,10 @@
 
         function toggle_add_visibilty() {
 
-            ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
+            $("#add_new_cook").hide();
+            $("#addprodContainer").show();
+
+            //ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
 
             // toggle class and remove the form
         }
@@ -249,9 +261,9 @@
 
                         for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) {
 
-                            st += `<label>${recipeArr[i].Products_in_recipe[j].ProductType}</label>\
+                            st += `<label>${recipeArr[i].Products_in_recipe[j].ProductName}</label>\
                                     <input type="number" min="0" value="${recipeArr[i].Products_in_recipe[j].Amount}"\
-                                    class="form-control" id="${recipeArr[i].Products_in_recipe[j].ProductType}"/><br>`
+                                    class="form-control" id="${recipeArr[i].Products_in_recipe[j].ProductName}"/><br>`
                         }
                         break;
                     }
@@ -411,11 +423,13 @@
             window.open(`Batch.html?batch_id=${batch_id}`, '_self');
         }
 
-
-        function CloseEditDiv() {
+        function Close_Div() {
             $("#editDiv").hide();
+            $("#addprodContainer").hide();
             $("#btnDiv").show();
+            $("#add_new_cook").show();
         }
+      
 
 
         function GetMaxBatchID() { // returns next batch_id
@@ -523,7 +537,8 @@
         </table>
 
         <div id="btnDiv" class="container">
-            <button id="add_new_cook" data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' class="btn btn-primary btn-block">Add To Table</button>
+            <button id="add_new_cook" class="btn btn-primary btn-block">Add To Table</button>
+            <!--data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'-->
             <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
         </div>
 
@@ -531,6 +546,9 @@
     <!-- table -->
     <!-- Add Product -->
     <div class="container collapse" id="addprodContainer">
+        <button type="button" class="close close_Btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
         <div id="addprod">
             <form id="ourForm">
                 <div class="form-group">
@@ -543,7 +561,7 @@
                     <label>Tank</label>
                     <input type="number" class="form-control" id="tankInput" required max="100"/>
                     <br>
-                    <label>Wort Volume</label>
+                    <label>Batch Volume</label>
                     <input type="number" class="form-control" id="wortInput" required />
                     <br>
 
@@ -560,7 +578,7 @@
     <!-- Add Product -->
     <!--Edit Row In  Table-->
     <div class="container" id="editDiv">
-        <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
+        <button id="close_editDiv_Btn" type="button" class="close close_Btn" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         <form id="editForm">

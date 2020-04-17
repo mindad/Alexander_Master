@@ -47,32 +47,29 @@ namespace Alexander.Models
         public int insert()
         {
             DBservices dbs = new DBservices();
-            int numEffected = dbs.insert(this); // insert to Batch_2020
+            int numEffected = 0;
 
             try // create new row in BatchAfterProd_2020 with the same id
             {
-                dbs = dbs.read("[BatchAfterProd_2020]");
+                numEffected = dbs.insert(this); // insert to Batch_2020
 
+                dbs = dbs.read("[BatchAfterProd_2020]");
                 dbs.dt.Rows.Add(BatchID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); 
                 numEffected += dbs.update();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
 
-            try // create new row in BatchAtProd_2020 with the same id
-            {
                 dbs = dbs.read("[BatchAtProd_2020]");
-
-                dbs.dt.Rows.Add(BatchID, 0, 0, 0, 0, 0, 0, 0, 0, 0); 
+                dbs.dt.Rows.Add(BatchID, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 numEffected += dbs.update();
             }
+            catch (InvalidOperationException ex) // not found
+            {
+                string message = string.Format("Unable to add batch_id: {0} in table", batchID);
+                throw new InvalidOperationException(message, ex);
+            }
             catch (Exception ex)
             {
                 throw ex;
             }
-
 
             return numEffected;
         }
@@ -152,51 +149,39 @@ namespace Alexander.Models
         }
 
         // Delete All Batches
-        public int delete_line(int row)
+        public int delete_line(int id)
         {
             DBservices dbs = new DBservices();
 
             try
             {
                 dbs = dbs.read("[BatchAfterProd_2020]");
-                dbs.dt.Select("batch_id=" + row).First().Delete(); // Delete a line in DataTable
+                dbs.dt.Select("batch_id=" + id).First().Delete(); // Delete a line in DataTable
                 dbs.update(); // update the DB
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            try
-            {
-                dbs = dbs.read("[BatchAtProd_2020]");
-                dbs.dt.Select("batch_id=" + row).First().Delete(); // Delete a line in DataTable
-                dbs.update(); // update the DB
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            try
-            {
-                dbs = dbs.read("[Brew_2020]");
-                dbs.dt.Select("batch_id=" + row).First().Delete(); // Delete a line in DataTable
-                dbs.update(); // update the DB
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            try
-            {
-                dbs = dbs.read("[Batch_2020]");
-                dbs.dt.Select("batch_id=" + row).First().Delete(); // Delete a line in DataTable
-                dbs.update(); // update the DB
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
 
+                dbs = dbs.read("[BatchAtProd_2020]");
+                dbs.dt.Select("batch_id=" + id).First().Delete(); 
+                dbs.update(); // update the DB
+
+                dbs = dbs.read("[Brew_2020]");
+                dbs.dt.Select("batch_id=" + id).First().Delete(); 
+                dbs.update(); // update the DB
+
+                dbs = dbs.read("[Batch_2020]");
+                dbs.dt.Select("batch_id=" + id).First().Delete(); 
+                dbs.update(); // update the DB
+
+            }
+            catch (InvalidOperationException ex) // not found
+            {
+                string message = string.Format("Unable to find batchID: {0} in table", id);
+                throw new InvalidOperationException(message, ex);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
             return 1;
         }
     }
