@@ -32,6 +32,8 @@
 
             ajaxCall("GET", "../../api/Batch_Production", "", GetBatchSucess, GetBatchError); // # of batches progress bar 
 
+            document.querySelector("body").style.visibility = "hidden"; // additions
+            document.querySelector( "#loader").style.visibility = "visible"; // additions
         });
 
         // Products API
@@ -58,6 +60,8 @@
                 createChart(locationArr[i], prodTypesNames[i], chartData);
             }
 
+            document.querySelector( "#loader").style.display = "none"; // additions
+            document.querySelector("body").style.visibility = "visible";// additions
         }
 
         function GetProductError(err) {
@@ -282,11 +286,34 @@
         .toast {
             height: 80px;
         }
+        #loader { 
+            border: 12px solid #f3f3f3; 
+            border-radius: 50%; 
+            border-top: 12px solid #444444; 
+            width: 70px; 
+            height: 70px; 
+            animation: spin 1s linear infinite; 
+        } 
+          
+        @keyframes spin { 
+            100% { 
+                transform: rotate(360deg); 
+            } 
+        } 
+        .centerLoader { 
+            position: absolute; 
+            top: 0; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            margin: auto; 
+        } 
     </style>
 
 </head>
 
 <body>
+    <div id="loader" class="centerLoader"></div>
     <!-- NavBar Template -->
     <div class="header text-center">
         <nav class="navbar navbar-expand-sm navbar-light border-bottom" style="background-color: #f7f6f6;">
@@ -327,7 +354,7 @@
         <div class="row" id="headerRow">
             <div class="col-4" id="toastdiv">
             </div>
-        <!-- toast Div -->
+            <!-- toast Div -->
 
             <div class="col-3"></div>
 
