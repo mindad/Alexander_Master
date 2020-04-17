@@ -238,9 +238,8 @@
         function toggle_add_visibilty() {
 
             $("#add_new_cook").hide();
+            $("#editDiv").hide();
             $("#addprodContainer").show();
-
-            //ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
 
             // toggle class and remove the form
         }
@@ -307,9 +306,9 @@
 
             $(document).on("click", ".editBtn", function () {
 
-                $('#btnDiv').hide(); // add To table button 
-
-                //console.log('batch id is:' ,this.getAttribute('data-btnId'));
+                $('#btnDiv').hide();  
+                $("#add_new_cook").hide();
+                $("#addprodContainer").hide();
 
                 populateFields(this.getAttribute('data-btnId')); // fill the form fields according to the selected row
             });
@@ -407,7 +406,7 @@
             $('#ph').val(id_in_arr); // saves id for later use
             
             $("#editDiv").show();
-            $('#edit_batch_header').html(`Batch #: ${btnID}`); // shows batch_id in edit form header
+            $('#edit_batch_header').html(`Batch # ${btnID}`); // shows batch_id in edit form header
             $("#beerTypeInput").val(batchArr[id_in_arr].BeerType);
             $("#batchDateInput").val(batchArr[id_in_arr].Date.substr(0, 10));
 

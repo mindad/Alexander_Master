@@ -271,6 +271,8 @@
                 populateFields(this.getAttribute('data-btnId'), this.getAttribute('data-Date').substr(0, 10)); // fill the form fields according to the selected row
 
                 $("#BTN_inventory_container").hide();
+                $("#addDiv").hide();
+                $("#add_prod_Div").hide();
             });
 
 
@@ -304,6 +306,8 @@
 
                 $("#addDiv").show();
                 $("#BTN_inventory_container").hide();
+                $("#add_prod_Div").hide();
+                $("#editDiv").hide();
                
             });
 
@@ -436,6 +440,8 @@
         function Show_Add_prod_Div() {
 
             $('#add_prod_Div').show();
+            $('#addDiv').hide();
+            $('#editDiv').hide();
             $('#BTN_inventory_container').hide();
         }
 
@@ -582,7 +588,7 @@
         <form id="editForm">
             <div class="form-group">
                 <label for="">Amount</label>
-                <input type="text" class="form-control" id="amountTypeInput" required pattern="[0-9]+" />
+                <input type="number" class="form-control" id="amountTypeInput" required />
                 <br />
                 <label for="fromDate">Date</label>
                 <input type="date" class="form-control" id="DateInput" required />
@@ -602,7 +608,7 @@
         <form id="addForm">
             <div class="form-group">
                 <label for="">Amount</label>
-                <input type="text" class="form-control" id="amountTypeInput_add" required pattern="[0-9]+" />
+                <input type="number" class="form-control" id="amountTypeInput_add" required />
                 <br />
                 <label for="fromDate">Date</label>
                 <input type="date" class="form-control" id="DateInput_add" required />
@@ -629,7 +635,7 @@
                 <select id="prod_type_select" class="form-control"></select>
                 <br />
                 <label for="">Minimum Amount</label>
-                <input type="text" class="form-control" id="TB_minAmount" required pattern="[0-9]+" />
+                <input type="number" class="form-control" id="TB_minAmount" required />
                 <br />
                 <div id="btnDiv" class="container">
                     <button id="BTN_submit" type="submit" class="btn btn-primary btn-block">Submit</button>
