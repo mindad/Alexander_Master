@@ -7,5 +7,6 @@ namespace Alexander.Models
 {
     public class SystemAlerts
     {
+
     }
 }

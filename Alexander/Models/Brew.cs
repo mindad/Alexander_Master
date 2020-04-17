@@ -51,7 +51,7 @@ namespace Alexander.Models
                     st += prod.ProductName + ":" + prod.Amount + ",";
                 }
             }
-            catch (Exception ex)
+            catch (NullReferenceException ex) // prod_list = ""
             {
             }
 
@@ -62,6 +62,10 @@ namespace Alexander.Models
                 dbs.dt.Rows.Add(Batch_id, st);
 
                 numEffected = dbs.update();
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentNullException(string.Format("Unable to insert batch_id: {0} to table", Batch_id), ex);
             }
             catch (Exception ex)
             {

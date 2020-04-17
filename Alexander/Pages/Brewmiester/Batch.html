@@ -33,7 +33,7 @@
 
         $(document).ready(function () {
 
-            batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
+            batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, ''); 
 
             // Hide ADD & Edit Divs
             hideDivs();
@@ -84,13 +84,6 @@
                 }
             }
 
-            // Iterate over JSON Object
-            //var keys = Object.keys(batch); 
-            //keys.forEach( function(key) {
-            //    var values = batch[key];
-            //    console.log(values);
-            //})
-
             // build simple table as for the excel
             let st = `
                     <tr>\
@@ -125,7 +118,10 @@
                         <th colspan="2">Set - Temp: <input type="text" class="" value="${batch.Set_temp}"/></th>\
                     </tr>`
             $('#batchTBL').html(st);
+
         }
+
+
         function GetBatchError(err) {
             console.log(err);
         }
@@ -400,7 +396,6 @@
                 alert(err);
             }
 
-            //buttonEvents();
         }
         function GetHarvestError(err) {
             console.log(err);
@@ -961,8 +956,7 @@
     <!-- table - General-->
     <div class="container">
         <h1 class="text-center">Batch</h1><br />
-        <table class="display" border="1" style="width:100%" id="batchTBL">
-        </table>
+        <table class="display" border="1" style="width:100%" id="batchTBL"></table>
     </div>
     <!-- table -->
     <!-- table - sample Details-->
@@ -984,7 +978,6 @@
             </thead>
             <tbody>
             </tbody>
-
         </table>
     </div>
     <!-- table - sample Details-->
@@ -1006,13 +999,12 @@
             </thead>
             <tbody>
             </tbody>
-
         </table>
     </div>
     <!--Purge Table-->
     <!--Harvest Table-->
     <div class="container" id="harvest_div">
-        <h5 class="text-center">Harvest</h5>
+        <h5 class="text-center" style="margin:auto;">Harvest</h5>
         <button id="AddHarvest" class="btn btn-warning">Add</button>
         <table id="tbl-harvest" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">
@@ -1027,7 +1019,6 @@
             </thead>
             <tbody>
             </tbody>
-
         </table>
     </div>
     <!--Harvest Table-->
@@ -1049,7 +1040,6 @@
             </thead>
             <tbody>
             </tbody>
-
         </table>
     </div>
     <!--Fermant Table-->

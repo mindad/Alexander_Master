@@ -69,15 +69,15 @@ namespace Alexander.Models
 
                 dbs.dt.Rows.Add(null, ProductName, ProductType, ProductID, Amount, Last_arrivalTime);
                 numEffected = dbs.update();
+
+                float am = Calc_inventory_amounts(ProductName);
+                am -= Calc_Brew_Amounts(ProductName);
+                Update_Product_Total_Amount(am, ProductName);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-
-            float am = Calc_inventory_amounts(ProductName);
-            am -= Calc_Brew_Amounts(ProductName);
-            Update_Product_Total_Amount(am, ProductName);
 
             return numEffected;
         }
@@ -97,8 +97,7 @@ namespace Alexander.Models
             {
                 foreach (var prod in prod_list)
                 {
-                    //float am = 0;
-                    DateTime dt = new DateTime(2008, 3, 1);
+                    DateTime dt = new DateTime(2008, 3, 1); // random dateTime as Counter
 
                     foreach (DataRow item in dbs_second.dt.Rows) 
                     {

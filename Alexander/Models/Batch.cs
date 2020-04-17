@@ -172,7 +172,7 @@ namespace Alexander.Models
                 dbs.update(); // update the DB
 
             }
-            catch (InvalidOperationException ex) // not found
+            catch (InvalidOperationException ex) // Delete cannot exe
             {
                 string message = string.Format("Unable to find batchID: {0} in table", id);
                 throw new InvalidOperationException(message, ex);
