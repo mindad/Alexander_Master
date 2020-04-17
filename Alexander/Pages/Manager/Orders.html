@@ -25,6 +25,7 @@
             $('#submit_edit').on('click', submitEdit);
             $('#editDiv').on('submit', f1);
 
+            $("#close_editDiv_Btn").on("click", CloseEditDiv) //close edit div
 
             ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError); //GET ORDER
 
@@ -228,6 +229,13 @@
             location.reload();
         }
 
+        //close edit div function
+        function CloseEditDiv() {
+            $("#editDiv").hide();
+         
+        }
+
+        //End close edit div function
 
     </script>
 
@@ -266,6 +274,9 @@
         .container {
             padding-bottom: 4%;
         }
+        #OrderID_header_edit, #BeerTypeName_header_edit {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -293,8 +304,8 @@
                         <a class="nav-link" href="Alerts_Manager.html">Alerts</a>
                     </li>
                     <!-- <li class="nav-item">
-              <a class="nav-link disabled" href="#">Disabled</a>
-            </li> -->
+                      <a class="nav-link disabled" href="#">Disabled</a>
+                    </li> -->
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
@@ -305,7 +316,8 @@
     </div>
     <!-- NavBar Template -->
     <!-- table -->
-    <div class="container-fluid">
+    <div class="container">
+        <h1 class="text-center">Orders</h1>
         <table id="tbl" class="display" border="1" style="width:90%">
             <thead style="background-color:cornflowerblue">
                 <tr>
@@ -325,26 +337,33 @@
     </div>
     <!-- table -->
     <!--Edit Row In  Table-->
+
     <div class="container" id="editDiv">
+        <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
         <form id="editForm">
+            <h4 id="OrderID_header_edit"></h4>
+            <h4 id="BeerTypeName_header_edit"></h4>
             <div class="form-group">
+                <label for="">Kegs 20 amount</label>
+                <input type="number" class="form-control" id="Kegs20amountInput_edit" />
+                <br />
+                <label for="">Kegs 30 amount</label>
+                <input type="number" class="form-control" id="Kegs30amountInput_edit" />
+                <br />
+                <label for="">bottle Boxes</label>
+                <input type="number" class="form-control" id="bottleamountInput_edit" />
 
-                <h2 id="OrderID_header_edit"></h2><br />
-                <h2 id="BeerTypeName_header_edit"></h2><br />
-                <label>Kegs 20 amount</label>
-                <input type="number" value="" id="Kegs20amountInput_edit" />
-                <br>
-                <label>Kegs 30 amount</label>
-                <input type="number" value="" id="Kegs30amountInput_edit" />
-                <br>
-                <label>bottle Boxes</label>
-                <input type="number" value="" id="bottleamountInput_edit" />
-                <br>
-
+                <br /><div id="inEditForm"></div>
+                <div id="btnDiv" class="container">
+                    <button id="submit_edit" class="btn btn-primary btn-block" type="submit">Submit</button>
+                </div>
             </div>
-            <button id="submit_edit">Submit</button>
         </form>
     </div>
+
+
     <!--Edit Row In  Table-->
 </body>
 </html>

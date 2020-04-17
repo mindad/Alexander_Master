@@ -26,6 +26,7 @@
             $('#editDiv').on('submit', f1);
 
             ajaxCall("GET", "../../api/Batch_Botteling", "", GetBatch_BottelingSucess, GetBatch_BottelingError);
+            $("#close_editDiv_Btn").on("click", CloseEditDiv) //close edit div
 
 
             buttonEvents();
@@ -48,7 +49,9 @@
 
                     pageLength: 7,
                     columns: [
+
                         {
+                              
                             data: "BatchID",
                             render: function (data, type, row, meta) {
 
@@ -60,13 +63,6 @@
                             }
                         },
                         { data: "BeerType" },
-                        {
-                            data: "BatchID",
-                            render: function (data, type, row, meta) {
-                                // ADD HREF !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                return '<a href="#">' + data + '</a>'
-                            }
-                        },
                         {
                             data: "Date",
                             render: function (data) {
@@ -127,7 +123,7 @@
                         {
                             data: {},
                             render: function (data, type, row, meta) {
-                                console.log(data.Waste_litter)
+                             
                                 if (data.tank > 60)
                                     return (data.Waste_litter / 6000).toFixed(2)
                                 else if (data.tank > 40)
@@ -202,7 +198,7 @@
         function Put_success(data) {
             console.log(data);
 
-            return false;
+            refresh_table();
         }
 
         function Put_Error(err) {
@@ -246,8 +242,10 @@
 
             console.log('batch to PUT:', batch);
 
-            ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(batch), Put_success, Put_Error);
-            refresh_table();
+            ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(batch), Put_success , Put_Error);
+
+
+            return false;
 
             // refresh_table();
 
@@ -255,11 +253,20 @@
         // ** Edit Batch
 
         function f1() {
+            Put_success
             return false;
         }
         function refresh_table() {
             location.reload();
         }
+
+
+        //close edit div function
+        function CloseEditDiv() {
+            $("#editDiv").hide();
+      
+        }
+                //End close edit div function
 
     </script>
 
@@ -268,6 +275,7 @@
         body {
             background-color: #f7f6f6;
             padding-bottom: 1%;
+            margin:auto;
         }
 
         #headerRow {
@@ -280,24 +288,23 @@
 
         table {
             text-align: center;
-            margin-right: 200px;
-        }
-
-        #addprod {
-            text-align: center;
-            margin-top: 100px;
-        }
-
-        #addprod {
-            margin: auto;
-            width: 60%;
-            border: solid 2px;
-            background-color: aliceblue;
+         
         }
 
         .container {
             padding-bottom: 4%;
         }
+        .container-fluid {
+            width: 90%;
+           
+        }
+        #tbl {
+            width: 70%;
+        }
+        #batchID_header_edit{
+            text-align:center;
+        }
+    
     </style>
 </head>
 <body>
@@ -325,8 +332,8 @@
                         <a class="nav-link" href="Alerts_Manager.html">Alerts</a>
                     </li>
                     <!-- <li class="nav-item">
-              <a class="nav-link disabled" href="#">Disabled</a>
-            </li> -->
+                      <a class="nav-link disabled" href="#">Disabled</a>
+                    </li> -->
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
@@ -338,12 +345,12 @@
     <!-- NavBar Template -->
     <!-- table -->
     <div class="container-fluid">
+        <h1 class="text-center">Manager Production</h1>
         <table id="tbl" class="display" border="1" style="width:90%">
             <thead style="background-color:cornflowerblue">
                 <tr>
                     <th></th> <!--edit/delete buttons-->
                     <th>Beer Type</th>
-                    <th>Batch Id</th>
                     <th>Date</th>
                     <th>Tank</th>
                     <th>Batch Volume</th>
@@ -368,25 +375,31 @@
 
     </div>
     <!-- table -->
-
     <!--Edit Row In  Table-->
+
     <div class="container" id="editDiv">
+        <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
         <form id="editForm">
+            <h4 id="batchID_header_edit"></h4>
             <div class="form-group">
-                <h2 id="batchID_header_edit"></h2><br />
-                <label>Keg20_amount</label>
-                <input type="number" value="" id="Keg20_amountInput_edit" />
-                <br>
-                <label>Keg30_amount</label>
-                <input type="number" value="" id="Keg30_amountInput_edit" />
-                <br>
-                <label>Bottles_qty</label>
-                <input type="number" value="" id="Bottles_qtyInput_edit" />
-                <br>
-                <label>Waste_Litter</label>
-                <input type="number" value="" id="WasteInput_edit" />
+                <label for="">Keg20_amount</label>
+                <input type="number" class="form-control" id="Keg20_amountInput_edit" />
+                <br />
+                <label for="">Keg30_amount</label>
+                <input type="number" class="form-control" id="Keg30_amountInput_edit" />
+                <br />
+                <label for="">Bottles_qty</label>
+                <input type="number" class="form-control" id="Bottles_qtyInput_edit" />
+                <br />
+                <label for="">Waste_Litter</label>
+                <input type="number" class="form-control" id="WasteInput_edit" />
+                <br /><div id="inEditForm"></div>
+                <div id="btnDiv" class="container">
+                    <button id="submit_edit" class="btn btn-primary btn-block" type="submit">Submit</button>
+                </div>
             </div>
-            <button id="submit_edit">Submit</button>
         </form>
     </div>
     <!--Edit Row In  Table-->
