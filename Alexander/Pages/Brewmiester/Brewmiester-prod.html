@@ -19,6 +19,18 @@
     <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="../../Scripts/ajaxCalls.js"></script>
 
+    <!--add pdf/print and excel options-->
+
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+
+    <!--add pdf/print and excel options-->
+
     <script>
 
         recipeArr = [];
@@ -35,7 +47,7 @@
 
             $("#ourForm, #editForm").on('submit', f1); // form control
 
-            $('#add_new_cook').on('click', toggle_add_visibilty); 
+            $('#add_new_cook').on('click', toggle_add_visibilty);
 
             $("#beerSelect").on('change', SetFormValues); // set form values when add batch to table
 
@@ -57,11 +69,15 @@
 
             try {
                 $('#tbl').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'excel', 'pdf', 'print'
+                    ],
                     data: Batchdata,
                     pageLength: 8,
-                    columns: [             
+                    columns: [
                         {
-                            data:"BatchID",
+                            data: "BatchID",
                             render: function (data, type, row, meta) {
 
                                 let data_for_tbl = "data-btnId='" + data + "'";
@@ -70,37 +86,37 @@
                                 return editBtn + deleteBtn;
                             }
                         },
-                        { data: "BeerType" },  
+                        { data: "BeerType" },
                         {
                             data: "BatchID",
                             render: function (data, type, row, meta) {
                                 try {
                                     for (var i = 0; i < BrewArr.length; i++) { // sets the relavent recipe for each beer type
-                                    if (BrewArr[i].Batch_id == data) {
+                                        if (BrewArr[i].Batch_id == data) {
 
-                                        let st = ''; // will hold 'prod:amount' key value pairs
+                                            let st = ''; // will hold 'prod:amount' key value pairs
 
-                                        for (var j = 0; j < BrewArr[i].Prod_list.length; j++) { 
-                                            if (j == BrewArr[i].Prod_list.length - 1) {
-                                                st += BrewArr[i].Prod_list[j].ProductName + ':' + BrewArr[i].Prod_list[j].Amount;
-                                                continue;
+                                            for (var j = 0; j < BrewArr[i].Prod_list.length; j++) {
+                                                if (j == BrewArr[i].Prod_list.length - 1) {
+                                                    st += BrewArr[i].Prod_list[j].ProductName + ':' + BrewArr[i].Prod_list[j].Amount;
+                                                    continue;
+                                                }
+                                                st += BrewArr[i].Prod_list[j].ProductName + ':' + BrewArr[i].Prod_list[j].Amount + ', ';
                                             }
-                                            st += BrewArr[i].Prod_list[j].ProductName + ':' + BrewArr[i].Prod_list[j].Amount +', ';
+                                            return st;
                                         }
-                                        return st;
                                     }
-                                }
                                 } catch (e) {
                                     return "No Details";
                                 }
-                                
+
                                 return "no recipe for this beer";
                             }
-                        }, 
+                        },
                         {
                             data: "Date",
-                             render: function (data) {
-                                 return data.substr(0, 10);
+                            render: function (data) {
+                                return data.substr(0, 10);
                             }
                         },
                         {
@@ -131,10 +147,10 @@
 
             batch = {
                 batchID: GetMaxBatchID(),
-                date: $('#addDate').val(), 
+                date: $('#addDate').val(),
                 beerType: $('#beerSelect').val(),
-                tank:$("#tankInput").val(),
-                wort_volume:$("#wortInput").val()
+                tank: $("#tankInput").val(),
+                wort_volume: $("#wortInput").val()
             }
 
             console.log('this is batch to post:', batch);
@@ -147,35 +163,35 @@
             console.log(data);
 
             let products = [];
-            for (var i = 0; i < recipeArr.length; i++) { // find inventory items in the form 
+            for (var i = 0; i < recipeArr.length; i++) { // find inventory items in the form
 
-                    if ((recipeArr[i].BeerType).toLowerCase() == $("#beerSelect").val().toLowerCase()) {
+                if ((recipeArr[i].BeerType).toLowerCase() == $("#beerSelect").val().toLowerCase()) {
 
-                        for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) {
-                            let st = {
-                                "productName": recipeArr[i].Products_in_recipe[j].ProductName,
-                                "amount": $(`#${(recipeArr[i].Products_in_recipe[j].ProductName).replace(" ","\\ ")}`).val()
-                            }
-                            products.push(st);
+                    for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) {
+                        let st = {
+                            "productName": recipeArr[i].Products_in_recipe[j].ProductName,
+                            "amount": $(`#${(recipeArr[i].Products_in_recipe[j].ProductName).replace(" ", "\\ ")}`).val()
                         }
-                        break;
+                        products.push(st);
                     }
+                    break;
+                }
             }
 
-            // Set Recipe deafult in case there is no recipe 
+            // Set Recipe deafult in case there is no recipe
             if (products.length < 1) {
                 products = "";
             }
 
             let brew = {
-                "batch_id":GetMaxBatchID(),
+                "batch_id": GetMaxBatchID(),
                 "prod_list": products
             }
 
             console.log("st to post to Brew:", brew);
 
             ajaxCall('POST', "../../api/Cooking", JSON.stringify(brew), PostBrewSucess, PostBrewError);
-           
+
         }
 
         function PostBatchError(err) {
@@ -185,7 +201,7 @@
 
         // BREW API
         function GetBrewSucess(data) {
-            console.log("Brew data:",data);
+            console.log("Brew data:", data);
 
             BrewArr = data;
 
@@ -222,7 +238,7 @@
         function GetBeerSucess(data) {
             console.log('data from Beer_2020:', data);
 
-            // insert values to beerType Select     
+            // insert values to beerType Select
             BeerTypesOptions = "<option>Select Beer Type</option>`";
             for (var i = 0; i < data.length; i++) {
                 BeerTypesOptions += `<option>${data[i].BeerType}</option>`;
@@ -246,31 +262,31 @@
         // ** Beer API
 
 
-        function SetFormValues(){ // Create Add To Table Form
+        function SetFormValues() { // Create Add To Table Form
 
-                var selectedBeer = $(this).children("option:selected").val();
+            var selectedBeer = $(this).children("option:selected").val();
 
-                $("#inForm").html(''); // clear inForm div
+            $("#inForm").html(''); // clear inForm div
 
-                let st = '';
+            let st = '';
 
-                for (var i = 0; i < recipeArr.length; i++) {
+            for (var i = 0; i < recipeArr.length; i++) {
 
-                    if ((recipeArr[i].BeerType).toLowerCase() == selectedBeer.toLowerCase()) {
+                if ((recipeArr[i].BeerType).toLowerCase() == selectedBeer.toLowerCase()) {
 
-                        for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) {
+                    for (var j = 0; j < recipeArr[i].Products_in_recipe.length; j++) {
 
-                            st += `<label>${recipeArr[i].Products_in_recipe[j].ProductName}</label>\
-                                    <input type="number" min="0" value="${recipeArr[i].Products_in_recipe[j].Amount}"\
-                                    class="form-control" id="${recipeArr[i].Products_in_recipe[j].ProductName}"/><br>`
-                        }
-                        break;
+                        st += `<label>${recipeArr[i].Products_in_recipe[j].ProductName}</label>\
+                                            <input type="number" min="0" value="${recipeArr[i].Products_in_recipe[j].Amount}"\
+                                            class="form-control" id="${recipeArr[i].Products_in_recipe[j].ProductName}"/><br>`
                     }
+                    break;
                 }
-                $("#inForm").append(st); 
+            }
+            $("#inForm").append(st);
         }
 
-        function Set_Edit_Form_Values(){ // set input for each product in recipe
+        function Set_Edit_Form_Values() { // set input for each product in recipe
 
             //let sr_str = $("#edit_batch_header").html().match(/[0-9]+/);
             let batch_id = $("#edit_batch_header").html().match(/[0-9]+/)[0]; // match batch_id
@@ -286,15 +302,15 @@
                     for (var j = 0; j < BrewArr[i].Prod_list.length; j++) {
 
                         st += `<label>${BrewArr[i].Prod_list[j].ProductName}</label>\
-                               <input type="number" min="0" value="${BrewArr[i].Prod_list[j].Amount}"\
-                               class="form-control" id="${BrewArr[i].Prod_list[j].ProductName}"/><br>`
+                                       <input type="number" min="0" value="${BrewArr[i].Prod_list[j].Amount}"\
+                                       class="form-control" id="${BrewArr[i].Prod_list[j].ProductName}"/><br>`
                     }
                     break;
                 }
             }
-            $("#inEditForm").append(st); 
+            $("#inEditForm").append(st);
         }
-        
+
 
         function f1(e) {
             e.preventDefault();
@@ -306,7 +322,7 @@
 
             $(document).on("click", ".editBtn", function () {
 
-                $('#btnDiv').hide();  
+                $('#btnDiv').hide();
                 $("#add_new_cook").hide();
                 $("#addprodContainer").hide();
 
@@ -319,7 +335,7 @@
 
                 if (confirm("Are You Sure You Want To Delete This Row?")) {
 
-                    ajaxCall("Delete", "../../api/Batch", JSON.stringify(batch_id), DeleteBatchSucess, DeleteBatchError); 
+                    ajaxCall("Delete", "../../api/Batch", JSON.stringify(batch_id), DeleteBatchSucess, DeleteBatchError);
                 }
                 else {
                     console.log("You pressed Cancel!");
@@ -346,9 +362,9 @@
 
             let batch = {
                 batchID: batchArr[id_in_batchArr].BatchID,
-                date: $("#batchDateInput").val(), 
+                date: $("#batchDateInput").val(),
                 beerType: $('#beerTypeInput').val(),
-                tank:0,
+                tank: 0,
                 wort_volume: 0,
                 recipe_for_this_batch: {
                     beerType: "",
@@ -358,7 +374,7 @@
             }
 
             console.log('this is batch that will be sent to PUT', batch);
-          
+
             ajaxCall("PUT", "../../api/Batch", JSON.stringify(batch), editBatchSucess, editBatchError);
         }
 
@@ -373,7 +389,7 @@
             console.log(err);
         }
         //****** editBatch
-        
+
         //////// DeleteBatch
         function DeleteBatchSucess(data) {
             console.log(data, "Record Deleted");
@@ -383,7 +399,7 @@
             }
 
             refresh_table();
-            
+
         }
 
         function DeleteBatchError(err) {
@@ -393,10 +409,10 @@
 
 
         function populateFields(btnID) { // set values in edit DIV
-             
+
             let id_in_arr = 0;
             // get row in batchArr
-            for (i in batchArr) { 
+            for (i in batchArr) {
                 if (batchArr[i].BatchID == btnID) {
                     id_in_arr = i;
                     break;
@@ -404,7 +420,7 @@
             }
 
             $('#ph').val(id_in_arr); // saves id for later use
-            
+
             $("#editDiv").show();
             $('#edit_batch_header').html(`Batch # ${btnID}`); // shows batch_id in edit form header
             $("#beerTypeInput").val(batchArr[id_in_arr].BeerType);
@@ -428,7 +444,7 @@
             $("#btnDiv").show();
             $("#add_new_cook").show();
         }
-      
+
 
 
         function GetMaxBatchID() { // returns next batch_id
@@ -437,7 +453,7 @@
             for (var i = 0; i < batchArr.length; i++) {
                 ID_arr.push(batchArr[i].BatchID);
             }
-            
+
             return Math.max.apply(null, ID_arr) + 1;
         }
 
@@ -464,20 +480,21 @@
         }
 
         #addprod {
-
             margin: auto;
             width: 60%;
+        }
 
+        #addprodContainer {
+            padding-top: 1%;
         }
-        #addprodContainer{
-            padding-top:1%;
+
+        #btnDiv {
+            padding-top: 1%;
+            width: 50%;
         }
-        #btnDiv{
-            padding-top:1%;
-            width:50%;
-        }
-        #edit_batch_header{
-            text-align:center;
+
+        #edit_batch_header {
+            text-align: center;
         }
     </style>
 

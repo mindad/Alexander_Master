@@ -17,12 +17,24 @@
     <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="../../Scripts/ajaxCalls.js"></script>
 
+
+    <!--add pdf/print and excel options-->
+
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+
+    <!--add pdf/print and excel options-->
     <script>
 
         RecipeArr = [];
         ProductTypesSelect = "";
 
-        $(document).ready(function () { 
+        $(document).ready(function () {
 
             Close_Div();
 
@@ -41,7 +53,7 @@
             $("#editForm").on("submit", EditRecipe);
 
             $("#addForm").on("submit", AddRecipe);
-            
+
             $("#appProd").on("click", addProds);
 
             $("#submit_edit", "#editForm").submit(f1);
@@ -56,12 +68,15 @@
 
             try {
                 $('#tbl').DataTable({
-
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'excel', 'pdf', 'print'
+                    ],
                     data: Recipedata,
                     pageLength: 8,
                     columns: [
                         {
-                            data:"BeerType",
+                            data: "BeerType",
                             render: function (data, type, row, meta) {
 
                                 let data_for_tbl = "data-btnId='" + data + "'";
@@ -79,14 +94,14 @@
                                 for (var i = 0; i < data.length; i++) {
                                     st += `${data[i].ProductName}:${data[i].Amount}, `
                                 }
-                                return st.slice(0,-2);
-                            } 
+                                return st.slice(0, -2);
+                            }
                         },
                         {
                             data: "CreationDate",
                             render: function (data) {
-                                    return data.substr(0, 10);
-                                } 
+                                return data.substr(0, 10);
+                            }
                         }
                     ]
                 });
@@ -141,11 +156,11 @@
                     for (var j = 0; j < RecipeArr[i].Products_in_recipe.length; j++) {
 
                         products.push({
-                            productType:"",
-                            amount: $(`#${(RecipeArr[i].Products_in_recipe[j].ProductName).replace(" ","\\ ")}`).val(),
-                            min_amount:0,
-                            productName:RecipeArr[i].Products_in_recipe[j].ProductName,
-                            productID:0
+                            productType: "",
+                            amount: $(`#${(RecipeArr[i].Products_in_recipe[j].ProductName).replace(" ", "\\ ")}`).val(),
+                            min_amount: 0,
+                            productName: RecipeArr[i].Products_in_recipe[j].ProductName,
+                            productID: 0
                         });
 
                     }
@@ -155,10 +170,10 @@
 
             let newProds = GetNewProds();//GetNewProds($("#beerTypeInput").val()); // Create another arr of new prods
 
-            for (let pr of newProds) { // insert more prods to products arr 
+            for (let pr of newProds) { // insert more prods to products arr
                 products.push(pr);
             }
-            
+
 
             let recipe = {
                 beerType: $("#beerTypeInput").val(),
@@ -179,7 +194,7 @@
 
             for (var i = 0; i < 20; i++) { // 20 is the maximum of products in recipe
 
-                if ($(`#new_prod${i}`).val()) { //  >= 0 
+                if ($(`#new_prod${i}`).val()) { //  >= 0
 
                     prods.push({ // RecipeArr[i].Products_in_recipe
                         "ProductName": $(`#new_prod${i}`).val(),
@@ -190,7 +205,7 @@
                     break;
                 }
             }
-    
+
             return prods;
         }
 
@@ -213,7 +228,7 @@
             alert("Unable To Delete Recipe");
         }
 
-        
+
         // Beer API
         function GetBeerSucess(data) {
             console.log(data);
@@ -222,7 +237,7 @@
         function GetBeerError(err) {
             console.log(err);
         }
-        
+
 
         function populate_BeerSelect(BeerArr) {
 
@@ -234,7 +249,7 @@
         }
         // ** Beer API
 
-        // Product API 
+        // Product API
         function GetProductSucess(data) {
             console.log("Product Data:", data);
 
@@ -249,7 +264,7 @@
         function populate_EditForm(beerName) {
 
             $("#beerTypeInput").val(beerName);
-            
+
             $("#inEditForm").html(''); // clear inEditForm div
 
             let st = '';
@@ -258,44 +273,44 @@
 
                 if ((RecipeArr[i].BeerType) == beerName) {
 
-                    $("#recipeDateInput").val(RecipeArr[i].CreationDate.substr(0,10)); // not related to later logic
+                    $("#recipeDateInput").val(RecipeArr[i].CreationDate.substr(0, 10)); // not related to later logic
 
                     for (var j = 0; j < RecipeArr[i].Products_in_recipe.length; j++) {
 
                         st += `<label>${RecipeArr[i].Products_in_recipe[j].ProductName}</label>\
-                               <input type="number" min="0" value="${RecipeArr[i].Products_in_recipe[j].Amount}"\
-                               class="form-control" id="${RecipeArr[i].Products_in_recipe[j].ProductName}"/><br>`
+                                       <input type="number" min="0" value="${RecipeArr[i].Products_in_recipe[j].Amount}"\
+                                       class="form-control" id="${RecipeArr[i].Products_in_recipe[j].ProductName}"/><br>`
                     }
                     break;
                 }
             }
-            $("#inEditForm").append(st); 
+            $("#inEditForm").append(st);
         }
 
 
         function addProds() {
 
-            $("#inEditForm").append(""); 
+            $("#inEditForm").append("");
 
             let n_of_products = prompt("How many products would you like to add?");
             let st = '';
 
             if (n_of_products && n_of_products < 20) {
-                for (var i = 0; i < n_of_products; i++) { 
+                for (var i = 0; i < n_of_products; i++) {
 
                     st += `<div class="row">\
-                            <div class="col">\
-                                <label>Product Name</label>
-                                <select name="prd" id="new_prod${i}" class="form-control"></select>
-                            </div>\
-                           <div class="col">
-                                <label>Amount</label>
-                                <input type="number" min="0" class="form-control" id="new_prod_amount${i}" required/>
-                            </div></div>`;
+                                    <div class="col">\
+                                        <label>Product Name</label>
+                                        <select name="prd" id="new_prod${i}" class="form-control"></select>
+                                    </div>\
+                                   <div class="col">
+                                        <label>Amount</label>
+                                        <input type="number" min="0" class="form-control" id="new_prod_amount${i}" required/>
+                                    </div></div>`;
                 }
 
 
-                $("#inEditForm").append(st); 
+                $("#inEditForm").append(st);
                 $("#appProd").hide();
 
                 // Add values to select buttons
@@ -304,7 +319,7 @@
                 }
             }
         }
-        
+
         function OpenAddDiv() {
             $("#addDiv").show();
             $("#addBtn").hide();
@@ -320,17 +335,17 @@
                 for (var i = 0; i < num_products_in_new_recipe; i++) {
 
                     st += `<div class="row">\
-                            <div class="col">\
-                                <label>Product Name</label>
-                                <select name="prd" id="new_prod${i}" class="form-control">${ProductTypesSelect}</select>
-                            </div>\
-                           <div class="col">
-                                <label>Amount</label>
-                                <input type="number" min="0" class="form-control" id="new_prod_amount${i}" required/>
-                            </div></div>`;
+                                    <div class="col">\
+                                        <label>Product Name</label>
+                                        <select name="prd" id="new_prod${i}" class="form-control">${ProductTypesSelect}</select>
+                                    </div>\
+                                   <div class="col">
+                                        <label>Amount</label>
+                                        <input type="number" min="0" class="form-control" id="new_prod_amount${i}" required/>
+                                    </div></div>`;
                 }
 
-                $("#inAddForm").append(st); 
+                $("#inAddForm").append(st);
             }
             else {
                 if (num_products_in_new_recipe == null) {
@@ -367,7 +382,7 @@
             console.log(data);
         }
 
-        
+
         // ** Post Recipe
 
 
@@ -410,9 +425,10 @@
         table {
             text-align: center;
         }
-        #btnDiv{
-            padding-top:1%;
-            width:50%;
+
+        #btnDiv {
+            padding-top: 1%;
+            width: 50%;
         }
     </style>
 
