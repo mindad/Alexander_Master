@@ -241,15 +241,25 @@
         function GetBatchSucess(data) {
             console.log(data);
 
-            const max_batch = 20; // number of monthly batches
-            let val = (data.length / max_batch)*100;
-            let month = new Date().toLocaleString('default', { month: 'long' }); // get month name
+            const max_batch = 15; // number of monthly batches
+            let month = new Date().toLocaleString('default', { month: 'long' }); // get current month name
+            let len = 0;
 
+            for (bt of data) {
+                let bt_date = new Date(bt.Date.substr(0, 10)).toLocaleString('default', { month: 'long' });
+
+                if (month == bt_date) {
+                    len += 1; 
+                }
+            }
+
+            let val = (len / max_batch)*100;
+            
             let st = `<h4 class="text-center" id="month">${month} Batches</h4>\
                       <div class="progress">\
                       <div class="progress-bar w-${val}" role="progressbar" style="width: ${val}%;"\
                       aria-valuenow="${val}"
-                      aria-valuemin="0" aria-valuemax="100">${data.length} Batches</div>
+                      aria-valuemin="0" aria-valuemax="100">${len} Batches</div>
                       </div>`
 
             $("#prog").append(st);
@@ -338,6 +348,9 @@
                     </li>
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Alerts.html">Alerts</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="../Login.html">Exit</a>
                     </li>
                 </ul>
             </div>

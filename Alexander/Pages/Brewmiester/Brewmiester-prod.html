@@ -41,6 +41,8 @@
 
             $('#editDiv').hide();
 
+            ajaxCall("GET", "../../api/Beer/Tanks", "", GetTankSucess, GetTankError);
+
             ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
 
             ajaxCall("GET", "../../api/Cooking", "", GetBrewSucess, GetBrewError); // get all Brews
@@ -149,7 +151,7 @@
                 batchID: GetMaxBatchID(),
                 date: $('#addDate').val(),
                 beerType: $('#beerSelect').val(),
-                tank: $("#tankInput").val(),
+                tank: $("#tankSelect").val(),
                 wort_volume: $("#wortInput").val()
             }
 
@@ -259,6 +261,20 @@
 
             // toggle class and remove the form
         }
+
+        //Tanks
+        function GetTankSucess(data) {
+            console.log("Tanks:", data);
+
+            let tankTypes = data.sort().map(tn => `<option>${tn}</option>`); // sets beerType arr values
+
+            document.getElementById("tankSelect").innerHTML = tankTypes;
+        }
+        function GetTankError(err) {
+            console.log(err);
+        }
+        // ** Tanks
+
         // ** Beer API
 
 
@@ -526,6 +542,9 @@
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Alerts.html">Alerts</a>
                     </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="../Login.html">Exit</a>
+                    </li>
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
@@ -575,10 +594,10 @@
                     <input type="date" name="date" id="addDate" class="form-control" required>
                     <br>
                     <label>Tank</label>
-                    <input type="number" class="form-control" id="tankInput" required max="100"/>
+                    <select id="tankSelect" class="form-control"></select>
                     <br>
                     <label>Batch Volume</label>
-                    <input type="number" class="form-control" id="wortInput" required />
+                    <input type="number" class="form-control" id="wortInput" min="1000" required />
                     <br>
 
                     <div id="inForm"></div>
