@@ -40,6 +40,7 @@
         $(document).ready(function () {
 
             $('#editDiv').hide();
+            $("#addprodContainer").hide();
 
             ajaxCall("GET", "../../api/Beer/Tanks", "", GetTankSucess, GetTankError);
 
@@ -580,7 +581,7 @@
     </div>
     <!-- table -->
     <!-- Add Product -->
-    <div class="container collapse" id="addprodContainer">
+    <div class="container" id="addprodContainer">
         <button type="button" class="close close_Btn" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
