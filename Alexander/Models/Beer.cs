@@ -44,5 +44,16 @@ namespace Alexander.Models
 
             return beer_arr;
         }
+
+        public List<int> get_Tanks()
+        {
+            DBservices dbs = new DBservices();
+
+            List<int> tanks_lst = dbs.get_TanksDB();
+
+            return tanks_lst;
+        }
+
+        
     }
 }

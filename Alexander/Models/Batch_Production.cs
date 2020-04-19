@@ -1,6 +1,7 @@
 ﻿using Alexander.Models.DAL;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -30,7 +31,7 @@ namespace Alexander.Models
 
         public Batch_Production() { }
 
-        public Batch_Production(float cast_volume, int yeast_cycle, float co2_vol, string pitchTime, float og, float fg, float pitching_rate, float tank_temp, float set_temp)
+        public Batch_Production(int batchID, DateTime date, int tank, float wort_volume, string beerType, Recipe recipe_for_this_batch, float cast_volume, int yeast_cycle, float co2_vol, string pitchTime, float og, float fg, float pitching_rate, float tank_temp, float set_temp)
         {
             this.cast_volume = cast_volume;
             this.yeast_cycle = yeast_cycle;
@@ -55,7 +56,41 @@ namespace Alexander.Models
 
         
 
+        new public int Update()
+        {
+            int effected = 0;
+            
+            try
+            {
+                DBservices dbs = new DBservices();
+                dbs = dbs.read("[BatchAtProd_2020]");
 
+                DataRow dr = dbs.dt.Select(string.Format("batch_id={0}", BatchID)).First();
+                
+               
+                dr["cast_volume"] = cast_volume;
+                dr["yeast_cycle"] = yeast_cycle;
+                dr["co2_vol"] = co2_vol;
+                dr["pitch_time"] = pitchTime;
+                dr["OG"] = og;
+                dr["FG"] = fg;
+                dr["Pitching_Rate"] = pitching_rate;
+                dr["Temp_Tank"] = tank_temp;
+                dr["Set_Temp"] = set_temp;
+
+                effected = dbs.update(); // update DB
+            }
+            catch (InvalidOperationException ex) // unnable to find batchID
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return effected;
+        }
 
 
     }

@@ -1021,7 +1021,40 @@ namespace Alexander.Models.DAL
             }
         }
 
-        //end get order_2020 orders
+        //end get order_2020 orders 
+        public List<int> get_TanksDB()
+        {
+            List<int> tanks_list = new List<int>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+                String query = "SELECT * FROM [Tank_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+                    int tank = Convert.ToInt32(dr["tankNumber"]);
+                    tanks_list.Add(tank);
+                }
+                return tanks_list;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
 
         public DBservices SendSQLQuery(string query)
         {

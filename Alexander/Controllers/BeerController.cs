@@ -17,5 +17,13 @@ namespace Alexander.Controllers
             Beer beer = new Beer();
             return beer.get_Beers();
         }
+
+        [HttpGet]
+        [Route("api/Beer/Tanks")]
+        public List<int> GetTanks()
+        {
+            Beer beer = new Beer();
+            return beer.get_Tanks();
+        }
     }
 }
