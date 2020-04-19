@@ -197,12 +197,16 @@ select * from Alert_Types_2020
 ################################################
 *************INSERT  Order_2020 TABLE*******************
 
-INSERT INTO Order_2020 (Order_id, Alert_id,SupplyDate,keg_20_amount,keg_30_amount,box_24,beerType)
-VALUES ('1','2',02/02/2020,'30','40','15','Ambree');
-INSERT INTO Order_2020 (Order_id, Alert_id,SupplyDate,keg_20_amount,keg_30_amount,box_24,beerType)
-VALUES ('2','3',02/02/2020,'30','40','15','Blonde');
-INSERT INTO Order_2020 (Order_id, Alert_id,SupplyDate,keg_20_amount,keg_30_amount,box_24,beerType)
-VALUES ('3','4',02/02/2020,'30','40','15','Black');
+INSERT INTO Order_2020 (Order_id,SupplyDate,keg_20_amount,keg_30_amount,box_24,beerType)
+VALUES ('1','05/05/2020','30','40','10','BLAZER');
+INSERT INTO Order_2020 (Order_id,SupplyDate,keg_20_amount,keg_30_amount,box_24,beerType)
+VALUES ('1','05/05/2020','30','50','20','BLONDE');
+INSERT INTO Order_2020 (Order_id,SupplyDate,keg_20_amount,keg_30_amount,box_24,beerType)
+VALUES ('1','05/05/2020','30','40','60','GREEN');
+INSERT INTO Order_2020 (Order_id,SupplyDate,keg_20_amount,keg_30_amount,box_24,beerType)
+VALUES ('1','05/05/2020','20','20','20','SHAPIRO SHLAGER');
+INSERT INTO Order_2020 (Order_id,SupplyDate,keg_20_amount,keg_30_amount,box_24,beerType)
+VALUES ('1','05/05/2020','10','10','10','חיטה ישראלית');
 
 select * from Order_2020
 

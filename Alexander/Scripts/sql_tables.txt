@@ -193,6 +193,11 @@ create table SampleDetails_2020(
 	Primary key ([index])
 )
 
+create table Tank_2020(
+ [tankNumber] int NOT NULL,
+	Primary key ([tankNumber])
+)
+********************
 
 ********************* Examples: *********************
 

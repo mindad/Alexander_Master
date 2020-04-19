@@ -80,6 +80,7 @@ namespace Alexander.Models
 
                 DataRow dr1 = dbs.dt.Select("batch_id='" + BatchID + "'").First();
                 //
+                int bottletocheck = Convert.ToInt32(dr1["bottles_qty"]);
                 dr1["keg_20_amount"] = this.keg20_amount;
                 dr1["keg_30_amount"] = this.keg30_amount;
                 dr1["bottles_qty"] = this.bottels_qty;
@@ -98,7 +99,12 @@ namespace Alexander.Models
                 //call function update beerinstock_2020 
                 Update_Beer_in_Stcok(beer, beerOrders, beertype);
 
-              // update DB
+                //call function update manager inventory 
+                if(bottletocheck< this.bottels_qty)//only if the number of bottles increased!!!!
+                Update_manager_inventory(beertype, this.bottels_qty- bottletocheck); 
+
+
+                // update DB
             }
             catch (Exception ex)
             {
@@ -109,6 +115,40 @@ namespace Alexander.Models
             return effected;
         }
 
+        //function to update manager inventory
+        public void Update_manager_inventory(string beertype, int bottles )
+        {
+            try
+            {
+                // update BeerInStock_2020 table 
+                DBservices dbs = new DBservices();
+                dbs = dbs.read("[manager_products_2020]");
+
+                DataRow dr = dbs.dt.Select("beerType='" + beertype + "' AND prodName='Box24'").First();         
+                dr["amount"] = Convert.ToInt32(dr["amount"])-(bottles/24);//box/24
+                dbs.update();
+
+        
+                DataRow[] data_rows = dbs.dt.Select("beerType='" + beertype + "' AND prodName LIKE 'Label%' ");
+                //
+
+                foreach (var dr1 in data_rows)//foreach label in beertype
+                {
+                    dr1["amount"] = Convert.ToInt32(dr1["amount"]) - bottles;
+
+                }
+                dbs.update();
+                //
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        //End function to update manager inventory 
 
 
         //function calc inventory amount--->>>>>>>>>>>>>>>>>>>>>>>sum keg20/keg30/bottle from specific beer in BatchAfterProd_2020

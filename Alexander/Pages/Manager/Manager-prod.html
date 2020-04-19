@@ -112,38 +112,42 @@
                                 return data * 30
                             }
                         },
-                        {
-                            data: {},
-                            render: function (data, type, row, meta) {
-                                return data.Keg20_amount + data.Keg30_amount + data.Bottels_qty
-                            }
-                        },
                         { data: "Bottels_qty" },
                         {
                             data: "Bottels_qty",
                             render: function (data, type, row, meta) {
                                 // ADD function *0.33 litter bottle
-                                return (data * 0.33).toFixed(2)
+                           
+                                return (data * 0.33).toFixed(2);
+                                
                             }
                         },
+                        {
+                            data: {},
+                            render: function (data, type, row, meta) {
+                                return data.Keg20_amount*20 + data.Keg30_amount*30 + data.Bottels_qty*0.33
+                            }
+                        },
+                   
                         {
                             data: "Bottels_qty",
                             render: function (data, type, row, meta) {
                                 // ADD function *24 bottles in box
-                                return (data / 24).toFixed(2)
+                                return (data / 24).toFixed(0)
                             }
                         },
-                        { data: "Waste_litter" },
+                        {
+                            data: {},
+                            render: function (data, type, row, meta) {
+                                return data.Wort_volume-data.Keg20_amount * 20 - data.Keg30_amount * 30 - data.Bottels_qty * 0.33
+                            }
+                        },
                         {
                             data: {},
                             render: function (data, type, row, meta) {
 
-                                if (data.tank > 60)
-                                    return (data.Waste_litter / 6000).toFixed(2)
-                                else if (data.tank > 40)
-                                    return (data.Waste_litter / 4000).toFixed(2)
-                                else
-                                    return (data.Waste_litter / 2000).toFixed(2)
+                                return ((data.Wort_volume - data.Keg20_amount * 20 - data.Keg30_amount * 30 - data.Bottels_qty * 0.33) / data.Wort_volume).toFixed(2)
+                                
                             }
                         },
                     ]
@@ -222,10 +226,11 @@
         function populateFields(batch_id) {
 
             let batch;
-
+           
             for (let item of Batch_BottelingArr) { // find batch_id clicked on in 'Batch_BottelingArr'
                 if (item.BatchID == batch_id) {
                     batch = item;
+               
                     break;
                 }
             }
@@ -240,23 +245,39 @@
         }
 
         function submitEdit() {
+            let batch1;
+            let batchid = $('#batchID_header_edit').html().replace(/[^0-9]/g, '');
+            console.log(batchid);
+            for (let item of Batch_BottelingArr) { // find batch_id clicked on in 'Batch_BottelingArr'
+                if (item.BatchID == batchid) {
+                    batch1 = item;
 
-
-            let batch = {
-                batchID: $('#batchID_header_edit').html().replace(/[^0-9]/g, ''), // gets batch id from <h1>
-                tank: 0,
-                wort_volume: 0,
-                beerType: '',
-                keg20_amount: $('#Keg20_amountInput_edit').val(),
-                keg30_amount: $('#Keg30_amountInput_edit').val(),
-                bottels_qty: $('#Bottles_qtyInput_edit').val(),
-                waste_litter: $('#WasteInput_edit').val(),
-                waste_percent: 0,
+                    break;
+                }
             }
+ 
+            let wastelitter = batch1.Wort_volume - $('#Keg20_amountInput_edit').val() * 20 - $('#Keg30_amountInput_edit').val() * 30 - $('#Bottles_qtyInput_edit').val() * 0.33;//calc waste in litter
+            console.log(wastelitter);
+            if (wastelitter > 0) {// if waste nagative something of the values the manager add are wrong he will get alert
+                let batch = {
+                    batchID: $('#batchID_header_edit').html().replace(/[^0-9]/g, ''), // gets batch id from <h1>
+                    tank: 0,
+                    wort_volume: 0,
+                    beerType: '',
+                    keg20_amount: $('#Keg20_amountInput_edit').val(),
+                    keg30_amount: $('#Keg30_amountInput_edit').val(),
+                    bottels_qty: $('#Bottles_qtyInput_edit').val(),
+                    waste_litter: wastelitter,
+                    waste_percent: 0,
+                }
 
-            console.log('batch to PUT:', batch);
+                console.log('batch to PUT:', batch);
 
-            ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(batch), Put_success, Put_Error);
+                ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(batch), Put_success, Put_Error);
+
+            }
+            else
+                alert("you cant make prod higher then wort vol- Something went wrong check again please");
 
 
             return false;
@@ -345,9 +366,12 @@
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Alerts_Manager.html">Alerts</a>
                     </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="../Login.html">Exit</a>
+                    </li>
                     <!-- <li class="nav-item">
-                      <a class="nav-link disabled" href="#">Disabled</a>
-                    </li> -->
+      <a class="nav-link disabled" href="#">Disabled</a>
+    </li> -->
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
@@ -370,12 +394,13 @@
                     <th>Batch Volume</th>
                     <th>Wort Volume</th>
                     <th>Keg20 amount</th>
-                    <th>Keg20 qty</th>
+                    <th>Keg20 Litter</th>
                     <th>Keg30 amount</th>
-                    <th>Keg30 qty</th>
-                    <th>Total Production</th>
+                    <th>Keg30 Litter</th>
                     <th>Bottles qty</th>
                     <th>Bottles Litter</th>
+                    <th>Total Production</th>
+
                     <th>Boxes qty</th>
                     <th>Waste Litter</th>
                     <th>Waste Precent</th>
@@ -406,9 +431,9 @@
                 <br />
                 <label for="">Bottles_qty</label>
                 <input type="number" class="form-control" id="Bottles_qtyInput_edit" />
-                <br />
+                <!--<br />
                 <label for="">Waste_Litter</label>
-                <input type="number" class="form-control" id="WasteInput_edit" />
+                <input type="number" class="form-control" id="WasteInput_edit" />-->
                 <br /><div id="inEditForm"></div>
                 <div id="btnDiv" class="container">
                     <button id="submit_edit" class="btn btn-primary btn-block" type="submit">Submit</button>
