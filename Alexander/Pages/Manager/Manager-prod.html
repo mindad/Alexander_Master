@@ -55,17 +55,15 @@
 
             try {
                 $('#tbl').DataTable({
-
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'excel', 'pdf', 'print'
+                    ],
                     data: Batch_Botteling_data,
 
                     pageLength: 7,
                     columns: [
-
                         {
-                            dom: 'Bfrtip',
-                            buttons: [
-                                'excel', 'pdf', 'print'
-                            ],
                             data: "BatchID",
                             render: function (data, type, row, meta) {
 
