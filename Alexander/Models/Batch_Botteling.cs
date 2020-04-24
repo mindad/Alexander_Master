@@ -85,6 +85,8 @@ namespace Alexander.Models
                 dr1["keg_30_amount"] = this.keg30_amount;
                 dr1["bottles_qty"] = this.bottels_qty;
                 dr1["waste_litter"] = this.waste_litter;
+                dr1["waste_precent"] = this.waste_percent;
+
                 //END  EDIT
 
                 effected = dbs.update();

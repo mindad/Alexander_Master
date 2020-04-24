@@ -29,23 +29,83 @@
     <!--add pdf/print and excel options-->
     <script>
         OrderArr = [];
+        beertypeArr = [];
 
         $(document).ready(function () {
 
             $('#editDiv').hide();
             $('#submit_edit').on('click', submitEdit);
+            $('#addForm').on('submit', AddOrder);//add order
             $('#editDiv').on('submit', f1);
 
             $("#close_editDiv_Btn").on("click", CloseEditDiv) //close edit div
+            $("#close_AddDiv_Btn").on("click", Close_AddDiv) //close Add div
 
             ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError); //GET ORDER
-
-
+            ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError); //beerinstock
+            //add Order BTN
+            $('#addBtn').on("click", OpenAddDiv);
+       
             buttonEvents();
 
             //$('#add_new_batchbotteling').on('click', toggle_add_visibilty);
 
         });
+
+
+        // Post Order
+        function AddOrder() {
+
+            let Order = {
+            
+                creationDate: $("#addDate").val(),
+                products_in_recipe: GetNewOrder()
+            }
+
+            console.log("this is Order to post:", Order);
+
+            //ajaxCall("POST", "../../api/Order", JSON.stringify(Order), PostRecipeSucess, PostRecipeError);
+
+            return false;
+        }
+
+        function PostRecipeSucess(data) {
+            console.log(data);
+
+            refresh_table();
+        }
+        function PostRecipeError(data) {
+            console.log(data);
+        }
+
+
+        // **End  Post Order
+        function GetNewOrder() { // Get New Orders arr
+
+            let Orders = [];
+
+            for (var i = 0; i < 8; i++) { // 8 is the maximum of products in recipe
+
+                if ($(`beerSelect${i}`).val()) { //  >= 0
+
+                    Orders.push({ // 
+                        "beerType": $(`#beerSelect${i}`).val(),
+                        "Amount_20": $(`#amount20_${i}`).val(),
+                        "Amount_30": $(`#amount30_${i}`).val(),
+                        "Amount_bottles": $(`#amountBoxes_${i}`).val()
+                    });
+                }
+                else {
+                    break;
+                }
+            }
+
+            return Orders;
+        }
+
+
+
+
         //Batch_Botteling  API
 
         function GetOrderSucess(data) {
@@ -113,11 +173,25 @@
             $('.invisible').removeClass();
         }
 
-        function GetBeerTypes() {
-            console.log('in Beer types');
-            // implement here ajaxcall that gets all beer types from DB
+
+       // API BEERTYPES
+        function GetBeerSucess(data) {
+            
+         
+            for (let i = 0; i < data.length; i++) {
+                beertypeArr.push(data[i].BeerType);   
+            }
+            console.log('this is BeerTypes:', beertypeArr);
+            let BeerTypes = "";
+            beertypeArr = beertypeArr.sort().map(beer => `<option>${beer}</option>`); // sets beerType arr values
+       
+            //document.getElementById("beerSelect").innerHTML = BeerTypes;
         }
 
+        function GetBeerError(err) {
+            console.log(err);
+        }
+        
 
         function buttonEvents() {
 
@@ -249,6 +323,69 @@
 
             //End close edit div function
 
+
+
+        function OpenAddDiv() {
+            $("#addDiv").show();
+            $("#addBtn").hide();
+            $("#editDiv").hide();
+            $("#tbl").hide();
+            $("#inAddForm").html('');
+
+            console.log(OrderArr);
+            let num_Beers_in_Order = prompt("How Many Beers Included In The Order?");
+            console.log(beertypeArr);
+            let st = '';
+
+           
+            for (var i = 0; i < num_Beers_in_Order; i++) {
+
+                    st += `<div class="row">\
+                                    <div class="col">\
+                                        <label>Beer Type</label>
+                                        <select name="Beer" id="beerSelect${i}" class="form-control">${beertypeArr}</select>
+                                    </div>\
+                                   <div class="col">
+                                        <label>Amount20</label>
+                                        <input type="number" min="0" class="form-control" id="amount20_${i}" />
+                                    </div>
+                                     <div class="col">
+                                        <label>Amount30</label>
+                                        <input type="number" min="0" class="form-control" id="amount30_${i}" />
+                                    </div>
+                                    <div class="col">
+                                        <label>AmountBoxes</label>
+                                        <input type="number" min="0" class="form-control" id="amountBoxes_${i}" />
+                                    </div>
+
+
+</div>`;
+                }
+            //document.getElementById("beerSelect").innerHTML = BeerTypes;
+                $("#inAddForm").append(st);
+        
+ 
+     
+            }
+      
+        //hide/show divs
+        function OpenEditDiv() {
+       
+            $("#addDiv").hide();
+        }
+        function Close_Div() {
+            $("#addDiv").hide();
+         
+          
+        }
+        function Close_AddDiv() {
+            $("#addBtn").show();
+            $("#tbl").show();
+            $("#addDiv").hide();
+
+        }
+        
+         //End hide/show divs
     </script>
 
     <style>
@@ -351,6 +488,9 @@
             <tbody></tbody>
 
         </table>
+             <div id="btnDiv" class="container">
+            <button id="addBtn" class="btn btn-primary btn-block">Add New Order</button>
+        </div>
     </div>
     <!-- table -->
     <!--Edit Row In  Table-->
@@ -379,8 +519,30 @@
             </div>
         </form>
     </div>
-
-
     <!--Edit Row In  Table-->
+
+        <!-- Add Recipe -->
+    <div class="container collapse" id="addDiv">
+        <button id="close_AddDiv_Btn" type="button" class="close close_Btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div id="addprod">
+            <form id="addForm">
+                <h4 >Order Details</h4>
+                <div class="form-group">
+
+                    <label>Date</label>
+                    <input type="date" name="date" id="addDate" class="form-control" required><br>
+
+                    <div id="inAddForm"></div>
+
+                    <div id="btnDiv" class="container">
+                        <button type="submit" id="submit_Add" class="btn btn-primary btn-block">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Add Product -->
 </body>
 </html>

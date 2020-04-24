@@ -387,7 +387,7 @@ namespace Alexander.Models.DAL
             {
                 con = connect("DBConnectionString");
                 // connect 2 table to 1 table with ID key
-                String query = "select  [Batch_2020].[batch_id],[Batch_2020].[date],[Batch_2020].[tank],[Batch_2020].[wort_volume],[Batch_2020].[beer_type],[dbo].[BatchAfterProd_2020].[keg_20_amount] , [dbo].[BatchAfterProd_2020].[keg_30_amount] , [dbo].[BatchAfterProd_2020].[bottles_qty] , [dbo].[BatchAfterProd_2020].[waste_litter] ,[dbo].[BatchAfterProd_2020].[purge_amount] , [dbo].[BatchAfterProd_2020].[prod_waste] ,[dbo].[BatchAfterProd_2020].[harvest_amount] ,[dbo].[BatchAfterProd_2020].[beer_req_litter] ,[dbo].[BatchAfterProd_2020].[filling_hose] ,[dbo].[BatchAfterProd_2020].[tank_leftover]   from [dbo].[BatchAfterProd_2020]  right JOIN  [dbo].[Batch_2020] ON [BatchAfterProd_2020].batch_id=[Batch_2020].batch_id";
+                String query = "select  [Batch_2020].[batch_id],[Batch_2020].[date],[Batch_2020].[tank],[Batch_2020].[wort_volume],[Batch_2020].[beer_type],[dbo].[BatchAfterProd_2020].[keg_20_amount] , [dbo].[BatchAfterProd_2020].[keg_30_amount] , [dbo].[BatchAfterProd_2020].[bottles_qty] , [dbo].[BatchAfterProd_2020].[waste_litter] from [dbo].[BatchAfterProd_2020]  right JOIN  [dbo].[Batch_2020] ON [BatchAfterProd_2020].batch_id=[Batch_2020].batch_id";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.CommandTimeout = 480; // enlarge T.O

@@ -255,7 +255,12 @@
             }
  
             let wastelitter = batch1.Wort_volume - $('#Keg20_amountInput_edit').val() * 20 - $('#Keg30_amountInput_edit').val() * 30 - $('#Bottles_qtyInput_edit').val() * 0.33;//calc waste in litter
-            console.log(wastelitter);
+            let wasteprecent = (wastelitter / batch1.Wort_volume);
+            if ((wastelitter / batch1.Wort_volume) == 1) {
+                 wasteprecent = 0;
+            }
+         
+               
             if (wastelitter > 0) {// if waste nagative something of the values the manager add are wrong he will get alert
                 let batch = {
                     batchID: $('#batchID_header_edit').html().replace(/[^0-9]/g, ''), // gets batch id from <h1>
@@ -266,7 +271,7 @@
                     keg30_amount: $('#Keg30_amountInput_edit').val(),
                     bottels_qty: $('#Bottles_qtyInput_edit').val(),
                     waste_litter: wastelitter,
-                    waste_percent: 0,
+                    waste_percent: wasteprecent,
                 }
 
                 console.log('batch to PUT:', batch);
