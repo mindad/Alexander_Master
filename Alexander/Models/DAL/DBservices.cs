@@ -1055,6 +1055,31 @@ namespace Alexander.Models.DAL
             }
         }
 
+        public List<string> GetUniqueBeerTypes()
+        {
+            List<string> beerType_list = new List<string>();
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "select distinct [beer_type] from Batch_2020;";
+                SqlCommand cmd = new SqlCommand(query, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+                    beerType_list.Add((string)dr["beer_type"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
+            return beerType_list;
+        }
+
 
         public DBservices SendSQLQuery(string query)
         {

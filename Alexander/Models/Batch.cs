@@ -184,5 +184,15 @@ namespace Alexander.Models
             
             return 1;
         }
+
+        public float AverageWastePercetage(string beer_name) // CHECK THIS
+        {
+            DBservices dbs = new DBservices();
+            dbs = dbs.SendSQLQuery($@"SELECT AVG(waste_precent) AS WasteAVG
+                                     FROM [BatchAfterProd_2020]  right JOIN  [Batch_2020] ON [BatchAfterProd_2020].batch_id=[Batch_2020].batch_id
+                                     WHERE [beer_type]='{beer_name}'");
+            
+            return (float)dbs.dt.Rows[0]["WasteAVG"];
+        }
     }
 }
