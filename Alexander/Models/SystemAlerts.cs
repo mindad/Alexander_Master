@@ -9,18 +9,12 @@ namespace Alexander.Models
 {
     public class SystemAlerts
     {
-        private alert al;
-        private const string message = "Warning: values are out of the range - ";
-
-        public alert Al { get => al; set => al = value; }
+        private const string message_with_batch = "Warning: values are out of the range: ";
+        private const string message_min_amount = "Warning: Product reached Minimum Amount - ";
 
         public SystemAlerts() { }
 
-        public SystemAlerts(alert al)
-        {
-            Al = al;
-        }
-
+    
         public void Check_For_Brewmiester_Alerts()
         {
             DBservices dbs = new DBservices();
@@ -33,7 +27,7 @@ namespace Alexander.Models
             {
                 if (sample.Ph < 4 || sample.Ph > 5.5)
                 {
-                    Create_Brewmiester_Alert(sample.Batch_id.ToString() , "PH " + sample.Ph.ToString());
+                    Create_Brewmiester_Alert("PH value is: " + sample.Ph.ToString(), "PH", sample.Batch_id.ToString());
                 }
                 
                 DataRow batch = dbs.dt.Select("batch_id=" + sample.Batch_id ).First();
@@ -41,11 +35,11 @@ namespace Alexander.Models
 
                 if ( beerType != "Wheat" && (sample.Tank_temp < 18 || sample.Tank_temp > 21)) // beertype need to be different from wheat
                 {
-                    Create_Brewmiester_Alert(sample.Batch_id.ToString(), "PH " + sample.Ph.ToString());
+                    Create_Brewmiester_Alert("Tank Temperature value is: " + sample.Tank_temp.ToString(), "Tank Temperature", sample.Batch_id.ToString());
                 }
                 if ( beerType == "Wheat" && (sample.Tank_temp < 28 || sample.Tank_temp > 30))
                 {
-                    Create_Brewmiester_Alert(sample.Batch_id.ToString(), "PH " + sample.Ph.ToString());
+                    Create_Brewmiester_Alert("Tank Temperature value is: " + sample.Tank_temp.ToString(), "Tank Temperature", sample.Batch_id.ToString());
                 }
 
                
@@ -56,7 +50,7 @@ namespace Alexander.Models
             {
                 if (fr.Tank_pressure < 0 || fr.Tank_pressure > 1.3)
                 {
-                    Create_Brewmiester_Alert(fr.Batchid.ToString() , "Tank Pressure");
+                    Create_Brewmiester_Alert(fr.Tank_pressure.ToString() , "Tank Pressure", fr.Batchid.ToString());
                 }
             }
             /// Minimum Amount Alerts
@@ -65,7 +59,7 @@ namespace Alexander.Models
             {
                 if (item.Amount < item.Min_amount)
                 {
-                    Create_Brewmiester_Alert(item.ProductName , "Minimum Amount");
+                    Create_Brewmiester_Alert(item.Amount.ToString(), "Minimum Amount", item.ProductName);
                 }
             }
 
@@ -97,7 +91,7 @@ namespace Alexander.Models
                                 number_of_deviations += 1;
                                 if (number_of_deviations == 2) 
                                 {
-                                    Create_Waste_Alert((batch.Waste_percent).ToString(), "Waste Alert"); // more then 2 deviations
+                                    Create_Waste_Alert(batch.Waste_percent.ToString(), "Waste", batch.BatchID.ToString()); // more then 2 deviations
                                 }
                             }
                             if (num_of_iterations == 2) // out of last 2 batches for a certain beer type
@@ -121,22 +115,47 @@ namespace Alexander.Models
         }
 
 
-        private void Create_Brewmiester_Alert(string alert_value, string alertType)
+        private void Create_Brewmiester_Alert(string alert_value, string alertType, string batch_or_product)
         {
-            al.Date = DateTime.Now;
-            al.Description = message + alert_value;
-            al.Type = alertType;
+            string st = "";
 
-            al.CreateAlert();
+            if ( new string[] { "Tank Temperature", "PH", "Tank Pressure" }.Contains(alertType))
+            {
+                st = message_with_batch + alert_value;
+            }
+            else if(alertType == "Minimum Amount")
+            {
+                st = message_min_amount + alert_value;
+            }
+
+            try
+            {
+                alert al = new alert();
+                al.Date = DateTime.Now.Date;
+                al.Description = st;
+                al.Type = alertType;
+                al.Batch_or_prod = batch_or_product;
+
+                al.CreateAlert();
+            }
+            catch (NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
         private void Create_Manager_Alert(string alert_value, string alertType)
         {
 
         }
 
-        private void Create_Waste_Alert(string alert_value, string alertType) 
+        private void Create_Waste_Alert(string alert_value, string alertType, string batch_id) 
         {
-            //Create_Brewmiester_Alert(alert_value, alertType);
+            Create_Brewmiester_Alert(alert_value, alertType, batch_id);
             //Create_Manager_Alert(alert_value, alertType);
         }
     }

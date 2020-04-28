@@ -36,8 +36,10 @@
         $(document).ready(function () {
 
             $('#editDiv').hide();
+            
+            ajaxCall("GET", "../../api/SystemAlerts", "", console.log(1), console.log(0));
 
-            ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError); // get all recipes
+            ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError); 
 
             $('#submit_edit').on("click", edit_Alert_table);
 
@@ -82,7 +84,8 @@
                             }
                         },
                         { data: "Description" },
-                        { data: "Notes" }
+                        { data: "Batch_or_prod" },
+                         { data: "Notes" }
                     ]
                 });
             }
@@ -266,6 +269,7 @@
                     <th>Type</th>
                     <th>Time</th>
                     <th>Description</th>
+                    <th>Batch Or Product</th>
                     <th>Notes</th>
                 </tr>
             </thead>
