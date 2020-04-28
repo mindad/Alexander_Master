@@ -65,7 +65,7 @@ namespace Alexander.Models
 
         }
 
-        public void Check_For_Waste_Alerts()
+        public void Check_For_Waste_Alerts() /// TODO
         {
             try
             {
@@ -155,7 +155,7 @@ namespace Alexander.Models
 
         private void Create_Waste_Alert(string alert_value, string alertType, string batch_id) 
         {
-            Create_Brewmiester_Alert(alert_value, alertType, batch_id);
+            //Create_Brewmiester_Alert(alert_value, alertType, batch_id);
             //Create_Manager_Alert(alert_value, alertType);
         }
     }
