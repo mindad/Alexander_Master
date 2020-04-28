@@ -10,6 +10,7 @@ namespace Alexander.Models
     public class SystemAlerts
     {
         private alert al;
+        private const string message = "Warning: values are out of the range - ";
 
         public alert Al { get => al; set => al = value; }
 
@@ -96,7 +97,7 @@ namespace Alexander.Models
                                 number_of_deviations += 1;
                                 if (number_of_deviations == 2) 
                                 {
-                                    CreateAlert((batch.Waste_percent).ToString(), "Waste Alert"); // more then 2 deviations
+                                    Create_Waste_Alert((batch.Waste_percent).ToString(), "Waste Alert"); // more then 2 deviations
                                 }
                             }
                             if (num_of_iterations == 2) // out of last 2 batches for a certain beer type
@@ -122,19 +123,21 @@ namespace Alexander.Models
 
         private void Create_Brewmiester_Alert(string alert_value, string alertType)
         {
-            string message = "Warning: values are out of the range - ";
-            // Create an alert here based on the alert_value 
+            al.Date = DateTime.Now;
+            al.Description = message + alert_value;
+            al.Type = alertType;
+
+            al.CreateAlert();
         }
         private void Create_Manager_Alert(string alert_value, string alertType)
         {
-            string message = "Warning: values are out of the range - ";
-            // Create an alert here based on the alert_value 
+
         }
 
-        private void CreateAlert(string alert_value, string alertType) // CREATE ALERTS FOR MANAGER AND BREW
+        private void Create_Waste_Alert(string alert_value, string alertType) 
         {
-            string message = "Warning: values are out of the range - ";
-            // Create an alert here based on the alert_value 
+            //Create_Brewmiester_Alert(alert_value, alertType);
+            //Create_Manager_Alert(alert_value, alertType);
         }
     }
 }

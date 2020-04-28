@@ -63,11 +63,10 @@ namespace Alexander.Models
 
         public int delete_line(int row)
         {
-            DBservices dbs = new DBservices();
-            dbs = dbs.read("[Alert_2020]");
-
             try
             {
+                DBservices dbs = new DBservices();
+                dbs = dbs.read("[Alert_2020]");
                 dbs.dt.Select("Alert_id=" + row).First().Delete(); // Delete a line in DataTable
                 dbs.update(); // update the DB
             }
@@ -77,6 +76,22 @@ namespace Alexander.Models
             }
 
             return 1;
+        }
+
+        public void CreateAlert()
+        {
+            try
+            {
+                DBservices dbs = new DBservices();
+                dbs = dbs.read("[Alert_2020]");
+                dbs.dt.Rows.Add(null, type, date, description, "");
+                dbs.update();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
     }
