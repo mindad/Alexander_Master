@@ -199,6 +199,13 @@ create table Tank_2020(
  [tankNumber] int NOT NULL,
 	Primary key ([tankNumber])
 )
+
+CREATE TABLE Waste_Output_2020(
+	[beer_type],
+	[date],
+	[wort_vol],
+
+)
 ********************
 
 ********************* Examples: *********************

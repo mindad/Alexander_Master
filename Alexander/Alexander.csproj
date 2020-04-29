@@ -226,6 +226,7 @@
     <Content Include="Pages\Manager\Manager-prod.html" />
     <Content Include="Pages\Manager\Manager-ProductInventory.html" />
     <Content Include="Pages\Manager\Orders.html" />
+    <Content Include="Pages\Waste.html" />
     <Content Include="Scripts\ajaxCalls.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
