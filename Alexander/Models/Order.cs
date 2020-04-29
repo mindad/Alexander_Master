@@ -44,27 +44,27 @@ namespace Alexander.Models
         //post
 
 
-        public int CreateOrder() // need to implement
-        {
-            DBservices dbs = new DBservices();
-            int numEffected = 0;
+        //public int CreateOrder() // need to implement
+        //{
+        //    DBservices dbs = new DBservices();
+        //    int numEffected = 0;
 
-            string st = prod_String_for_DB(products_in_recipe);
+        //    string st = prod_String_for_DB(products_in_recipe);
 
-            try // create new row in BatchAfterProd_2020 with the same id
-            {
-                dbs = dbs.read("[Recipe_2020]");
+        //    try // create new row in BatchAfterProd_2020 with the same id
+        //    {
+        //        dbs = dbs.read("[Recipe_2020]");
 
-                dbs.dt.Rows.Add(beerType, creationDate, st);
-                numEffected += dbs.update();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+        //        dbs.dt.Rows.Add(beerType, creationDate, st);
+        //        numEffected += dbs.update();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
 
-            return numEffected;
-        }
+        //    return numEffected;
+        //}
 
 
 

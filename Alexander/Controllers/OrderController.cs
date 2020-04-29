@@ -20,24 +20,24 @@ namespace Alexander.Controllers
 
 
         //post
-        public HttpResponseMessage Post([FromBody]Order order)
-        {
-            int numEffected = 0;
-            try
-            {
-                numEffected = order.CreateOrder();
+        //public HttpResponseMessage Post([FromBody]Order order)
+        //{
+        //    int numEffected = 0;
+        //    try
+        //    {
+        //        numEffected = order.CreateOrder();
 
-                if (numEffected > 0)
-                    return Request.CreateResponse(HttpStatusCode.OK, numEffected);
-                else
-                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not Found");
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
+        //        if (numEffected > 0)
+        //            return Request.CreateResponse(HttpStatusCode.OK, numEffected);
+        //        else
+        //            return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not Found");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+        //    }
 
-        }
+        //}
 
 
 
