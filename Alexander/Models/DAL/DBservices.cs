@@ -399,7 +399,7 @@ namespace Alexander.Models.DAL
 
                     Batch_Botteling Batch_Botteling = new Batch_Botteling();
 
-                    //check if nul from SQL
+                    //check if null from SQL
                     Batch_Botteling.BatchID = Convert.ToInt32(dr["batch_id"]);
                     if(dr["keg_20_amount"] != DBNull.Value)
                     {
