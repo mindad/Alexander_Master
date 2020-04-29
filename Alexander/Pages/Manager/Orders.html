@@ -35,6 +35,7 @@
 
             $('#editDiv').hide();
             $('#submit_edit').on('click', submitEdit);
+         
             $('#addForm').on('submit', AddOrder);//add order
             $('#editDiv').on('submit', f1);
 
@@ -63,18 +64,18 @@
             }
 
             console.log("this is Order to post:", Order);
-
-            //ajaxCall("POST", "../../api/Order", JSON.stringify(Order), PostRecipeSucess, PostRecipeError);
+PostOrderError
+            ajaxCall("POST", "../../api/Order", JSON.stringify(Order), PostOrderSucess, PostOrderError);
 
             return false;
         }
 
-        function PostRecipeSucess(data) {
+        function PostOrderSucess(data) {
             console.log(data);
 
             refresh_table();
         }
-        function PostRecipeError(data) {
+        function PostOrderError(data) {
             console.log(data);
         }
 
@@ -84,9 +85,9 @@
 
             let Orders = [];
 
-            for (var i = 0; i < 8; i++) { // 8 is the maximum of products in recipe
+            for (let i = 0; i < 8; i++) { // 8 is the maximum of products in recipe
 
-                if ($(`beerSelect${i}`).val()) { //  >= 0
+                if ($(`#beerSelect${i}`).val()) { //  >= 0
 
                     Orders.push({ // 
                         "beerType": $(`#beerSelect${i}`).val(),
@@ -296,6 +297,9 @@
         }
         // ** Edit Batch
 
+
+
+
         function Put_success(data) {
             console.log(data);
 
@@ -333,7 +337,7 @@
             $("#inAddForm").html('');
 
             console.log(OrderArr);
-            let num_Beers_in_Order = prompt("How Many Beers Included In The Order?");
+            var num_Beers_in_Order = prompt("How Many Beers Included In The Order?");
             console.log(beertypeArr);
             let st = '';
 
@@ -537,6 +541,7 @@
                     <div id="inAddForm"></div>
 
                     <div id="btnDiv" class="container">
+                        <br />
                         <button type="submit" id="submit_Add" class="btn btn-primary btn-block">Submit</button>
                     </div>
                 </div>
