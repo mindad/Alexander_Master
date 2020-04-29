@@ -69,12 +69,14 @@ create table brewmiester_2020(
 	[Perrmission]bit NOT NULL,
 	Primary key ([userName])
 )
+
 create table Alert_2020(
-	[Alert_id] int NOT NULL,
+	[Alert_id] smallint IDENTITY (1, 1) NOT NULL,
 	[type] nvarchar(50) not null,
 	[date] datetime,
 	[description] nvarchar(255),
 	[notes] nvarchar(255),
+	[batch_or_product] nvarchar(255),
 	FOREIGN KEY ([type]) REFERENCES Alert_Types_2020([type]),
 	Primary key ([Alert_id])
 )
