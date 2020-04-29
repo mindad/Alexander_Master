@@ -29,12 +29,72 @@
 
         $(document).ready(function () {
 
+            ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
             ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); //tbl-purge
             ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); //tbl-harvest
-
+            //ajaxCall('GET', '../../api/Waste', '', GetWasteSuccess, GetWasteError); // get reuslts
+            //
+            
             CreatePieChart(); // TODO
 
         });
+
+        // Waste API
+        function GetWasteSuccess(data) {
+            console.log(data);
+
+            //$("#progress_waste").width(`${data}%`);
+            //$("#progress_waste").html(`${data}%`);
+        }
+        function GetWasteError(err) {
+            console.log(err);
+        }
+        // ****** Waste API
+
+        // Batch API
+        function GetBatchSuccess(batches) {
+            console.log('batches are:',batches);
+
+            let beer = "";
+            for (batch of batches) {
+                if (batch.BatchID == batch_id) {
+                    beer = batch;
+                    break;
+                }
+            }
+
+            st = `<h5 class="card-title">${beer.BeerType}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">${beer.Date.substr(0,10)}</h6>
+                        <p><strong>Wort vol: ${beer.Wort_volume} litters</strong></p>
+                        <p class="card-text">
+                            Some info about this alert
+                        </p>
+                        <a href="Brewmiester/Batch.html?batch_id=${beer.BatchID}" class="card-link">Batch #${beer.BatchID}</a>`
+
+            $(".card-body").html(st);
+
+            $('#beerType_header').html(`${beer.BeerType} Average Waste %`);
+
+            ajaxCall('GET', `../../api/Batch/Beer_avg?beer_name=${beer.BeerType}`, '', GetAVGSuccess, GetAVGError); // AVG wate for beerType
+
+            // GET % waste for each batch with the same Tank and BeerType
+        }
+        function GetBatchError(err) {
+            console.log(err);
+        }
+        function GetAVGSuccess(data) {
+            data *= 100;
+            data = data.toFixed(2);
+            console.log(data);
+
+            $("#progress_avg").width(`${data}%`);
+            $("#progress_avg").html(`${data}%`);
+
+        }
+        function GetAVGError(err) {
+            console.log(err);
+        }
+        // ******* Batch API
 
         // Purge API
         function GetPurgeSuccess(purges) {
@@ -251,22 +311,22 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" href="Brewmiester-prod.html">Production</a>
+                        <a class="nav-link" href="Brewmiester/Brewmiester-prod.html">Production</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="Inventory.html">Inventory</a>
+                        <a class="nav-link" href="Brewmiester/Inventory.html">Inventory</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="Recipes.html">Recipes</a>
+                        <a class="nav-link" href="Brewmiester/Recipes.html">Recipes</a>
                     </li>
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Waste.html">Waste</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="Alerts.html">Alerts</a>
+                        <a class="nav-link" href="Brewmiester/Alerts.html">Alerts</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="../Login.html">Exit</a>
+                        <a class="nav-link" href="Login.html">Exit</a>
                     </li>
                 </ul>
             </div>
@@ -283,28 +343,26 @@
             <div class="col-6">
                 <div class="card" style="background-color: #f7f6f6;">
                     <div class="card-body">
-                        <h5 class="card-title">Ambree</h5>
+                        <!--<h5 class="card-title">Ambree</h5>
                         <h6 class="card-subtitle mb-2 text-muted">1/2/2020</h6>
                         <p><strong>Wort vol: 6230 litters</strong></p>
                         <p class="card-text">
                             Some info about this alert
                         </p>
-                        <a href="#" class="card-link">Batch #625</a>
-                        <!-- <a href="#" class="card-link">Another link</a> -->
+                        <a href="#" class="card-link">Batch #625</a>-->
                     </div>
                 </div>
             </div>
             <div class="col-6 text-center">
                 <br>
-                <h5>Ambree Average Waste %</h5>
+                <h5 id="beerType_header"></h5>
                 <div class="progress">
-                    <div class="progress-bar" style="width:23%">23%</div>
+                    <div class="progress-bar" id="progress_avg"></div>
                 </div>
                 <br>
                 <h5>Batch Waste %</h5>
-                <!-- Red -->
                 <div class="progress">
-                    <div class="progress-bar bg-danger" style="width:28%">28%</div>
+                    <div class="progress-bar bg-danger" id="progress_waste" style="width:28%">28%</div>
                 </div>
             </div>
         </div>

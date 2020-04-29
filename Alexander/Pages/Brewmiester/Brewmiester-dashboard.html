@@ -144,8 +144,7 @@
             let st = "";
 
             for (alert of Alertdata) {
-
-                if (alert.Type == 'Product Stock' || alert.Type == 'Stock') { // only brewmiester alerts
+                if (alert.Type != "Minimum Amount") {
                     toasts_arr.push(
                     `<div class="toast" data-autohide="false" id="${toast_Count}"><div class="toast-header">\
                     <strong class="mr-auto text-primary"><a href="Alerts.html">${alert.Type}</a></strong>\
@@ -153,6 +152,15 @@
                     </div><div class="toast-body">${alert.Description}</div></div>`);
                     toast_Count += 1;
                 }
+                else {
+                    toasts_arr.push(
+                    `<div class="toast" data-autohide="false" id="${toast_Count}"><div class="toast-header">\
+                    <strong class="mr-auto text-primary"><a href="Alerts.html">${alert.Type}</a></strong>\
+                    <small class="text-muted">${alert.Date.substr(0, 10)}</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>\
+                    </div><div class="toast-body">${alert.Description} - ${alert.Batch_or_prod}</div></div>`);
+                    toast_Count += 1;
+                }
+                
             }
 
             st = toasts_arr[toasts_arr.length - 1] + toasts_arr[toasts_arr.length - 2];

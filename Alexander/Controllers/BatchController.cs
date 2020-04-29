@@ -16,6 +16,15 @@ namespace Alexander.Controllers
             return batch.get_Batches();
         }
 
+        [HttpGet]
+        [Route("api/Batch/Beer_avg")]
+        public double Get_AVG(string beer_name)
+        {
+            Batch batch = new Batch();
+            return batch.AverageWastePercetage(beer_name);
+        }
+
+
         public int Post([FromBody]Batch batch)
         {
             return batch.insert();

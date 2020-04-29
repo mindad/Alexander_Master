@@ -9,8 +9,8 @@ namespace Alexander.Models
 {
     public class SystemAlerts
     {
-        private const string message_with_batch = "Warning: values are out of the range: ";
-        private const string message_min_amount = "Warning: Product reached Minimum Amount - ";
+        private const string message_with_batch = "Warning: ";
+        private const string message_min_amount = "Warning: Minimum Amount - ";
 
         public SystemAlerts() { }
 
@@ -80,7 +80,7 @@ namespace Alexander.Models
                     int num_of_iterations = 0;
                     foreach (Batch_Botteling batch in batch_Botteling_List)
                     {
-                        float avg_waste = batch.AverageWastePercetage(beer_name); // CHECK THIS
+                        double avg_waste = batch.AverageWastePercetage(beer_name); // CHECK THIS
 
                         if (batch.BeerType == beer_name)
                         {
