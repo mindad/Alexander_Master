@@ -12,21 +12,24 @@ namespace Alexander.Models
         private int orderID;
         private DateTime date;
         private Beer beer;
+        private List<Beer> list_beer;
 
         public Order() { }
 
-        public Order(int orderID, DateTime date, Beer beer)
+        public Order(int orderID, DateTime date, Beer beer,List<Beer> ls)
         {
             this.orderID = orderID;
             this.date = date;
             this.beer = beer;
+            this.list_beer = ls;
         }
 
         public int OrderID { get => orderID; set => orderID = value; }
         public DateTime Date { get => date; set => date = value; }
         public Beer Beer { get => beer; set => beer = value; }
+        public List<Beer> List_beer { get => list_beer; set => list_beer = value; }
 
-        
+
         //get
 
         public List<Order> get_Orders()
@@ -44,27 +47,26 @@ namespace Alexander.Models
         //post
 
 
-        //public int CreateOrder() // need to implement
-        //{
-        //    DBservices dbs = new DBservices();
-        //    int numEffected = 0;
+        public int CreateOrder() // need to implement
+        {
+            DBservices dbs = new DBservices();
+            int numEffected = 0;
 
-        //    string st = prod_String_for_DB(products_in_recipe);
 
-        //    try // create new row in BatchAfterProd_2020 with the same id
-        //    {
-        //        dbs = dbs.read("[Recipe_2020]");
+            try //
+            {
+                numEffected = dbs.insert(this); // insert to Order_2020
 
-        //        dbs.dt.Rows.Add(beerType, creationDate, st);
-        //        numEffected += dbs.update();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
+     
+            }
+  
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
-        //    return numEffected;
-        //}
+            return numEffected;
+        }
 
 
 

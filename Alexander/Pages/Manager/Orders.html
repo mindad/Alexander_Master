@@ -58,13 +58,13 @@
         function AddOrder() {
 
             let Order = {
-            
-                creationDate: $("#addDate").val(),
-                products_in_recipe: GetNewOrder()
+                OrderID: OrderArr[OrderArr.length - 1].OrderID + 1,
+                Date: $("#addDate").val(),
+                List_beer: GetNewOrder()//get list of beers in order
             }
 
             console.log("this is Order to post:", Order);
-PostOrderError
+
             ajaxCall("POST", "../../api/Order", JSON.stringify(Order), PostOrderSucess, PostOrderError);
 
             return false;
@@ -90,10 +90,10 @@ PostOrderError
                 if ($(`#beerSelect${i}`).val()) { //  >= 0
 
                     Orders.push({ // 
-                        "beerType": $(`#beerSelect${i}`).val(),
-                        "Amount_20": $(`#amount20_${i}`).val(),
-                        "Amount_30": $(`#amount30_${i}`).val(),
-                        "Amount_bottles": $(`#amountBoxes_${i}`).val()
+                        "BeerType": $(`#beerSelect${i}`).val(),
+                        "Keg20_amount": $(`#amount20_${i}`).val(),
+                        "Keg30_amount": $(`#amount30_${i}`).val(),
+                        "BottleCase_amount": $(`#amountBoxes_${i}`).val()
                     });
                 }
                 else {

@@ -253,6 +253,70 @@ namespace Alexander.Models.DAL
         // ** Batches END
 
 
+        /// 
+        /// INSERT all Orders
+        /// 
+        public int insert(Order order)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            int numEffected = 0;
+
+            var x = 0;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            try
+            {
+                foreach (var item in order.List_beer)//foreach beer in the list of order post
+                {
+                    
+                    String cStr = BuildInsertCommand(order, x);      // helper method to build the insert string
+                    cmd = CreateCommand(cStr, con);             // create the command
+                    numEffected += cmd.ExecuteNonQuery();       // Execute command
+                    x += 1;//for the beer numbers
+                }
+              
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            return numEffected;
+        }
+
+        private String BuildInsertCommand(Order order,int x)
+        {
+            String command;
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("Values({0}, '{1}', {2}, {3}, '{4}', '{5}')", order.OrderID, order.Date.ToString("yyyy-MM-dd"), order.List_beer[x].Keg20_amount, order.List_beer[x].Keg30_amount, order.List_beer[x].BottleCase_amount, order.List_beer[x].BeerType);
+            String prefix = "INSERT INTO Order_2020 " + "([Order_id], [SupplyDate], [keg_20_amount], [keg_30_amount], [box_24] ,[beerType]) ";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        // ** Order END
+
+
+
+
+
         /// INSERT all BatcheBatchebotteling
         /// 
         public int insert(Batch_Botteling Batch_Botteling)
