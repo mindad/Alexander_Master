@@ -8,31 +8,47 @@ namespace Alexander.Models
 {
     public class Waste
     {
-        public int purgeAmount;
-        public int prodWaste;
-        public int harvestAmount;
-        public float beer_req_litter;
-        public int filling_Hose;
-        public int tank_Leftover;
+        private DateTime start_period;
+        private DateTime end_period;
+        private double valA;
+        private double valB;
+        private double valC;
+        private string varA;
+        private string varB;
+        private string varC;
+
+        public DateTime Start_period { get => start_period; set => start_period = value; }
+        public DateTime End_period { get => end_period; set => end_period = value; }
+        public double ValA { get => valA; set => valA = value; }
+        public double ValB { get => valB; set => valB = value; }
+        public double ValC { get => valC; set => valC = value; }
+        public string VarA { get => varA; set => varA = value; }
+        public string VarB { get => varB; set => varB = value; }
+        public string VarC { get => varC; set => varC = value; }
 
         public Waste() { }
-        public Waste(int purgeAmount, int prodWaste, int harvestAmount, float beer_req_litter, int filling_Hose, int tank_Leftover)
+
+        public Waste(DateTime start_period, DateTime end_period, double valA, double valB, double valC, string varA, string varB, string varC)
         {
-            this.purgeAmount = purgeAmount;
-            this.prodWaste = prodWaste;
-            this.harvestAmount = harvestAmount;
-            this.beer_req_litter = beer_req_litter;
-            this.filling_Hose = filling_Hose;
-            this.tank_Leftover = tank_Leftover;
+            this.start_period = start_period;
+            this.end_period = end_period;
+            this.valA = valA;
+            this.valB = valB;
+            this.valC = valC;
+            this.varA = varA;
+            this.varB = varB;
+            this.varC = varC;
         }
 
-        // getters + setters
-        public int PurgeAmount { get => purgeAmount; set => purgeAmount = value; }
-        public int ProdWaste { get => prodWaste; set => prodWaste = value; }
-        public int HarvestAmount { get => harvestAmount; set => harvestAmount = value; }
-        public float Beer_req_litter { get => beer_req_litter; set => beer_req_litter = value; }
-        public int Filling_Hose { get => filling_Hose; set => filling_Hose = value; }
-        public int Tank_Leftover { get => tank_Leftover; set => tank_Leftover = value; }
+
+        public List<Waste> get_Waste_Records() 
+        { 
+            DBservices dbs = new DBservices();
+
+            List<Waste> waste_arr = dbs.get_WasteDB();
+
+            return waste_arr;
+        }
 
 
         public List<Batch_Botteling> Get_Batches_with_same_tank_and_beer(string beer_name, int tank, DateTime date)
@@ -43,7 +59,7 @@ namespace Alexander.Models
 
             foreach (Batch_Botteling batch in batch_list)
             {
-                if (batch.BeerType == beer_name && batch.Tank == tank && batch.Date != date)
+                if (batch.BeerType == beer_name && batch.Tank == tank) // && batch.Date != date
                 {
                     current_beer_list.Add(batch);
                 }

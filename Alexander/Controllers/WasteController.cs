@@ -10,11 +10,11 @@ namespace Alexander.Controllers
 {
     public class WasteController : ApiController
     {
-        //public List<Batch> Get()
-        //{
-        //    Batch batch = new Batch();
-        //    return batch.get_Batches();
-        //}
+        public List<Waste> Get()
+        {
+            Waste ws = new Waste();
+            return ws.get_Waste_Records();
+        }
 
         [HttpGet]
         [Route("api/Waste/SimilarBatch")]

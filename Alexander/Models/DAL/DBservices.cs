@@ -1054,6 +1054,46 @@ namespace Alexander.Models.DAL
             }
         }
 
+        public List<Waste> get_WasteDB()
+        {
+            List<Waste> waste_list = new List<Waste>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+                String query = "SELECT * FROM [waste_2020]";
+                SqlCommand cmd = new SqlCommand(query, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+                    Waste ws = new Waste();
+                    ws.Start_period = Convert.ToDateTime(dr["start_period"]);
+                    ws.End_period = Convert.ToDateTime(dr["end_period"]);
+                    ws.ValA = Convert.ToDouble(dr["val1"]);
+                    ws.ValB= Convert.ToDouble(dr["val2"]);
+                    ws.ValC= Convert.ToDouble(dr["val3"]);
+                    ws.VarA= (string)dr["sig1"];
+                    ws.VarB = (string)dr["sig2"];
+                    ws.VarC = (string)dr["sig3"];
+                    waste_list.Add(ws);
+                }
+                return waste_list;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
         public List<string> GetUniqueBeerTypes()
         {
             List<string> beerType_list = new List<string>();

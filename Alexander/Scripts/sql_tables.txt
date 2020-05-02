@@ -206,6 +206,18 @@ CREATE TABLE Waste_Output_2020(
 	[wort_vol],
 
 )
+########### WASTE TABLE FOR PRODUCTION
+create table waste_2020(
+	[start_period] datetime,
+	[end_period] datetime,
+	[sig1] nvarchar(255),
+	[sig2] nvarchar(255),
+	[sig3] nvarchar(255),
+    [val1] real,
+    [val2] real,
+    [val3] real,
+	Primary key ([start_period],[end_period])
+)
 ********************
 
 ********************* Examples: *********************
