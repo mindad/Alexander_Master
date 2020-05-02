@@ -33,9 +33,6 @@
             ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); 
             ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); 
             //ajaxCall('GET', '../../api/Waste', '', GetWasteSuccess, GetWasteError); // get reuslts
-            //
-            
-            //CreatePieChart(); // TODO
 
         });
 
@@ -63,7 +60,7 @@
                 }
             }
 
-            st = `<h5 class="card-title">${beer.BeerType}</h5>
+            card_details = `<h5 class="card-title">${beer.BeerType}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">${beer.Date.substr(0,10)}</h6>
                         <p><strong>Wort vol: ${beer.Wort_volume} litters</strong></p>
                         <p class="card-text">
@@ -71,7 +68,7 @@
                         </p>
                         <a href="Brewmiester/Batch.html?batch_id=${beer.BatchID}" class="card-link">Batch #${beer.BatchID}</a>`
 
-            $(".card-body").html(st);
+            $(".card-body").html(card_details); // set card details
 
             $('#beerType_header').html(`${beer.BeerType} Average Waste %`);
 
@@ -91,8 +88,6 @@
             $("#progress_avg").width(`${data}%`);
             $("#progress_avg").html(`${data}%`);
 
-            
-
         }
         function GetAVGError(err) {
             console.log(err);
@@ -102,9 +97,9 @@
             console.log('similar_batches', similar_batches_arr);
 
             if (similar_batches_arr.length == 0) {
-                CreatePieChart([]);
+                CreateBarChart([]);
             }
-            CreatePieChart(similar_batches_arr);
+            CreateBarChart(similar_batches_arr);
         }
         function GetSimilarError(err) {
             console.log(err);
@@ -145,11 +140,9 @@
                     ]
                 });
             }
-
             catch (err) {
                 alert(err);
             }
-
         }
         function GetPurgeError(err) {
             console.log(err);
@@ -203,44 +196,41 @@
             catch (err) {
                 alert(err);
             }
-
         }
         function GetHarvestError(err) {
             console.log(err);
         }
         // ****** Harvest API
 
-        function CreatePieChart(arr) {
-            let piechart = document.getElementById('piechart').getContext('2d');
+        function CreateBarChart(arr) {
+            let barchart = document.getElementById('barchart').getContext('2d');
 
-            if (arr.length == 0) {
+            if (arr.length == 0) { // set some arbitrary values
                 date_labels = ['1/1/2020', '11/2/2020', '1/3/2020', '1/4/2020', '2/6/2020'];
                 bg_color = ['rgba(219, 81, 18,1)', 'rgba(220, 53, 69,1)', 'rgba(219, 81, 18,1)', 'rgba(50, 168, 82,1)', 'rgba(220, 53, 69,1)']
                 chart_data = [21, 20.6, 21.4, 22, 24];
                 text_label = 'Ambree - Tank # 62';
             }
             else {
-                for (item of arr) {
+                for (item of arr) { // set real values
                     date_labels.push(item.Date);
                     chart_data.push((item.Waste_litter / item.Wort_volume) * 100);
                 }
                 text_label = `${arr[0].BeerType} - Tank # ${arr[0].Tank}`;
             }
 
-            let piechartData = {
+            let barchart_Data = {
                 labels: date_labels,
                 datasets: [{
                     label: '% Waste',
                     backgroundColor: bg_color,
                     data: chart_data
-                },
-                ]
+                }]
             };
 
-
-            var pie_waste = new Chart(piechart, {
+            var pie_waste = new Chart(barchart, {
                 type: 'horizontalBar',
-                data: piechartData,
+                data: barchart_Data,
                 options: {
                     title: {
                         display: true,
@@ -273,36 +263,19 @@
             background-color: #f7f6f6;
             padding-bottom: 1%;
         }
-
         .navbar {
             height: 70px;
         }
-
         #headerRow {
             height: 180px;
         }
-
         .main {
             padding-top: 3%;
         }
-
-        /*.vertical {
-            -webkit-transform: rotate(270deg);
-            -moz-transform: rotate(270deg);
-            -o-transform: rotate(270deg);
-            -ms-transform: rotate(270deg);
-            transform: rotate(270deg);
-            box-shadow: inset 0px 4px 6px #ccc;
-        }
-        
-        .progress-bar {
-            box-shadow: inset 0px 0px 0px rgba(100, 100, 100, 0.6);
-        }*/
         .sig{
             margin-left: 2%;
             margin-right: 2%;
         }
-        
     </style>
 
 </head>
@@ -351,13 +324,7 @@
             <div class="col-6">
                 <div class="card" style="background-color: #f7f6f6;">
                     <div class="card-body">
-                        <!--<h5 class="card-title">Ambree</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">1/2/2020</h6>
-                        <p><strong>Wort vol: 6230 litters</strong></p>
-                        <p class="card-text">
-                            Some info about this alert
-                        </p>
-                        <a href="#" class="card-link">Batch #625</a>-->
+                    
                     </div>
                 </div>
             </div>
@@ -409,7 +376,7 @@
             </div>
 
             <div class="col-6">
-                <canvas id="piechart" class="border border-secondary"></canvas>
+                <canvas id="barchart" class="border border-secondary"></canvas>
             </div>
         </div>
     </div>
@@ -452,7 +419,6 @@
         </div>
     </div>
     <!--tables-->
-
 </body>
 
 </html>
