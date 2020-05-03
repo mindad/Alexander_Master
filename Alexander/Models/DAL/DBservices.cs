@@ -13,7 +13,7 @@ namespace Alexander.Models.DAL
     {
         public SqlDataAdapter da;
         public DataTable dt;
-
+        int manageralertid; //for alerts manager
         public DBservices()
         {
             //
@@ -967,8 +967,12 @@ namespace Alexander.Models.DAL
                     alert_to_add.Type = (string)dr["type"];
                     alert_to_add.Date = Convert.ToDateTime(dr["date"]);
                     alert_to_add.Description = (string)dr["description"];
-                    alert_to_add.Notes = (string)dr["notes"];
-
+                    if (dr["notes"] != DBNull.Value)
+                    {
+                        alert_to_add.Notes = (string)dr["notes"];
+                    }
+                    else
+                        alert_to_add.Notes = "";
                     alert_list_manager.Add(alert_to_add);
                 }
 
@@ -989,6 +993,100 @@ namespace Alexander.Models.DAL
 
         //end Get all alert [Alert_Manager_2020]
 
+        /// INSERT  Insert AlertManager END
+        /// 
+        public int insertManagerAlert( string beer,string type)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            int numEffected = 0;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            try
+            {
+                String query = "SELECT MAX(alert_id) as 'alert' FROM[dbo].Alert_Manager_2020";
+                SqlCommand cmd1 = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd1.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+                while (dr.Read())
+                {
+                    manageralertid = Convert.ToInt32(dr["alert"]);
+                }
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            // SELECT MAX(alert_id) FROM[dbo].Alert_Manager_2020
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            try
+            {
+                manageralertid = manageralertid + 1;//next alertid
+                   AlertsManager amanager= new AlertsManager { };
+                amanager.Type = type;
+                amanager.Description ="Minimum In Stock";
+                amanager.AlertID = manageralertid;
+               var dd1 = DateTime.Now.Day;
+               var mm1 = DateTime.Now.Month;
+                var yy1 = DateTime.Now.Year;      
+                var date2= yy1.ToString()+'/'+mm1.ToString()+'/'+dd1.ToString();
+             
+            
+                amanager.Notes = date2;//add the date
+       
+                String cStr = BuildInsertCommand(amanager);      // helper method to build the insert string
+                cmd = CreateCommand(cStr, con);             // create the command
+                numEffected += cmd.ExecuteNonQuery();       // Execute command
+                                                            //nextalertid
+             
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            return numEffected;
+        }
+
+        private String BuildInsertCommand(AlertsManager amanager)
+        {
+            String command;
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("Values({0}, '{1}', '{2}', '{3}','{4}')", amanager.AlertID, amanager.Type, amanager.Notes, amanager.Description,"");
+            String prefix = "INSERT INTO Alert_Manager_2020 " + "([Alert_id], [type], [date], [description], [notes]) ";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        // ** Insert AlertManager END
 
 
 

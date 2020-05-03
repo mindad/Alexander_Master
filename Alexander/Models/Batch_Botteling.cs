@@ -103,8 +103,10 @@ namespace Alexander.Models
 
                 //call function update manager inventory 
                 if(bottletocheck< this.bottels_qty)//only if the number of bottles increased!!!!
-                Update_manager_inventory(beertype, this.bottels_qty- bottletocheck); 
+                Update_manager_inventory(beertype, this.bottels_qty- bottletocheck);
 
+                //check if there is alert to post
+                check_for_Alerts(beertype);
 
                 // update DB
             }
@@ -116,6 +118,51 @@ namespace Alexander.Models
 
             return effected;
         }
+
+        //post
+
+        ////check if there is alert to post
+        public void check_for_Alerts(string beertype)
+        {
+            try
+            {
+
+                DBservices dbs = new DBservices();
+                dbs = dbs.read("[manager_products_2020]");
+
+                DataRow dr2 = dbs.dt.Select("beerType='" + beertype + "' AND prodName='Box24'").First();
+
+                if (Convert.ToInt32(dr2["amount"]) < Convert.ToInt32(dr2["min_In_Stock"]))//boxes
+                {
+
+                    dbs.insertManagerAlert(beertype, "Boxes Stock");
+
+                }
+                 
+
+
+                DataRow[] data_rows = dbs.dt.Select("beerType='" + beertype + "' AND prodName LIKE 'Label%' ");//labels
+                //
+
+                foreach (var dr1 in data_rows)//foreach label in beertype
+                {
+                    if (Convert.ToInt32(dr1["amount"]) < Convert.ToInt32(dr1["min_In_Stock"]))
+                    { dbs.insertManagerAlert(beertype, "Label Stock");//if there is more then 1 label its stop check the labels
+                        break;
+                    }
+
+                }
+                dbs.update();
+                //
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
 
         //function to update manager inventory
         public void Update_manager_inventory(string beertype, int bottles )
