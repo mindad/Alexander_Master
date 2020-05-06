@@ -222,6 +222,7 @@
     <Content Include="Pages\Images\Logo_alexander.jpeg" />
     <Content Include="Pages\Login.html" />
     <Content Include="Pages\Manager\Alerts_Manager.html" />
+    <Content Include="Pages\Manager\Annual_Reports.html" />
     <Content Include="Pages\Manager\Manager-dashboard.html" />
     <Content Include="Pages\Manager\Manager-prod.html" />
     <Content Include="Pages\Manager\Manager-ProductInventory.html" />
@@ -258,6 +259,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\Sql_DB_Scripts.txt" />
     <Content Include="Scripts\sql_tables.txt" />
+    <Content Include="Scripts\Annual_Report_querys.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -1,0 +1,18 @@
+﻿
+#######################################    עבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה                           ####################################################
+SELECT beer_type, SUM([dbo].[BatchAfterProd_2020].[keg_20_amount])  as keg_20_amount, sum	([dbo].[BatchAfterProd_2020].[keg_30_amount])  as keg_30_amount,sum	([dbo].[BatchAfterProd_2020].[bottles_qty])  as [bottles_qty],AVG([dbo].[BatchAfterProd_2020].[waste_precent]) as waste
+FROM [dbo].[BatchAfterProd_2020]  right JOIN  [dbo].[Batch_2020] ON [BatchAfterProd_2020].batch_id=[Batch_2020].batch_id
+where date LIKE '%2020%'
+group by beer_type
+
+#######################################   TANK וכמות ייצור שנתית לפי TANK עבור אחוז פחת לפי סוג בירה                           ####################################################
+SELECT tank ,sum([dbo].[BatchAfterProd_2020].[keg_20_amount])   as keg_20_amount, sum	([dbo].[BatchAfterProd_2020].[keg_30_amount])  as keg_30_amount,sum	([dbo].[BatchAfterProd_2020].[bottles_qty])  as [bottles_qty],AVG([dbo].[BatchAfterProd_2020].[waste_precent]) as waste
+FROM [dbo].[BatchAfterProd_2020]  right JOIN  [dbo].[Batch_2020] ON [BatchAfterProd_2020].batch_id=[Batch_2020].batch_id
+where date LIKE '%2020%'
+group by tank
+
+#######################################  עבור כמות עזמנות שנתית לפי סוג בירה                         ####################################################
+SELECT beerType ,sum([dbo].[Order_2020].[keg_20_amount])   as keg_20_amount, sum	([dbo].[Order_2020].[keg_30_amount])  as keg_30_amount,sum	([dbo].[Order_2020].[box_24])  as [box_24]
+FROM [dbo].[Order_2020]
+where [SupplyDate] LIKE '%2020%'
+group by beerType

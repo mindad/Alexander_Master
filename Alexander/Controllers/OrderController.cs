@@ -19,6 +19,18 @@ namespace Alexander.Controllers
 
 
 
+
+        //year ORDER  Annual Reports
+        [HttpGet]
+        [Route("api/Order/thisyear")]
+        public List<Order> Getthis()
+        {
+            Order order = new Order();
+            return order.get_Orderthisyear();
+        }
+
+        //end  Annual Reports Order
+
         //post
         public HttpResponseMessage Post([FromBody]Order order)
         {

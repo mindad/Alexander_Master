@@ -44,6 +44,25 @@ namespace Alexander.Models
         // getters + setters
 
 
+        //get orders this year Annual Reports
+        
+
+    public List<Order> get_Orderthisyear()
+        {
+            DBservices dbs = new DBservices();
+
+            List<Order> Order_arr = dbs.get_OrdersYearDB();
+
+            return Order_arr;
+        }
+
+        //end get orders this year Annual Reports
+
+
+        //
+
+
+
         //post
 
 

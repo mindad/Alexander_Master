@@ -1,0 +1,485 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> Annual Reports</title>
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <!--asd-->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!--<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="../../Scripts/ajaxCalls.js"></script>
+
+    <script>
+        Beers_arr = [];
+        kegs20_backgroudColor = [];
+        kegs20_borderColor = [];
+        kegs30_borderColor = [];
+        kegs30_backgroudColor = [];
+        BottleCasebackgroudColor = [];
+        BottleCaseborderColor = [];
+        FrontLabelbackgroudColor = [];
+        FrontLabelborderColor = [];
+        Beerprod = [];
+
+        orders_arr = []; // DO NOT DELETE !!!
+        toasts_arr = [];
+        toast_Count = 0;
+
+
+        $(document).ready(function () {
+
+
+
+
+
+            ajaxCall("GET", "../../api/Batch_Botteling/thisyear", "", GetBatch_BottelingSucess, GetBatch_BottelingError);//get prod עבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה 
+            ajaxCall("GET", "../../api/Batch_Botteling/thisyeartank", "", GetBatch_BottelingSucesstank, GetBatch_BottelingErrortank);//get prod TANK וכמות ייצור שנתית לפי TANK עבור אחוז פחת לפי סוג בירה   
+
+            ajaxCall("GET", "../../api/Order/thisyear", "", GetOrderSucess, GetOrderError); //GET ORDER  עבור כמות עזמנות שנתית לפי סוג בירה  
+            /*    ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError); *///GET BEER IN STOCK
+
+            /* $("#beerSelect").on('change', SetOrderChartValues);*/ // Changes Order Chart Depands on Beer Type
+
+            //$('.toast').toast('show'); // Shows toast without event!!! very important!!
+
+            //$('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
+            //   if (confirm('are you sure yow want to delete this alert?')) {
+            //        return;
+            //    }
+            //    return false; // Toast Not Deleted
+            //});
+
+
+        });
+
+        //get productionעבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה 
+        function GetBatch_BottelingSucess(Batch_Botteling_data) {
+            console.log("batch by year beertype", Batch_Botteling_data);
+
+        }
+
+        function GetBatch_BottelingError(err) {
+            console.log(err);
+        }
+
+
+
+
+        //End get production
+
+        //get production TANK וכמות ייצור שנתית לפי TANK עבור אחוז פחת לפי סוג בירה   
+        function GetBatch_BottelingSucesstank(Batch_Botteling_data) {
+            console.log("batch by year tank", Batch_Botteling_data);
+
+        }
+
+        function GetBatch_BottelingErrortank(err) {
+            console.log(err);
+        }
+
+
+
+
+        //End get production
+        // Beer API
+        function GetBeerSucess(data) {
+            console.log('data from Beer_2020:', data);
+            beerinstock = data;
+            // Build Select button options
+            let BeerTypesOptions = "";
+            for (var i = 0; i < data.length; i++) {
+                BeerTypesOptions += `<option>${data[i].BeerType}</option>`;
+            }
+
+            document.getElementById("beerSelect").innerHTML = BeerTypesOptions;
+
+
+            //make array backgroud colors dinamic
+
+            for (var i = 0; i < data.length; i++) {
+                kegs20_backgroudColor[i] = "rgba(255, 99, 132, 0.6)";
+                kegs20_borderColor[i] = "rgba(255, 99, 132, 1),";
+                kegs30_borderColor[i] = " rgba(54, 162, 235, 1),";
+                kegs30_backgroudColor[i] = "rgba(54, 162, 235, 0.6),";
+                BottleCasebackgroudColor[i] = "rgba(153, 102, 255, 0.6),";
+                BottleCaseborderColor[i] = "rgba(153, 102, 255, 1),";
+
+            }
+
+
+
+
+
+            Init_arrays(data, Beers_arr);
+
+            // Beer Stock
+            var crt_leftTop = new Chart(ctx_rightTop, {
+                type: 'bar',
+                // data: feed Data Here
+                data: {
+
+                    //  dinamic label from beer types
+                    labels: data.map(item => item.BeerType),
+                    datasets: [{
+                        label: 'Kegs 20',
+                        data: data.map(item => item.Keg20_amount),//[12, 5, 3, 5, 6, 3],
+                        backgroundColor: kegs20_backgroudColor,
+                        borderColor: kegs20_borderColor,
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-1'
+                    },
+                    {
+                        label: 'Kegs 30',
+                        data: data.map(item => item.Keg30_amount),
+                        backgroundColor: kegs30_backgroudColor,
+                        borderColor: kegs30_borderColor,
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-2'
+                    },
+                    {
+                        label: 'Bottle Cases',
+                        data: data.map(item => item.BottleCase_amount),
+                        backgroundColor: BottleCasebackgroudColor,
+                        borderColor: BottleCasebackgroudColor,
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-3'
+                    },
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Beer Stock'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: true
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'left',
+                            // gridLines : {
+                            //     display : false
+                            // },
+                            id: 'y-axis-1'
+                        },
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                                display: false // left / right axis
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'right',
+                            gridLines: {
+                                display: false  // the vertical lines inside the chart itself
+                            },
+                            id: 'y-axis-2',
+                        },
+                        {
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'right',
+                            gridLines: {
+                                display: false // the vertical lines inside the chart itself
+                            },
+                            id: 'y-axis-3',
+                        }
+                        ]
+                    }
+                }
+            });
+
+
+
+        }
+
+        function GetBeerError(err) {
+            console.log(err);
+        }
+
+
+        // Orders API
+        function GetOrderSucess(data) {
+            console.log('data from order this year:', data);
+
+        }
+        function GetOrderError(data) {
+            console.log('data from Order_2020:', data);
+
+        }
+
+        // ** Orders API
+
+        function Init_arrays(data, Beers_arr) {
+
+            for (var i = 0; i < data.length; i++) {
+                Beers_arr.push(data[i].BeerType);
+            }
+            //console.log(Beers_arr);
+            //////////////////////make array backgroud colors dinamicly/////////////////
+
+            for (var i = 0; i < data.length; i++) {
+                kegs20_backgroudColor[i] = "rgba(255, 99, 132, 0.6)";
+                kegs20_borderColor[i] = "rgba(255, 99, 132, 1)";
+                kegs30_borderColor[i] = " rgba(54, 162, 235, 1)";
+                kegs30_backgroudColor[i] = "rgba(54, 162, 235, 0.6)";
+                BottleCasebackgroudColor[i] = "rgba(153, 102, 255, 0.6)";
+                BottleCaseborderColor[i] = "rgba(153, 102, 255, 1)";
+                FrontLabelbackgroudColor[i] = "rgba(255, 206, 86, 0.6)";
+                FrontLabelborderColor[i] = "rgba(255, 206, 86, 1)";
+            }
+        }
+
+
+        function closestday(selectedBeer_arr) { //// function to return closest day
+            //check date///
+            var closeorderid;
+            var closedate = 100;
+            ///check date
+            for (let i = 0; i < selectedBeer_arr.length; i++) {
+                date1 = new Date(selectedBeer_arr[i].Date);
+                var dd1 = String(date1.getDate()).padStart(2, '0');
+                var mm1 = String(date1.getMonth() + 1).padStart(2, '0');
+                var yyyy1 = date1.getFullYear();
+                date1 = mm1 + '/' + dd1 + '/' + yyyy1;
+
+                var secondDate = new Date(yyyy1, mm1, dd1);
+
+
+                //get today Date
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0');
+                var yyyy = today.getFullYear();
+
+                today = mm + '/' + dd + '/' + yyyy;
+
+                const firstDate = new Date(yyyy, mm, dd);
+                //setting of day
+                const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+
+                //end get today
+                //end
+                if ((firstDate - secondDate) < 0)///only if the date didnt passed enter
+                {
+                    let diffDays2 = Math.round(Math.abs((firstDate - secondDate) / oneDay));//check how many days between 2 dates
+
+                    if (diffDays2 < closedate)///take the closest date
+                    {
+                        closedate = diffDays2;
+                        closeorderid = selectedBeer_arr[i].OrderID;
+                    }
+                }
+            }
+
+
+            return closeorderid;
+            // end check Date
+        }
+
+
+
+        function beer_in_stock(selectedBeer) { ///take amounts from the selected beer in stock
+
+            let beer_amount_in_stock;
+            for (let i = 0; i < beerinstock.length; i++) {
+                if (beerinstock[i].BeerType == selectedBeer) {
+                    beer_amount_in_stock = {
+                        "beertypeinorder": selectedBeer,
+                        "Keg20_amount": beerinstock[i].Keg20_amount,
+                        "Keg30_amount": beerinstock[i].Keg30_amount,
+                        "BottleCase_amount": beerinstock[i].BottleCase_amount
+                    }
+                }
+            }
+            Build_orders_tbl(selectedBeer, beer_amount_in_stock); // builds Order Table
+        }
+
+
+
+
+
+    </script>
+
+    <style>
+        body {
+            background-color: #f7f6f6;
+            padding-bottom: 1%;
+        }
+
+        h4 {
+            padding-bottom: 5%;
+        }
+
+        .navbar {
+            height: 70px;
+        }
+
+        #selectRow {
+            padding-top: 2%;
+        }
+
+        #headerRow {
+            height: 180px;
+        }
+
+        .toast {
+            height: 80px;
+        }
+
+        /*#loader {
+            border: 12px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 12px solid #444444;
+            width: 70px;
+            height: 70px;
+            animation: spin 1s linear infinite;
+        }*/
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /*.centerLoader {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }*/
+    </style>
+
+</head>
+
+<body>
+    <div id="loader1" class="centerLoader"></div>
+    <!-- NavBar Template -->
+    <div class="header text-center">
+        <!-- <h2>Manager Dashboard</h2> -->
+        <nav class="navbar navbar-expand-sm navbar-light border-bottom" style="background-color: #f7f6f6;">
+            <a class="navbar-brand" href="#">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="Manager-prod.html">Production</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="Manager-ProductInventory.html">Inventory</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="Orders.html">Orders</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="Alerts_Manager.html">Alerts</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="../Login.html">Exit</a>
+                    </li>
+                </ul>
+            </div>
+            <a class="navbar-brand" href="#">
+                <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
+
+            </a>
+        </nav>
+    </div>
+    <br>
+    <!-- NavBar Template -->
+
+
+    <div class="container">
+        <!-- toast Div -->
+        <div class="row" id="headerRow">
+            <div class="col-4" id="toastdiv">
+
+            </div>
+            <!-- toast Div -->
+            <div class="col-3"></div>
+
+            <div class="col-4">
+
+                <h4 class="text-center">Time Till Next Order:</h4>
+
+                <div class="progress" id="bartimetillnext">
+
+                </div>
+
+            </div>
+        </div>
+    </div><br>
+
+
+    <div class="container">
+
+        <div class="row" style="text-align:center">
+
+            <div class="col-6">
+                <canvas id="myChartSecond" class="border border-secondary"></canvas>
+            </div>
+            <div class="col-6">
+                <canvas id="myChartBottom" class="border border-secondary"></canvas>
+            </div>
+
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-3">
+
+            </div>
+            <div class="col-6">
+                <canvas id="myChartSecondBottom" class="border border-secondary"></canvas>
+                <div class="row" id="selectRow">
+                    <div class="col-3">
+
+                    </div>
+                    <div class="col-4"></div>
+                    <div class="col-4">
+                        <select class="custom-select bg-primary text-dark" id="beerSelect"></select>
+                    </div>
+                    <div class="col-4"></div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

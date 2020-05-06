@@ -15,6 +15,7 @@ namespace Alexander.Models
         private int bottels_qty;
         private float waste_litter;
         private float waste_percent;
+        private double waste_precent1;
 
         public int Keg20_amount { get => keg20_amount; set => keg20_amount = value; }
         public int Keg30_amount { get => keg30_amount; set => keg30_amount = value; }
@@ -22,21 +23,47 @@ namespace Alexander.Models
         public int Bottels_qty { get => bottels_qty; set => bottels_qty = value; }
         public float Waste_litter { get => waste_litter; set => waste_litter = value; }
         public float Waste_percent { get => waste_percent; set => waste_percent = value; }
+        public double Waste_precent1 { get => waste_precent1; set => waste_precent1 = value; }
 
         //public Waste waste;
 
         public Batch_Botteling() { }
 
-        public Batch_Botteling(int batchID, DateTime date, int tank, float wort_volume, string beerType, Recipe recipe_for_this_batch, int keg20_amount, int keg30_amount, int bottels_qty, float waste_litter, float waste_percent) : base(batchID, date, tank, wort_volume, beerType, recipe_for_this_batch)
+        public Batch_Botteling(int batchID, DateTime date, int tank, float wort_volume, string beerType, Recipe recipe_for_this_batch, int keg20_amount, int keg30_amount, int bottels_qty, float waste_litter, float waste_percent, double waste_percent1) : base(batchID, date, tank, wort_volume, beerType, recipe_for_this_batch)
         {
             this.Keg20_amount = keg20_amount;
             this.Keg30_amount = keg30_amount;
-
+            
             this.Bottels_qty = bottels_qty;
             this.Waste_litter = waste_litter;
             this.Waste_percent = waste_percent;
+            this.Waste_precent1 = waste_precent1;
         }
 
+        //  Annual Reports Get batches this year
+
+
+        //  // Annual Reports Get batches this year by tank
+        public List<Batch_Botteling> get_Batch_Bottelingyeartank()
+        {
+            DBservices dbs = new DBservices();
+
+            List<Batch_Botteling> Batch_Botteling_arr_year = dbs.get_Batch_BottelingyeartankDB();
+
+            return Batch_Botteling_arr_year;
+        }
+
+
+        // Annual Reports Get batches this year by beertype
+        public List<Batch_Botteling> get_Batch_Bottelingyear()
+        {
+            DBservices dbs = new DBservices();
+
+            List<Batch_Botteling> Batch_Botteling_arr_year = dbs.get_Batch_BottelingyearDB();
+
+            return Batch_Botteling_arr_year;
+        }
+        // End Annual Reports Get batches this year
 
         public List<Batch_Botteling> get_Batch_Botteling()
         {
