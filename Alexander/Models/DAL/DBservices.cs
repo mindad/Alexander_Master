@@ -1054,7 +1054,7 @@ namespace Alexander.Models.DAL
             }
         }
 
-        public List<Waste> get_WasteDB()
+        public List<Waste> get_WasteDB(bool get_recent=false)
         {
             List<Waste> waste_list = new List<Waste>();
             SqlConnection con = null;
@@ -1063,6 +1063,11 @@ namespace Alexander.Models.DAL
             {
                 con = connect("DBConnectionString");
                 String query = "SELECT * FROM [waste_2020]";
+                if (get_recent)
+                {
+                    query = "SELECT * FROM [waste_2020] WHERE end_period = (SELECT MAX(end_period) FROM [waste_2020] WHERE start_period=start_period AND end_period=end_period)";
+                }
+               
                 SqlCommand cmd = new SqlCommand(query, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -1071,9 +1076,12 @@ namespace Alexander.Models.DAL
                     Waste ws = new Waste();
                     ws.Start_period = Convert.ToDateTime(dr["start_period"]);
                     ws.End_period = Convert.ToDateTime(dr["end_period"]);
-                    ws.ValA = Convert.ToDouble(dr["val1"]);
-                    ws.ValB= Convert.ToDouble(dr["val2"]);
-                    ws.ValC= Convert.ToDouble(dr["val3"]);
+                    ws.CoefA = Convert.ToDouble(dr["coef1"]);
+                    ws.CoefB = Convert.ToDouble(dr["coef2"]);
+                    ws.CoefC = Convert.ToDouble(dr["coef3"]);
+                    ws.P_valueA = Convert.ToDouble(dr["p_value1"]);
+                    ws.P_valueB = Convert.ToDouble(dr["p_value2"]);
+                    ws.P_valueC = Convert.ToDouble(dr["p_value3"]);
                     ws.VarA= (string)dr["sig1"];
                     ws.VarB = (string)dr["sig2"];
                     ws.VarC = (string)dr["sig3"];

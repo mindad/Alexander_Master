@@ -10,10 +10,10 @@ namespace Alexander.Controllers
 {
     public class WasteController : ApiController
     {
-        public List<Waste> Get()
+        public List<Waste> Get(bool get_recent)
         {
             Waste ws = new Waste();
-            return ws.get_Waste_Records();
+            return ws.get_Waste_Records(get_recent);
         }
 
         [HttpGet]

@@ -213,9 +213,12 @@ create table waste_2020(
 	[sig1] nvarchar(255),
 	[sig2] nvarchar(255),
 	[sig3] nvarchar(255),
-    [val1] real,
-    [val2] real,
-    [val3] real,
+    [coef1] real,
+    [coef2] real,
+    [coef3] real,
+	[p_value1] real,
+    [p_value2] real,
+    [p_value3] real,
 	Primary key ([start_period],[end_period])
 )
 ********************

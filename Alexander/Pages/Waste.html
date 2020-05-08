@@ -29,45 +29,38 @@
 
         $(document).ready(function () {
 
-            ajaxCall('GET', '../../api/Waste', '', GetWasteSuccess, GetWasteError); // get reuslts
+            ajaxCall('GET', `../../api/Waste?get_recent=${true}`, '', GetWasteSuccess, GetWasteError); // get reuslts
             ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
             ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); 
             ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); 
             
-
         });
 
         // Waste API
-        function GetWasteSuccess(ws) {
-            console.log('ws:',ws);
-            let p_value = 83; // ws.p_value;
+        function GetWasteSuccess(waste_data) {
+            console.log('waste_data:',waste_data);
 
-            for (data of ws) { // <p>Value: <strong>${data.ValB.toFixed(5)}</strong></p>\
-                st = `<div class="col nopad">
-                    <p><u>${data.VarA}</u> - Value: <strong>${data.ValA.toFixed(5)}</strong></p>\
+            for (ws of waste_data) {
+                st = `<div class="col nopad">\
+                <p><u>${ws.VarA}</u> - Value: <strong>${ws.CoefA.toFixed(5)}</strong></p>\
+                <div class="progress sig">\
+                    <div class="progress-bar bg-danger" role="progressbar" style="width:${ws.P_valueA}%" aria-valuenow="${ws.P_valueA}"
+                            aria-valuemin="0" aria-valuemax="100">${ws.P_valueA}%</div>\
+                </div></div>\
+                <div class="col nopad">\
+                <p><u>${ws.VarB}</u> - Value: <strong>${ws.CoefB.toFixed(5)}</strong></p>\
                     <div class="progress sig">\
-                        <div class="progress-bar bg-danger" role="progressbar" style="width:${p_value}%" aria-valuenow="${p_value}"
-                                aria-valuemin="0" aria-valuemax="100">${p_value}%</div>\
-                    </div>\
-                </div>\
-                <div class="col nopad">
-                <p><u>${data.VarB}</u> - Value: <strong>${data.ValB.toFixed(5)}</strong></p>\
-                
+                        <div class="progress-bar bg-danger" role="progressbar" style="width:${ws.P_valueB}%" aria-valuenow="${ws.P_valueB}"
+                                aria-valuemin="0" aria-valuemax="100">${ws.P_valueB}%</div>\
+                    </div></div>\
+                <div class="col nopad"><p><u>${ws.VarC}</u> - Value: <strong>${ws.CoefC.toFixed(5)}</strong></p>\
                     <div class="progress sig">\
-                        <div class="progress-bar bg-danger" role="progressbar" style="width:${p_value}%" aria-valuenow="${p_value}"
-                                aria-valuemin="0" aria-valuemax="100">${p_value}%</div>\
-                    </div>\
-                </div>\
-                <div class="col nopad"><p><u>${data.VarC}</u> - Value: <strong>${data.ValC.toFixed(5)}</strong></p>\
-                    <div class="progress sig">\
-                        <div class="progress-bar bg-danger" role="progressbar" style="width:${p_value}%" aria-valuenow="${p_value}"
-                                aria-valuemin="0" aria-valuemax="100">${p_value}%</div>\
-                    </div>\
-                </div>`
+                        <div class="progress-bar bg-danger" role="progressbar" style="width:${ws.P_valueC}%" aria-valuenow="${ws.P_valueC}"
+                                aria-valuemin="0" aria-valuemax="100">${ws.P_valueC}%</div>\
+                    </div></div>`
             }
             
             $('#waste_div').append(st);
-            console.log(st);
 
         }
         function GetWasteError(err) {
@@ -91,7 +84,7 @@
                         <h6 class="card-subtitle mb-2 text-muted">${beer.Date.substr(0,10)}</h6>
                         <p><strong>Wort vol: ${beer.Wort_volume} litters</strong></p>
                         <p class="card-text">
-                            Some info about this alert
+                            Waste Alert For Batch # ${beer.BatchID}
                         </p>
                         <a href="Brewmiester/Batch.html?batch_id=${beer.BatchID}" class="card-link">Batch #${beer.BatchID}</a>`
 
@@ -110,11 +103,8 @@
         function GetAVGSuccess(data) {
             data *= 100;
             data = data.toFixed(2);
-            console.log(data);
-
             $("#progress_avg").width(`${data}%`);
             $("#progress_avg").html(`${data}%`);
-
         }
         function GetAVGError(err) {
             console.log(err);
@@ -247,10 +237,10 @@
                 chart_data = [21, 20.6, 21.4, 22, 24];
                 text_label = 'Ambree - Tank # 62';
             }
-            else {
+            else { // set real values
                 let date_labels = [];
                 let chart_data = [];
-                for (item of arr) { // set real values
+                for (item of arr) { 
                     date_labels.push(item.Date);
                     chart_data.push((item.Waste_litter / item.Wort_volume) * 100);
                 }
@@ -301,7 +291,6 @@
     <style>
         body {
             background-color: #f7f6f6;
-            padding-bottom: 1%;
         }
         .navbar {
             height: 70px;
@@ -391,31 +380,6 @@
         <div class="row">
             <div class="col-6 text-center" id="waste_div">
                 <h6><strong>Most Significant Values</strong></h6>
-
-                <!--<div class="col nopad">
-                    <p><u>Grv</u></p>
-                    <p>Value: <strong>3.2 dec</strong></p>
-                    <div class="progress sig">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width:83%" aria-valuenow="83"
-                             aria-valuemin="0" aria-valuemax="100">83%</div>
-                    </div>
-                </div>
-                <div class="col nopad">
-                    <p><u>PH</u></p>
-                    <p>Value: <strong>5.7</strong></p>
-                    <div class="progress sig">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 93%" aria-valuenow="93"
-                             aria-valuemin="0" aria-valuemax="100">93%</div>
-                    </div>
-                </div>
-                <div class="col nopad">
-                    <p><u>Tank temp</u></p>
-                    <p>Value: <strong>22.4 c</strong></p>
-                    <div class="progress sig">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 78%" aria-valuenow="78"
-                             aria-valuemin="0" aria-valuemax="100">78%</div>
-                    </div>
-                </div>-->
             </div>
 
             <div class="col-6">
