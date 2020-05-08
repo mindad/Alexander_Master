@@ -105,7 +105,7 @@
             console.log(err);
         }
         function GetAVGSuccess(data) {
-            data *= 100;
+            //data *= 100;
             data = data.toFixed(2);
             $("#progress_avg").width(`${data}%`);
             $("#progress_avg").html(`${data}%`);
@@ -119,7 +119,7 @@
 
             for (batch of similar_batches_arr){
                 if (batch.BatchID == batch_id) {
-                    let waste_percent = (batch.Waste_litter / batch.Wort_volume)*100
+                    let waste_percent = ((batch.Waste_litter / batch.Wort_volume) * 100).toFixed(2);
                     $("#progress_waste").width(`${waste_percent}%`);
                     $("#progress_waste").html(`${waste_percent}%`);
                     break;
@@ -129,7 +129,10 @@
             if (similar_batches_arr.length == 1) {
                 CreateBarChart([]);
             }
-            CreateBarChart(similar_batches_arr);
+            else {
+                CreateBarChart(similar_batches_arr);
+            }
+            
 
             document.querySelector("#loader").style.display = "none";
             document.querySelector("body").style.visibility = "visible";
@@ -237,19 +240,20 @@
 
         function CreateBarChart(arr) {
             let barchart = document.getElementById('barchart').getContext('2d');
+            date_labels = [];
+            chart_data = [];
+            bg_color = ['rgba(219, 81, 18,1)', 'rgba(220, 53, 69,1)', 'rgba(50, 168, 82,1)', 'rgba(220, 53, 69,1)', 'rgba(219, 81, 18,1)']
 
             if (arr.length == 0) { // set some arbitrary values
                 date_labels = ['1/1/2020', '11/2/2020', '1/3/2020', '1/4/2020', '2/6/2020'];
-                bg_color = ['rgba(219, 81, 18,1)', 'rgba(220, 53, 69,1)', 'rgba(219, 81, 18,1)', 'rgba(50, 168, 82,1)', 'rgba(220, 53, 69,1)']
                 chart_data = [21, 20.6, 21.4, 22, 24];
                 text_label = 'Ambree - Tank # 62';
             }
             else { // set real values
-                let date_labels = [];
-                let chart_data = [];
                 for (item of arr) { 
-                    date_labels.push(item.Date);
-                    chart_data.push((item.Waste_litter / item.Wort_volume) * 100);
+                    if (item.Waste_litter == 0) continue;
+                    date_labels.push(item.Date.substr(0,10));
+                    chart_data.push(((item.Waste_litter / item.Wort_volume) * 100).toFixed(2));
                 }
                 text_label = `${arr[0].BeerType} - Tank # ${arr[0].Tank}`;
             }

@@ -54,7 +54,7 @@ namespace Alexander.Models
                 numEffected = dbs.insert(this); // insert to Batch_2020
 
                 dbs = dbs.read("[BatchAfterProd_2020]");
-                dbs.dt.Rows.Add(BatchID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); 
+                dbs.dt.Rows.Add(BatchID, 0, 0, 0, 0, 0); 
                 numEffected += dbs.update();
 
                 dbs = dbs.read("[BatchAtProd_2020]");
