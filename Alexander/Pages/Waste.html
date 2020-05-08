@@ -25,15 +25,19 @@
     <script src="../Scripts/ajaxCalls.js"></script>
 
     <script>
-        batch_id = 2;
+        batch_id = 0;
 
         $(document).ready(function () {
 
-            ajaxCall('GET', `../../api/Waste?get_recent=${true}`, '', GetWasteSuccess, GetWasteError); // get reuslts
+            batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
+
             ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
+            ajaxCall('GET', `../../api/Waste?get_recent=${true}`, '', GetWasteSuccess, GetWasteError); // get reuslts
             ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); 
             ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); 
             
+            document.querySelector("body").style.visibility = "hidden"; // loader
+            document.querySelector("#loader").style.visibility = "visible"; 
         });
 
         // Waste API
@@ -70,7 +74,7 @@
 
         // Batch API
         function GetBatchSuccess(batches) {
-            console.log('batches are:',batches);
+            console.log('batches are:', batches);
 
             let beer = "";
             for (batch of batches) {
@@ -126,6 +130,9 @@
                 CreateBarChart([]);
             }
             CreateBarChart(similar_batches_arr);
+
+            document.querySelector("#loader").style.display = "none";
+            document.querySelector("body").style.visibility = "visible";
         }
         function GetSimilarError(err) {
             console.log(err);
@@ -277,7 +284,6 @@
                                 min: 15,
                                 max: 30,
                                 stepSize: 3
-                                //beginAtZero: true,
                             }
                         }]
                     },
@@ -308,11 +314,35 @@
         .col.nopad{
             padding-top:3%;
         }
+
+        #loader { 
+            border: 12px solid #f3f3f3; 
+            border-radius: 50%; 
+            border-top: 12px solid #444444; 
+            width: 70px; 
+            height: 70px; 
+            animation: spin 1s linear infinite; 
+        } 
+          
+        @keyframes spin { 
+            100% { 
+                transform: rotate(360deg); 
+            } 
+        } 
+        .centerLoader { 
+            position: absolute; 
+            top: 0; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            margin: auto; 
+        } 
     </style>
 
 </head>
 
 <body>
+    <div id="loader" class="centerLoader"></div>
     <!-- NavBar Template -->
     <div class="header text-center">
         <nav class="navbar navbar-expand-sm navbar-light border-bottom" style="background-color: #f7f6f6;">
@@ -333,7 +363,7 @@
                         <a class="nav-link" href="Brewmiester/Recipes.html">Recipes</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="Waste.html">Waste</a>
+                        <a class="nav-link" href="Waste_transition.html">Waste</a>
                     </li>
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Brewmiester/Alerts.html">Alerts</a>
@@ -356,7 +386,7 @@
             <div class="col-6">
                 <div class="card" style="background-color: #f7f6f6;">
                     <div class="card-body">
-                    
+
                     </div>
                 </div>
             </div>
@@ -369,7 +399,7 @@
                 <br>
                 <h5>Batch Waste %</h5>
                 <div class="progress">
-                    <div class="progress-bar bg-danger" id="progress_waste" style="width:28%">28%</div>
+                    <div class="progress-bar bg-danger" id="progress_waste"></div>
                 </div>
             </div>
         </div>

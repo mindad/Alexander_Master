@@ -1112,7 +1112,7 @@ namespace Alexander.Models.DAL
 
                 String query = "select distinct [beer_type] from Batch_2020;";
                 SqlCommand cmd = new SqlCommand(query, con);
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); 
 
                 while (dr.Read())
                 {
@@ -1123,7 +1123,14 @@ namespace Alexander.Models.DAL
             {
                 throw ex;
             }
-            
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
             return beerType_list;
         }
 

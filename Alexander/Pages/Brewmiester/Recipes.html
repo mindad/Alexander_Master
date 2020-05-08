@@ -196,7 +196,7 @@
 
                 if ($(`#new_prod${i}`).val()) { //  >= 0
 
-                    prods.push({ // RecipeArr[i].Products_in_recipe
+                    prods.push({ 
                         "ProductName": $(`#new_prod${i}`).val(),
                         "Amount": $(`#new_prod_amount${i}`).val()
                     });
@@ -299,14 +299,14 @@
                 for (var i = 0; i < n_of_products; i++) {
 
                     st += `<div class="row">\
-                                    <div class="col">\
-                                        <label>Product Name</label>
-                                        <select name="prd" id="new_prod${i}" class="form-control"></select>
-                                    </div>\
-                                   <div class="col">
-                                        <label>Amount</label>
-                                        <input type="number" min="0" class="form-control" id="new_prod_amount${i}" required/>
-                                    </div></div>`;
+                            <div class="col">\
+                                <label>Product Name</label>
+                                <select name="prd" id="new_prod${i}" class="form-control"></select>
+                            </div>\
+                            <div class="col">
+                                <label>Amount</label>
+                                <input type="number" min="0" class="form-control" id="new_prod_amount${i}" required/>
+                            </div></div>`;
                 }
 
 
@@ -335,14 +335,14 @@
                 for (var i = 0; i < num_products_in_new_recipe; i++) {
 
                     st += `<div class="row">\
-                                    <div class="col">\
-                                        <label>Product Name</label>
-                                        <select name="prd" id="new_prod${i}" class="form-control">${ProductTypesSelect}</select>
-                                    </div>\
-                                   <div class="col">
-                                        <label>Amount</label>
-                                        <input type="number" min="0" class="form-control" id="new_prod_amount${i}" required/>
-                                    </div></div>`;
+                            <div class="col">\
+                                <label>Product Name</label>
+                                <select name="prd" id="new_prod${i}" class="form-control">${ProductTypesSelect}</select>
+                            </div>\
+                            <div class="col">
+                                <label>Amount</label>
+                                <input type="number" min="0" class="form-control" id="new_prod_amount${i}" required/>
+                            </div></div>`;
                 }
 
                 $("#inAddForm").append(st);
@@ -381,13 +381,10 @@
         function PostRecipeError(data) {
             console.log(data);
         }
-
-
         // ** Post Recipe
 
 
         // Global functions
-
         function refresh_table() {
             location.reload();
         }
@@ -405,7 +402,7 @@
             $("#editDiv").hide();
             $("#addBtn").show();
         }
-
+        // **** Global functions
     </script>
 
     <style>
@@ -454,7 +451,7 @@
                         <a class="nav-link" href="Recipes.html">Recipes</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="#">Waste</a>
+                        <a class="nav-link" href="../Waste_transition.html">Waste</a>
                     </li>
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Alerts.html">Alerts</a>

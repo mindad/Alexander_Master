@@ -33,7 +33,7 @@
             ajaxCall("GET", "../../api/Batch_Production", "", GetBatchSucess, GetBatchError); // # of batches progress bar 
 
             document.querySelector("body").style.visibility = "hidden"; // loader
-            document.querySelector( "#loader").style.visibility = "visible"; 
+            document.querySelector("#loader").style.visibility = "visible"; 
         });
 
         // Products API
@@ -60,8 +60,8 @@
                 createChart(locationArr[i], prodTypesNames[i], chartData);
             }
 
-            document.querySelector( "#loader").style.display = "none"; // additions
-            document.querySelector("body").style.visibility = "visible";// additions
+            document.querySelector("#loader").style.display = "none";
+            document.querySelector("body").style.visibility = "visible";
         }
 
         function GetProductError(err) {
@@ -352,7 +352,7 @@
                         <a class="nav-link" href="Recipes.html">Recipes</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="#">Waste</a>
+                        <a class="nav-link" href="../Waste_transition.html">Waste</a>
                     </li>
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Alerts.html">Alerts</a>
