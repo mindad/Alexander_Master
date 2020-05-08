@@ -144,23 +144,28 @@
             let st = "";
 
             for (alert of Alertdata) {
-                if (alert.Type != "Minimum Amount") {
+                if (alert.Type == "Waste") {
+                    toasts_arr.push(
+                    `<div class="toast" data-autohide="false" id="${toast_Count}"><div class="toast-header">\
+                    <strong class="mr-auto text-primary"><a href="../Waste.html?batch_id=${alert.Batch_or_prod}">${alert.Type}</a></strong>\
+                    <small class="text-muted">${alert.Date.substr(0, 10)}</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>\
+                    </div><div class="toast-body">${alert.Description} - ${alert.Batch_or_prod}</div></div>`);
+                }
+                else if (alert.Type == "Minimum Amount") {
                     toasts_arr.push(
                     `<div class="toast" data-autohide="false" id="${toast_Count}"><div class="toast-header">\
                     <strong class="mr-auto text-primary"><a href="Alerts.html">${alert.Type}</a></strong>\
                     <small class="text-muted">${alert.Date.substr(0, 10)}</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>\
                     </div><div class="toast-body">${alert.Description}</div></div>`);
-                    toast_Count += 1;
                 }
                 else {
                     toasts_arr.push(
                     `<div class="toast" data-autohide="false" id="${toast_Count}"><div class="toast-header">\
-                    <strong class="mr-auto text-primary"><a href="Alerts.html">${alert.Type}</a></strong>\
+                    <strong class="mr-auto text-primary"><a href="Batch.html?batch_id=${alert.Batch_or_prod}">${alert.Type}</a></strong>\
                     <small class="text-muted">${alert.Date.substr(0, 10)}</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>\
                     </div><div class="toast-body">${alert.Description} - ${alert.Batch_or_prod}</div></div>`);
-                    toast_Count += 1;
                 }
-                
+                toast_Count += 1;
             }
 
             st = toasts_arr[toasts_arr.length - 1] + toasts_arr[toasts_arr.length - 2];
@@ -173,7 +178,7 @@
                 if (confirm('are you sure yow want to delete this alert?')) {
 
                     for (var i = 0; i < toasts_arr.length; i++) { // find toast id and remove it from toast_arr
-                        let toast_id = toasts_arr[i].match(/id="([0-9])"/);
+                        let toast_id = toasts_arr[i].match(/id="([0-9]*)"/);
 
                         if (toast_id[1] == this.id) {
                             toasts_arr.splice(i, 1);
@@ -212,7 +217,7 @@
                 if (confirm('are you sure yow want to delete this alert?')) {
 
                     for (var i = 0; i < toasts_arr.length; i++) { // find toast id and remove it from toast_arr
-                        let toast_id = toasts_arr[i].match(/id="([0-9])"/);
+                        let toast_id = toasts_arr[i].match(/id="([0-9]*)"/);
 
                         if (toast_id[1] == this.id) {
                             toasts_arr.splice(i, 1);
@@ -261,12 +266,12 @@
                 }
             }
 
-            let val = (len / max_batch)*100;
+            let num_batches = (len / max_batch)*100;
             
             let st = `<h4 class="text-center" id="month">${month} Batches</h4>\
                       <div class="progress">\
-                      <div class="progress-bar w-${val}" role="progressbar" style="width: ${val}%;"\
-                      aria-valuenow="${val}"
+                      <div class="progress-bar w-${num_batches}" role="progressbar" style="width: ${num_batches}%;"\
+                      aria-valuenow="${num_batches}"
                       aria-valuemin="0" aria-valuemax="100">${len} Batches</div>
                       </div>`
 

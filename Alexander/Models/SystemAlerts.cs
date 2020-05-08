@@ -65,23 +65,22 @@ namespace Alexander.Models
 
         }
 
-        public void Check_For_Waste_Alerts() /// TODO
+        public void Check_For_Waste_Alerts()
         {
             try
             {
                 DBservices dbs = new DBservices();
                 List<string> beerTypes = dbs.GetUniqueBeerTypes();
                 List<Batch_Botteling> batch_Botteling_List = dbs.get_Batch_BottelingDB();
-                batch_Botteling_List.Sort((p, q) => p.Date.CompareTo(q.Date)); // sort batch list by dates // CHECK THIS
+                batch_Botteling_List.Sort((p, q) => p.Date.CompareTo(q.Date)); // sort batch list by dates 
 
                 foreach (var beer_name in beerTypes)
                 {
+                    double avg_waste = new Batch().AverageWastePercetage(beer_name); // get current beer waste AVG
                     int number_of_deviations = 0;
                     int num_of_iterations = 0;
                     foreach (Batch_Botteling batch in batch_Botteling_List)
                     {
-                        double avg_waste = batch.AverageWastePercetage(beer_name); // CHECK THIS
-
                         if (batch.BeerType == beer_name)
                         {
                             num_of_iterations += 1;
@@ -91,7 +90,7 @@ namespace Alexander.Models
                                 number_of_deviations += 1;
                                 if (number_of_deviations == 2) 
                                 {
-                                    Create_Waste_Alert(batch.Waste_percent.ToString(), "Waste", batch.BatchID.ToString()); // more then 2 deviations
+                                    Create_Brewmiester_Alert("Waste value: " + batch.Waste_percent.ToString(), "Waste", batch.BatchID.ToString()); // more then 2 deviations
                                 }
                             }
                             if (num_of_iterations == 2) // out of last 2 batches for a certain beer type

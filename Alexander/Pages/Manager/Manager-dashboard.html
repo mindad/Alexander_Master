@@ -665,7 +665,7 @@
                 if (confirm('are you sure yow want to delete this alert?')) {
 
                     for (var i = 0; i < toasts_arr.length; i++) { // find toast id and remove it from toast_arr
-                        let toast_id = toasts_arr[i].match(/id="([0-9])"/);
+                        let toast_id = toasts_arr[i].match(/id="([0-9]*)"/);
 
                         if (toast_id[1] == this.id) {
                             toasts_arr.splice(i, 1);
@@ -704,7 +704,7 @@
                 if (confirm('are you sure yow want to delete this alert?')) {
 
                     for (var i = 0; i < toasts_arr.length; i++) { // find toast id and remove it from toast_arr
-                        let toast_id = toasts_arr[i].match(/id="([0-9])"/);
+                        let toast_id = toasts_arr[i].match(/id="([0-9]*)"/);
 
                         if (toast_id[1] == this.id) {
                             toasts_arr.splice(i, 1);

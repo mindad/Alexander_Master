@@ -16,7 +16,7 @@ namespace Alexander.Controllers
             SystemAlerts sys_alerts = new SystemAlerts();
             sys_alerts.Check_For_Brewmiester_Alerts();
             //sys_alerts.Create_Manager_Alert();
-            //sys_alerts.Check_For_Waste_Alerts();
+            sys_alerts.Check_For_Waste_Alerts();
         }
 
     }
