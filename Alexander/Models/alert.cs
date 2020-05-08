@@ -87,7 +87,6 @@ namespace Alexander.Models
 
         public void CreateAlert()
         {
-            
             try
             {
                 DBservices dbs = new DBservices();

@@ -11,7 +11,7 @@ namespace Alexander.Models
     {
         private const string message_with_batch = "Warning: ";
         private const string message_min_amount = "Warning: Minimum Amount - ";
-
+        
         public SystemAlerts() { }
 
     
@@ -98,20 +98,14 @@ namespace Alexander.Models
                             {
                                 break;
                             }
-                        }
-                        
+                        }   
                     }
-
-
                 }
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            
-
-            
         }
 
 
@@ -119,7 +113,7 @@ namespace Alexander.Models
         {
             string st = "";
 
-            if ( new string[] { "Tank Temperature", "PH", "Tank Pressure" }.Contains(alertType))
+            if (new string[] { "Tank Temperature", "PH", "Tank Pressure", "Waste" }.Contains(alertType))
             {
                 st = message_with_batch + alert_value;
             }
