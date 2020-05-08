@@ -16,10 +16,7 @@
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="../../Scripts/ajaxCalls.js"></script>
-
-
     <!--add pdf/print and excel options-->
-
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -28,7 +25,6 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 
-    <!--add pdf/print and excel options-->
     <script>
 
         RecipeArr = [];
@@ -106,7 +102,6 @@
                     ]
                 });
             }
-
             catch (err) {
                 alert(err);
             }
@@ -168,7 +163,7 @@
                 }
             }
 
-            let newProds = GetNewProds();//GetNewProds($("#beerTypeInput").val()); // Create another arr of new prods
+            let newProds = GetNewProds(); // Create another arr of new prods
 
             for (let pr of newProds) { // insert more prods to products arr
                 products.push(pr);
@@ -410,19 +405,12 @@
             background-color: #f7f6f6;
             padding-bottom: 1%;
         }
-
-        #headerRow {
-            height: 180px;
-        }
-
         .navbar {
             height: 70px;
         }
-
         table {
             text-align: center;
         }
-
         #btnDiv {
             padding-top: 1%;
             width: 50%;
@@ -484,8 +472,6 @@
 
         <div id="btnDiv" class="container">
             <button id="addBtn" class="btn btn-primary btn-block">Add New Recipe</button>
-            <!--data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer'-->
-            <!-- collapse/Expend the addprodcontianer (bootstrap) data-toggle='collapse' data-target='#addprodContainer' aria-expanded='false' aria-controls='addprodContainer' -->
         </div>
     </div>
     <!-- table -->
