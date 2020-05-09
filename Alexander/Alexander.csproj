@@ -217,6 +217,7 @@
     <Content Include="Pages\Brewmiester\Brewmiester-prod.html" />
     <Content Include="Pages\Brewmiester\Inventory.html" />
     <Content Include="Pages\Brewmiester\Recipes.html" />
+    <Content Include="Pages\CSS\styles.css" />
     <Content Include="Pages\Images\alexanderlogo.png" />
     <Content Include="Pages\Images\details_close.png" />
     <Content Include="Pages\Images\details_open.png" />

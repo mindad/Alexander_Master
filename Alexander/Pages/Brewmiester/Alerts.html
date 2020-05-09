@@ -26,16 +26,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    
+
+    <link href="../CSS/styles.css" rel="stylesheet" />
     <script>
 
         $(document).ready(function () {
 
             $('#editDiv').hide();
-            
+
             ajaxCall("GET", "../../api/SystemAlerts", "", console.log(1), console.log(0));
 
-            ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError); 
+            ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError);
 
             $('#submit_edit').on("click", edit_Alert_table);
 
@@ -86,13 +87,13 @@
                                 if (!isNaN(data.Batch_or_prod)) {
                                     if (data.Type == "Waste") {
                                         return `<a href="../Waste.html?batch_id=${data.Batch_or_prod}">${data.Batch_or_prod}</a>`;
-                                    } 
+                                    }
                                     return `<a href="Batch.html?batch_id=${data.Batch_or_prod}">${data.Batch_or_prod}</a>`;
                                 }
                                 return data.Batch_or_prod;
                             }
                         },
-                         { data: "Notes" }
+                        { data: "Notes" }
                     ]
                 });
             }
@@ -144,7 +145,7 @@
                 $('#notes_input').val()
             ]
 
-            ajaxCall("PUT", "../../api/Alert", JSON.stringify(alert_id_and_notes), editAlertSucess, editAlertError); 
+            ajaxCall("PUT", "../../api/Alert", JSON.stringify(alert_id_and_notes), editAlertSucess, editAlertError);
         }
 
         //////// editAlert
@@ -197,27 +198,9 @@
 
 
     <style>
-        body {
-            background-color: #f7f6f6;
-            padding-bottom: 1%;
-        }
-
-        #headerRow {
-            height: 180px;
-        }
-
-        .navbar {
-            height: 70px;
-        }
-
-        table {
-            text-align: center;
-        }
-
         .container {
             padding-bottom: 4%;
         }
-
         #notes_input {
             height: 15%;
             width: 80%;
@@ -257,7 +240,7 @@
                     </li>
                 </ul>
             </div>
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="Brewmiester-dashboard.html">
                 <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
             </a>
         </nav>

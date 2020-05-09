@@ -1,0 +1,44 @@
+﻿body {
+    background-color: #f7f6f6;
+    padding-bottom: 1%;
+}
+.navbar {
+    height: 70px;
+}
+table {
+    text-align: center;
+}
+.toast {
+    height: 80px;
+}
+/*brewmiester pages*/
+#btnDiv {
+    padding-top: 1%;
+    width: 50%;
+}
+/*brewmiester pages*/
+/*loading progress*/
+#loader {
+    border: 12px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 12px solid #444444;
+    width: 70px;
+    height: 70px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.centerLoader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+/*loading progress*/
