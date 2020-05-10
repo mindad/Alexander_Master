@@ -512,7 +512,7 @@ namespace Alexander.Models.DAL
         /// 
         /// //get batches by year and beertype Annual Reports
 
-        public List<Batch_Botteling> get_Batch_BottelingyearDB()
+        public List<Batch_Botteling> get_Batch_BottelingyearDB(string year)
         {
             List<Batch_Botteling> Batch_Botteling_List = new List<Batch_Botteling>();
             SqlConnection con = null;
@@ -521,7 +521,7 @@ namespace Alexander.Models.DAL
             {
                 con = connect("DBConnectionString");
                 // connect 2 table to 1 table with ID key
-                String query = "SELECT beer_type, SUM([dbo].[BatchAfterProd_2020].[keg_20_amount])  as keg_20_amount, sum	([dbo].[BatchAfterProd_2020].[keg_30_amount])  as keg_30_amount,sum	([dbo].[BatchAfterProd_2020].[bottles_qty])  as [bottles_qty],AVG([dbo].[BatchAfterProd_2020].[waste_precent]) as waste FROM[dbo].[BatchAfterProd_2020]  right JOIN[dbo].[Batch_2020] ON[BatchAfterProd_2020].batch_id=[Batch_2020].batch_id where Year([date])=YEAR(getutcdate()) group by beer_type";
+                String query = "SELECT beer_type, SUM([dbo].[BatchAfterProd_2020].[keg_20_amount])  as keg_20_amount, sum	([dbo].[BatchAfterProd_2020].[keg_30_amount])  as keg_30_amount,sum	([dbo].[BatchAfterProd_2020].[bottles_qty])  as [bottles_qty],AVG([dbo].[BatchAfterProd_2020].[waste_precent]) as waste FROM[dbo].[BatchAfterProd_2020]  right JOIN[dbo].[Batch_2020] ON[BatchAfterProd_2020].batch_id=[Batch_2020].batch_id where Year([date])="+ year+" group by beer_type";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.CommandTimeout = 480; // enlarge T.O
@@ -588,7 +588,7 @@ namespace Alexander.Models.DAL
         //get batches by tank and year Annual Reports
 
 
-        public List<Batch_Botteling> get_Batch_BottelingyeartankDB()
+        public List<Batch_Botteling> get_Batch_BottelingyeartankDB(string year)
         {
             List<Batch_Botteling> Batch_Botteling_List = new List<Batch_Botteling>();
             SqlConnection con = null;
@@ -597,7 +597,7 @@ namespace Alexander.Models.DAL
             {
                 con = connect("DBConnectionString");
                 // connect 2 table to 1 table with ID key
-                String query = "SELECT tank ,sum([dbo].[BatchAfterProd_2020].[keg_20_amount])   as keg_20_amount, sum	([dbo].[BatchAfterProd_2020].[keg_30_amount])  as keg_30_amount,sum	([dbo].[BatchAfterProd_2020].[bottles_qty])  as [bottles_qty],AVG([dbo].[BatchAfterProd_2020].[waste_precent]) as waste FROM[dbo].[BatchAfterProd_2020]  right JOIN[dbo].[Batch_2020] ON[BatchAfterProd_2020].batch_id=[Batch_2020].batch_id where Year([date])=YEAR(getutcdate()) group by tank";
+                String query = "SELECT tank ,sum([dbo].[BatchAfterProd_2020].[keg_20_amount])   as keg_20_amount, sum	([dbo].[BatchAfterProd_2020].[keg_30_amount])  as keg_30_amount,sum	([dbo].[BatchAfterProd_2020].[bottles_qty])  as [bottles_qty],AVG([dbo].[BatchAfterProd_2020].[waste_precent]) as waste FROM[dbo].[BatchAfterProd_2020]  right JOIN[dbo].[Batch_2020] ON[BatchAfterProd_2020].batch_id=[Batch_2020].batch_id where Year([date])="+ year+" group by tank";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.CommandTimeout = 480; // enlarge T.O
@@ -1337,7 +1337,7 @@ namespace Alexander.Models.DAL
 
 
 
-        public List<Order> get_OrdersYearDB()
+        public List<Order> get_OrdersYearDB(string year)
         {
             List<Order> Order_List = new List<Order>();
             SqlConnection con = null;
@@ -1346,8 +1346,10 @@ namespace Alexander.Models.DAL
             {
                 con = connect("DBConnectionString");
 
-                String query = "SELECT beerType, sum([dbo].[Order_2020].[keg_20_amount])   as keg_20_amount, sum([dbo].[Order_2020].[keg_30_amount])  as keg_30_amount,sum([dbo].[Order_2020].[box_24])  as [box_24] FROM[dbo].[Order_2020] where Year([SupplyDate])='2020' group by beerType";
-                SqlCommand cmd = new SqlCommand(query, con);
+                String query = "SELECT beerType, sum([dbo].[Order_2020].[keg_20_amount]) as keg_20_amount, sum([dbo].[Order_2020].[keg_30_amount]) as keg_30_amount,sum([dbo].[Order_2020].[box_24]) as [box_24] FROM[dbo].[Order_2020] where Year([SupplyDate])=" + year + " group by beerType";
+
+                SqlCommand cmd = CreateCommand(query, con);//new SqlCommand(query, con);
+              
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
@@ -1358,7 +1360,7 @@ namespace Alexander.Models.DAL
 
                     //TODO add the beer type
 
-                    order.Beer = new Beer((string)dr["beerType"], Convert.ToInt32(dr["keg_20_amount"]), Convert.ToInt32(dr["keg_30_amount"]), Convert.ToInt32(dr["box_24"]), 0);
+                    order.Beer = new Beer((string)dr["beerType"], Convert.ToInt32(dr["keg_20_amount"]), Convert.ToInt32(dr["keg_30_amount"]), Convert.ToInt32(dr["box_24"]),0);
 
                     Order_List.Add(order);
                 }

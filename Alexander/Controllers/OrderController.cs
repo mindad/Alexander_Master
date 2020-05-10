@@ -23,10 +23,10 @@ namespace Alexander.Controllers
         //year ORDER  Annual Reports
         [HttpGet]
         [Route("api/Order/thisyear")]
-        public List<Order> Getthis()
+        public List<Order> Getthis(string year)
         {
             Order order = new Order();
-            return order.get_Orderthisyear();
+            return order.get_Orderthisyear(year);
         }
 
         //end  Annual Reports Order

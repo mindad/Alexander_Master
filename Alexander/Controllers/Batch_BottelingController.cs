@@ -23,19 +23,19 @@ namespace Alexander.Controllers
         //year batch botteling tank get  Annual Reports
         [HttpGet]
         [Route("api/Batch_Botteling/thisyeartank")]
-        public List<Batch_Botteling> Getthistank()
+        public List<Batch_Botteling> Getthistank(string year)
         {
             Batch_Botteling batchyear = new Batch_Botteling();
-            return batchyear.get_Batch_Bottelingyeartank();
+            return batchyear.get_Batch_Bottelingyeartank(year);
         }
 
         //year batch bottleing   Annual Reports
         [HttpGet]
         [Route("api/Batch_Botteling/thisyear")]
-        public List<Batch_Botteling> Getthis()
+        public List<Batch_Botteling> Getthis(string year)
         {
             Batch_Botteling batchyear = new Batch_Botteling();
-            return batchyear.get_Batch_Bottelingyear();
+            return batchyear.get_Batch_Bottelingyear(year);
         }
 
         /// <summary>

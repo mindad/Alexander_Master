@@ -44,22 +44,22 @@ namespace Alexander.Models
 
 
         //  // Annual Reports Get batches this year by tank
-        public List<Batch_Botteling> get_Batch_Bottelingyeartank()
+        public List<Batch_Botteling> get_Batch_Bottelingyeartank(string year)
         {
             DBservices dbs = new DBservices();
 
-            List<Batch_Botteling> Batch_Botteling_arr_year = dbs.get_Batch_BottelingyeartankDB();
+            List<Batch_Botteling> Batch_Botteling_arr_year = dbs.get_Batch_BottelingyeartankDB(year);
 
             return Batch_Botteling_arr_year;
         }
 
 
         // Annual Reports Get batches this year by beertype
-        public List<Batch_Botteling> get_Batch_Bottelingyear()
+        public List<Batch_Botteling> get_Batch_Bottelingyear(string year)
         {
             DBservices dbs = new DBservices();
 
-            List<Batch_Botteling> Batch_Botteling_arr_year = dbs.get_Batch_BottelingyearDB();
+            List<Batch_Botteling> Batch_Botteling_arr_year = dbs.get_Batch_BottelingyearDB(year);
 
             return Batch_Botteling_arr_year;
         }

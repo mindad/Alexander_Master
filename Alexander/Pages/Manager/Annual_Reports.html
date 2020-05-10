@@ -39,47 +39,41 @@
         BottleCaseborderColor = [];
         FrontLabelbackgroudColor = [];
         FrontLabelborderColor = [];
-        Beerprod = [];
-
+        var selectedyear;
+    
         orders_arr = []; // DO NOT DELETE !!!
-        toasts_arr = [];
-        toast_Count = 0;
+  
 
 
         $(document).ready(function () {
+            $('#charts').hide();
 
+            getyears();
 
-
-
-
-            ajaxCall("GET", "../../api/Batch_Botteling/thisyear", "", GetBatch_BottelingSucess, GetBatch_BottelingError);//get prod עבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה 
-            ajaxCall("GET", "../../api/Batch_Botteling/thisyeartank", "", GetBatch_BottelingSucesstank, GetBatch_BottelingErrortank);//get prod TANK וכמות ייצור שנתית לפי TANK עבור אחוז פחת לפי סוג בירה   
-
-            ajaxCall("GET", "../../api/Order/thisyear", "", GetOrderSucess, GetOrderError); //GET ORDER  עבור כמות עזמנות שנתית לפי סוג בירה  
-            /*    ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError); *///GET BEER IN STOCK
-
-            /* $("#beerSelect").on('change', SetOrderChartValues);*/ // Changes Order Chart Depands on Beer Type
-
-            //$('.toast').toast('show'); // Shows toast without event!!! very important!!
-
-            //$('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
-            //   if (confirm('are you sure yow want to delete this alert?')) {
-            //        return;
-            //    }
-            //    return false; // Toast Not Deleted
-            //});
+            $("#yearchoosen").on('change', getannualreports); // Changes Order Chart Depands on Beer Type
 
 
         });
 
-        //get productionעבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה 
-        function GetBatch_BottelingSucess(Batch_Botteling_data) {
-            console.log("batch by year beertype", Batch_Botteling_data);
+        function getannualreports() {
+          selectedyear = $(this).children("option:selected").val();//get this selecter year
+
+            $('#charts').show();
+            console.log('this is year', selectedyear);
+
+            ajaxCall("GET", "../../api/Batch_Botteling/thisyear?year=" + selectedyear+" ", "", GetBatch_BottelingSucess, GetBatch_BottelingError);//get prod עבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה 
+            ajaxCall("GET", "../../api/Batch_Botteling/thisyeartank?year=" + selectedyear + "", "", GetBatch_BottelingSucesstank, GetBatch_BottelingErrortank);//get prod TANK וכמות ייצור שנתית לפי TANK עבור אחוז פחת לפי סוג בירה   
+
+            ajaxCall("GET", "../../api/Order/thisyear?year=" + selectedyear + "", "", GetOrderyearSucess, GetOrderyearError); //GET ORDER  עבור כמות עזמנות שנתית לפי סוג בירה
+
 
         }
 
-        function GetBatch_BottelingError(err) {
-            console.log(err);
+        function getyears() {
+
+            let now = new Date().getUTCFullYear();
+            let years = Array(now - (now - 5)).fill('').map((v, idx) => `<option>${now - idx}</option>`);
+            document.getElementById('yearchoosen').innerHTML = `<option>Choose A Year</option>` + years;
         }
 
 
@@ -88,58 +82,24 @@
         //End get production
 
         //get production TANK וכמות ייצור שנתית לפי TANK עבור אחוז פחת לפי סוג בירה   
-        function GetBatch_BottelingSucesstank(Batch_Botteling_data) {
-            console.log("batch by year tank", Batch_Botteling_data);
-
-        }
-
-        function GetBatch_BottelingErrortank(err) {
-            console.log(err);
-        }
+        function GetBatch_BottelingSucesstank(data) {
+            console.log("batch by year tank", data);
+        
 
 
-
-
-        //End get production
-        // Beer API
-        function GetBeerSucess(data) {
-            console.log('data from Beer_2020:', data);
-            beerinstock = data;
-            // Build Select button options
-            let BeerTypesOptions = "";
-            for (var i = 0; i < data.length; i++) {
-                BeerTypesOptions += `<option>${data[i].BeerType}</option>`;
-            }
-
-            document.getElementById("beerSelect").innerHTML = BeerTypesOptions;
-
-
-            //make array backgroud colors dinamic
-
-            for (var i = 0; i < data.length; i++) {
-                kegs20_backgroudColor[i] = "rgba(255, 99, 132, 0.6)";
-                kegs20_borderColor[i] = "rgba(255, 99, 132, 1),";
-                kegs30_borderColor[i] = " rgba(54, 162, 235, 1),";
-                kegs30_backgroudColor[i] = "rgba(54, 162, 235, 0.6),";
-                BottleCasebackgroudColor[i] = "rgba(153, 102, 255, 0.6),";
-                BottleCaseborderColor[i] = "rgba(153, 102, 255, 1),";
-
-            }
-
-
-
-
+            //beerprod by tank num year
+            let ctx_rightTop = document.getElementById('myChartYearByTank').getContext('2d');
 
             Init_arrays(data, Beers_arr);
 
             // Beer Stock
-            var crt_leftTop = new Chart(ctx_rightTop, {
+            var crt_leftTop2 = new Chart(ctx_rightTop, {
                 type: 'bar',
                 // data: feed Data Here
                 data: {
 
                     //  dinamic label from beer types
-                    labels: data.map(item => item.BeerType),
+                    labels: data.map(item => item.Tank),
                     datasets: [{
                         label: 'Kegs 20',
                         data: data.map(item => item.Keg20_amount),//[12, 5, 3, 5, 6, 3],
@@ -158,7 +118,7 @@
                     },
                     {
                         label: 'Bottle Cases',
-                        data: data.map(item => item.BottleCase_amount),
+                        data: data.map(item => item.Bottels_qty),
                         backgroundColor: BottleCasebackgroudColor,
                         borderColor: BottleCasebackgroudColor,
                         borderWidth: 1,
@@ -170,7 +130,7 @@
                     responsive: true,
                     title: {
                         display: true,
-                        text: 'Beer Stock'
+                        text: 'Beer Prod This Year By Tank'
                     },
                     tooltips: {
                         mode: 'index',
@@ -220,20 +180,387 @@
             });
 
 
+            //End   beerprop chart
+
+
+
+
+
+            //beerWaste by tank
+            let ctx_leftTop1 = document.getElementById('myChartYearWasteByTank').getContext('2d');
+
+            Init_arrays(data, Beers_arr);
+
+            // Beer Stock
+            var crt_leftTop3 = new Chart(ctx_leftTop1, {
+                type: 'pie',
+                // data: feed Data Here
+                data: {
+
+                    //  dinamic label from beer types
+                    labels: data.map(item => item.Tank),
+                    datasets: [{
+                        label: 'Waste Precent',
+                        data: data.map(item => item.Waste_precent1),//
+                        backgroundColor: BottleCasebackgroudColor,
+                        borderColor: kegs30_borderColor,
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-1'
+                    },
+
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Beer Waste Precent Year by Tank'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: true
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'left',
+                            // gridLines : {
+                            //     display : false
+                            // },
+                            id: 'y-axis-1'
+                        },
+
+                        ]
+                    }
+                }
+            });
+
+
+            //End   beer Waste chart by tank
+
+
+
 
         }
 
-        function GetBeerError(err) {
+
+       
+
+        function GetBatch_BottelingErrortank(err) {
+            console.log(err);
+        }
+
+
+
+
+        //End get production
+
+        //get productionעבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה 
+
+
+
+        function GetBatch_BottelingSucess(data) {
+            console.log('data from Beer_thisyear:', data);
+            beerinstock = data;
+
+
+            //make array backgroud colors dinamic
+
+            for (var i = 0; i < data.length; i++) {
+                kegs20_backgroudColor[i] = "rgba(255, 99, 132, 0.6)";
+                kegs20_borderColor[i] = "rgba(255, 99, 132, 1),";
+                kegs30_borderColor[i] = " rgba(54, 162, 235, 1),";
+                kegs30_backgroudColor[i] = "rgba(54, 162, 235, 0.6),";
+                BottleCasebackgroudColor[i] = "rgba(153, 102, 255, 0.6),";
+                BottleCaseborderColor[i] = "rgba(153, 102, 255, 1),";
+
+            }
+
+            //beerprop chart
+            let ctx_rightTop = document.getElementById('myChartYearProd').getContext('2d');
+
+            Init_arrays(data, Beers_arr);
+
+            // Beer Stock
+            var crt_leftTop = new Chart(ctx_rightTop, {
+                type: 'bar',
+                // data: feed Data Here
+                data: {
+
+                    //  dinamic label from beer types
+                    labels: data.map(item => item.BeerType),
+                    datasets: [{
+                        label: 'Kegs 20',
+                        data: data.map(item => item.Keg20_amount),//[12, 5, 3, 5, 6, 3],
+                        backgroundColor: kegs20_backgroudColor,
+                        borderColor: kegs20_borderColor,
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-1'
+                    },
+                    {
+                        label: 'Kegs 30',
+                        data: data.map(item => item.Keg30_amount),
+                        backgroundColor: kegs30_backgroudColor,
+                        borderColor: kegs30_borderColor,
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-2'
+                    },
+                    {
+                        label: 'Bottle Cases',
+                        data: data.map(item => item.Bottels_qty),
+                        backgroundColor: BottleCasebackgroudColor,
+                        borderColor: BottleCasebackgroudColor,
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-3'
+                    },
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Beer Prod This Year'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: true
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'left',
+                            // gridLines : {
+                            //     display : false
+                            // },
+                            id: 'y-axis-1'
+                        },
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                                display: false // left / right axis
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'right',
+                            gridLines: {
+                                display: false  // the vertical lines inside the chart itself
+                            },
+                            id: 'y-axis-2',
+                        },
+                        {
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'right',
+                            gridLines: {
+                                display: false // the vertical lines inside the chart itself
+                            },
+                            id: 'y-axis-3',
+                        }
+                        ]
+                    }
+                }
+            });
+
+
+            //End   beerprop chart
+
+
+
+
+
+            //beerWaste charte
+            let ctx_leftTop1 = document.getElementById('myChartYearWaste').getContext('2d');
+
+            Init_arrays(data, Beers_arr);
+
+            // Beer Stock
+            var crt_leftTop = new Chart(ctx_leftTop1, {
+                type: 'bar',
+                // data: feed Data Here
+                data: {
+
+                    //  dinamic label from beer types
+                    labels: data.map(item => item.BeerType),
+                    datasets: [{
+                        label: 'Waste Precent',
+                        data: data.map(item => item.Waste_precent1),//[12, 5, 3, 5, 6, 3],
+                        backgroundColor: kegs20_backgroudColor,
+                        borderColor: kegs20_borderColor,
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-1'
+                    },
+                    
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Beer Waste Precent Year'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: true
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'left',
+                            // gridLines : {
+                            //     display : false
+                            // },
+                            id: 'y-axis-1'
+                        },
+  
+                        ]
+                    }
+                }
+            });
+
+
+            //End   beer Waste chart
+
+
+
+        }
+
+        function GetBatch_BottelingError(err) {
             console.log(err);
         }
 
 
         // Orders API
-        function GetOrderSucess(data) {
-            console.log('data from order this year:', data);
+        function GetOrderyearSucess(data) {
+          
+          
+            //beer Order chart
+            let orderarr = [];
+            for (var i = 0; i < data.length; i++) {
+                let keg20 = data[i].Beer.Keg20_amount;
+                let keg30 = data[i].Beer.Keg30_amount;
+                let bottles = data[i].Beer.BottleCase_amount;
+                let beertype = data[i].Beer.BeerType;
+                orderarr.push({ // 
+                    "BeerType": beertype,
+                    "Keg20_amount": keg20,
+                    "Keg30_amount": keg30,
+                    "Bottels_qty": bottles
+                });
+            }
+            let ctx_rightTop = document.getElementById('myChartYearOrders').getContext('2d');
+
+            data = orderarr;
+            console.log("orders of this year: ", data);
+            Init_arrays(data, Beers_arr);
+      
+            var crt_bottom = new Chart(ctx_rightTop, {
+                type: 'bar',
+                // data: feed Data Here
+                data: {
+
+                    //  dinamic label from beer types
+                    labels: data.map(item => item.BeerType),
+                    datasets: [{
+                        label: 'Kegs 20',
+                        data: data.map(item => item.Keg20_amount),//[12, 5, 3, 5, 6, 3],
+                        backgroundColor: kegs20_backgroudColor,
+                        borderColor: kegs20_borderColor,
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-1'
+                    },
+                    {
+                        label: 'Kegs 30',
+                        data: data.map(item => item.Keg30_amount),
+                        backgroundColor: kegs30_backgroudColor,
+                        borderColor: kegs30_borderColor,
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-2'
+                    },
+                    {
+                        label: 'Bottle Cases',
+                        data: data.map(item => item.Bottels_qty),
+                        backgroundColor: BottleCasebackgroudColor,
+                        borderColor: BottleCasebackgroudColor,
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-3'
+                    },
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Beer Orders This Year'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: true
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'left',
+                            // gridLines : {
+                            //     display : false
+                            // },
+                            id: 'y-axis-1'
+                        },
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                                display: false // left / right axis
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'right',
+                            gridLines: {
+                                display: false  // the vertical lines inside the chart itself
+                            },
+                            id: 'y-axis-2',
+                        },
+                        {
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'right',
+                            gridLines: {
+                                display: false // the vertical lines inside the chart itself
+                            },
+                            id: 'y-axis-3',
+                        }
+                        ]
+                    }
+                }
+            });
+
+
+            //End   beerprop chart
+
+
 
         }
-        function GetOrderError(data) {
+        function GetOrderyearError(data) {
             console.log('data from Order_2020:', data);
 
         }
@@ -261,73 +588,6 @@
         }
 
 
-        function closestday(selectedBeer_arr) { //// function to return closest day
-            //check date///
-            var closeorderid;
-            var closedate = 100;
-            ///check date
-            for (let i = 0; i < selectedBeer_arr.length; i++) {
-                date1 = new Date(selectedBeer_arr[i].Date);
-                var dd1 = String(date1.getDate()).padStart(2, '0');
-                var mm1 = String(date1.getMonth() + 1).padStart(2, '0');
-                var yyyy1 = date1.getFullYear();
-                date1 = mm1 + '/' + dd1 + '/' + yyyy1;
-
-                var secondDate = new Date(yyyy1, mm1, dd1);
-
-
-                //get today Date
-                var today = new Date();
-                var dd = String(today.getDate()).padStart(2, '0');
-                var mm = String(today.getMonth() + 1).padStart(2, '0');
-                var yyyy = today.getFullYear();
-
-                today = mm + '/' + dd + '/' + yyyy;
-
-                const firstDate = new Date(yyyy, mm, dd);
-                //setting of day
-                const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-
-                //end get today
-                //end
-                if ((firstDate - secondDate) < 0)///only if the date didnt passed enter
-                {
-                    let diffDays2 = Math.round(Math.abs((firstDate - secondDate) / oneDay));//check how many days between 2 dates
-
-                    if (diffDays2 < closedate)///take the closest date
-                    {
-                        closedate = diffDays2;
-                        closeorderid = selectedBeer_arr[i].OrderID;
-                    }
-                }
-            }
-
-
-            return closeorderid;
-            // end check Date
-        }
-
-
-
-        function beer_in_stock(selectedBeer) { ///take amounts from the selected beer in stock
-
-            let beer_amount_in_stock;
-            for (let i = 0; i < beerinstock.length; i++) {
-                if (beerinstock[i].BeerType == selectedBeer) {
-                    beer_amount_in_stock = {
-                        "beertypeinorder": selectedBeer,
-                        "Keg20_amount": beerinstock[i].Keg20_amount,
-                        "Keg30_amount": beerinstock[i].Keg30_amount,
-                        "BottleCase_amount": beerinstock[i].BottleCase_amount
-                    }
-                }
-            }
-            Build_orders_tbl(selectedBeer, beer_amount_in_stock); // builds Order Table
-        }
-
-
-
-
 
     </script>
 
@@ -350,13 +610,14 @@
         }
 
         #headerRow {
-            height: 180px;
+            height: 50px;
+         
         }
 
-        .toast {
-            height: 80px;
+        #printBTN{
+          margin-left:auto;
+            align-self:center;
         }
-
         /*#loader {
             border: 12px solid #f3f3f3;
             border-radius: 50%;
@@ -365,7 +626,6 @@
             height: 70px;
             animation: spin 1s linear infinite;
         }*/
-
         @keyframes spin {
             100% {
                 transform: rotate(360deg);
@@ -410,6 +670,13 @@
                         <a class="nav-link" href="Alerts_Manager.html">Alerts</a>
                     </li>
                     <li class="nav-item active px-2">
+                        <a class="nav-link" href="Annual_Reports.html">Annual Reports</a>
+                    </li>
+                  
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="../WasteManager.html"  >Waste</a>
+                    </li>
+                    <li class="nav-item active px-2">
                         <a class="nav-link" href="../Login.html">Exit</a>
                     </li>
                 </ul>
@@ -427,59 +694,53 @@
     <div class="container">
         <!-- toast Div -->
         <div class="row" id="headerRow">
-            <div class="col-4" id="toastdiv">
 
-            </div>
-            <!-- toast Div -->
-            <div class="col-3"></div>
-
-            <div class="col-4">
-
-                <h4 class="text-center">Time Till Next Order:</h4>
-
-                <div class="progress" id="bartimetillnext">
-
-                </div>
-
-            </div>
+            <select id="yearchoosen"></select>
+            <button id="printBTN" onclick="window.print()">Print this page</button>
         </div>
     </div><br>
 
 
-    <div class="container">
+          <div class="container" id="charts">
 
-        <div class="row" style="text-align:center">
+              <div class="row" style="text-align:center">
 
-            <div class="col-6">
-                <canvas id="myChartSecond" class="border border-secondary"></canvas>
-            </div>
-            <div class="col-6">
-                <canvas id="myChartBottom" class="border border-secondary"></canvas>
-            </div>
+                  <div class="col-6">
+                      <canvas id="myChartYearProd" class="border border-secondary"></canvas>
+                  </div>
+                  <div class="col-6">
+                      <canvas id="myChartYearWaste" class="border border-secondary"></canvas>
+                  </div>
 
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-3">
+              </div>
+              <br>   <br>
+              <div class="row" style="text-align:center">
 
-            </div>
-            <div class="col-6">
-                <canvas id="myChartSecondBottom" class="border border-secondary"></canvas>
-                <div class="row" id="selectRow">
-                    <div class="col-3">
+                  <div class="col-6">
+                      <canvas id="myChartYearByTank" class="border border-secondary"></canvas>
+                  </div>
+                  <div class="col-6">
+                      <canvas id="myChartYearWasteByTank" class="border border-secondary"></canvas>
+                  </div>
 
-                    </div>
-                    <div class="col-4"></div>
-                    <div class="col-4">
-                        <select class="custom-select bg-primary text-dark" id="beerSelect"></select>
-                    </div>
-                    <div class="col-4"></div>
-                </div>
+              </div>
+              <br>   <br>
+              <div class="row" style="text-align:center">
 
-            </div>
-        </div>
+                  <div class="col-3">
 
-    </div>
+                  </div>
+                  <div class="col-6">
+                      <canvas id="myChartYearOrders" class="border border-secondary"></canvas>
+                  </div>
+                  <div class="col-3">
+
+                  </div>
+
+              </div>
+              <br>
+
+          </div>
 </body>
 
 </html>
