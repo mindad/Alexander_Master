@@ -36,7 +36,7 @@
             batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
 
             ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
-            ajaxCall('GET', `../../api/Waste?get_recent=${true}`, '', GetWasteSuccess, GetWasteError); // get reuslts
+            ajaxCall('GET', `../../api/Waste?get_recent=${true}`, '', GetWasteSuccess, GetWasteError); // get waste reuslts
             ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); 
             ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); 
 
