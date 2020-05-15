@@ -29,7 +29,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="../../Scripts/ajaxCalls.js"></script>
     <script src="../JS/glob_functions.js"></script>
-
+    <link href="../CSS/styles.css" rel="stylesheet" />
     <script>
         Beers_arr = [];
         kegs20_backgroudColor = [];
@@ -41,9 +41,9 @@
         FrontLabelbackgroudColor = [];
         FrontLabelborderColor = [];
         var selectedyear;
-    
+
         orders_arr = []; // DO NOT DELETE !!!
-  
+
 
 
         $(document).ready(function () {
@@ -60,13 +60,13 @@
         });
 
         function getannualreports() {
-          selectedyear = $(this).children("option:selected").val();//get this selecter year
+            selectedyear = $(this).children("option:selected").val();//get this selecter year
 
             $('#charts').show();
             console.log('this is year', selectedyear);
 
-            ajaxCall("GET", "../../api/Batch_Botteling/thisyear?year=" + selectedyear+" ", "", GetBatch_BottelingSucess, GetBatch_BottelingError);//get prod עבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה 
-            ajaxCall("GET", "../../api/Batch_Botteling/thisyeartank?year=" + selectedyear + "", "", GetBatch_BottelingSucesstank, GetBatch_BottelingErrortank);//get prod TANK וכמות ייצור שנתית לפי TANK עבור אחוז פחת לפי סוג בירה   
+            ajaxCall("GET", "../../api/Batch_Botteling/thisyear?year=" + selectedyear + " ", "", GetBatch_BottelingSucess, GetBatch_BottelingError);//get prod עבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה
+            ajaxCall("GET", "../../api/Batch_Botteling/thisyeartank?year=" + selectedyear + "", "", GetBatch_BottelingSucesstank, GetBatch_BottelingErrortank);//get prod TANK וכמות ייצור שנתית לפי TANK עבור אחוז פחת לפי סוג בירה
 
             ajaxCall("GET", "../../api/Order/thisyear?year=" + selectedyear + "", "", GetOrderyearSucess, GetOrderyearError); //GET ORDER  עבור כמות עזמנות שנתית לפי סוג בירה
 
@@ -85,10 +85,10 @@
 
         //End get production
 
-        //get production TANK וכמות ייצור שנתית לפי TANK עבור אחוז פחת לפי סוג בירה   
+        //get production TANK וכמות ייצור שנתית לפי TANK עבור אחוז פחת לפי סוג בירה
         function GetBatch_BottelingSucesstank(data) {
             console.log("batch by year tank", data);
-        
+
 
 
             //beerprod by tank num year
@@ -252,7 +252,7 @@
         }
 
 
-       
+
 
         function GetBatch_BottelingErrortank(err) {
             console.log(err);
@@ -263,7 +263,7 @@
 
         //End get production
 
-        //get productionעבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה 
+        //get productionעבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה
 
 
 
@@ -404,7 +404,7 @@
                         borderWidth: 1,
                         yAxisID: 'y-axis-1'
                     },
-                    
+
                     ]
                 },
                 options: {
@@ -430,7 +430,7 @@
                             // },
                             id: 'y-axis-1'
                         },
-  
+
                         ]
                     }
                 }
@@ -450,8 +450,8 @@
 
         // Orders API
         function GetOrderyearSucess(data) {
-          
-          
+
+
             //beer Order chart
             let orderarr = [];
             for (var i = 0; i < data.length; i++) {
@@ -459,7 +459,7 @@
                 let keg30 = data[i].Beer.Keg30_amount;
                 let bottles = data[i].Beer.BottleCase_amount;
                 let beertype = data[i].Beer.BeerType;
-                orderarr.push({ // 
+                orderarr.push({ //
                     "BeerType": beertype,
                     "Keg20_amount": keg20,
                     "Keg30_amount": keg30,
@@ -471,7 +471,7 @@
             data = orderarr;
             console.log("orders of this year: ", data);
             Init_arrays(data, Beers_arr);
-      
+
             var crt_bottom = new Chart(ctx_rightTop, {
                 type: 'bar',
                 // data: feed Data Here
@@ -606,12 +606,11 @@
 
         #headerRow {
             height: 50px;
-         
         }
 
-        #printBTN{
-          margin-left:auto;
-            align-self:center;
+        #printBTN {
+            margin-left: auto;
+            align-self: center;
         }
     </style>
 

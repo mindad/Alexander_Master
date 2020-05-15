@@ -145,7 +145,7 @@
         function editAlertSucess(data) {
             console.log(data, 'record changed succefully');
 
-            refresh_table();
+            refresh_tableAlert();
 
         }
         function editAlertError(err) {
@@ -157,7 +157,7 @@
         function DeleteAlertSucess(data) {
             console.log(data, "Record Deleted");
 
-            refresh_table();
+            refresh_tableAlert();
 
         }
 
@@ -167,7 +167,7 @@
         //****** Delete Alert
 
 
-        function refresh_table() {
+        function refresh_tableAlert() {
 
             $('#tbl').DataTable().destroy(); // destory table so it could be refreshed
             $('#notes_input').val('');
@@ -228,6 +228,13 @@
                     </li>
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Alerts_Manager.html">Alerts</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="Annual_Reports.html">Annual Reports</a>
+                    </li>
+
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="../WasteManager.html">Waste</a>
                     </li>
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="../Login.html" onclick="Clear_LocalStorage()">Exit</a>
