@@ -18,6 +18,7 @@
     <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 
     <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="JS/glob_functions.js"></script>
 
     <script>
 
@@ -39,9 +40,7 @@
         });
 
 
-        function f1() {
-            return false;
-        }
+
         var user = "";
         var password = "";
 
@@ -72,7 +71,7 @@
 
             ajaxCall('POST', "../api/User/Forgotpass", JSON.stringify(userforgot), PostUserForgotSucess, PostUserForgotError);
 
-            return false;
+            f1();
 
         }
         
@@ -114,7 +113,7 @@
             }
             else {
                 alert("new password and confirm new password must be the same");
-                return false;
+                f1();
             }
         }
         //end change password

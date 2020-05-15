@@ -35,6 +35,7 @@
         $(document).ready(function () {
 
             Check_User("Brewmiester");
+            
 
             Close_Div();
 
@@ -186,7 +187,7 @@
 
             ajaxCall("PUT", "../../api/Recipe", JSON.stringify(recipe), PutRecipeSucess, PutRecipeError);
 
-            return false; // form control
+            f1();
         }
 
         function GetNewProds() { // Get New Products arr
@@ -371,7 +372,7 @@
 
             ajaxCall("POST", "../../api/Recipe", JSON.stringify(recipe), PostRecipeSucess, PostRecipeError);
 
-            return false;
+            f1();
         }
 
         function PostRecipeSucess(data) {
@@ -386,12 +387,6 @@
 
 
         // Global functions
-        function refresh_table() {
-            location.reload();
-        }
-        function f1() {
-            return false;
-        }
         function OpenEditDiv() {
             $("#editDiv").show();
             $("#appProd").show();

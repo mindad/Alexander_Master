@@ -31,14 +31,16 @@
 
         $(document).ready(function () {
 
+            Check_User_Global();
+
             batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
 
             ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
             ajaxCall('GET', `../../api/Waste?get_recent=${true}`, '', GetWasteSuccess, GetWasteError); // get reuslts
             ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); 
             ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); 
-            // TODO
-            //setInterval(function () { checkExpiration_Brewmiester(); }, 15 * 60 * 1000); // 15 min Interval for user expiration
+
+            setInterval(function () { checkExpiration_Global(); }, 15 * 60 * 1000); // 15 min Interval for user expiration
             
             document.querySelector("body").style.visibility = "hidden"; // loader
             document.querySelector("#loader").style.visibility = "visible"; 

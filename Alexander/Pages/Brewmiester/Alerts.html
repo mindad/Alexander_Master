@@ -52,6 +52,7 @@
             setInterval(function () { checkExpiration_Brewmiester(); }, 15 * 60 * 1000); // 15 min Interval for user expiration
         });
 
+
         // Alert API
         function GetAlertSucess(Alertdata) {
 
@@ -156,7 +157,7 @@
         function editAlertSucess(data) {
             console.log(data, 'record changed succefully');
 
-            refresh_table();
+            refresh_alert_table();
 
         }
         function editAlertError(err) {
@@ -168,7 +169,7 @@
         function DeleteAlertSucess(data) {
             console.log(data, "Record Deleted");
 
-            refresh_table();
+            refresh_alert_table();
 
         }
 
@@ -178,7 +179,7 @@
         //****** Delete Alert
 
 
-        function refresh_table() {
+        function refresh_alert_table() {
 
             $('#tbl').DataTable().destroy(); // destory table so it could be refreshed
             $('#notes_input').val('');
@@ -188,9 +189,7 @@
             ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError); // get all Alerts
         }
 
-        function f1() {
-            return false;
-        }
+        
 
         function CloseEditDiv() {
             $("#editDiv").hide();

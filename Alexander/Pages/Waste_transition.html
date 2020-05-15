@@ -27,14 +27,17 @@
 
         $(document).ready(function () {
 
+            Check_User_Global();
+
             ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
 
             $('#checkWastebtn').on('click', function () {
+                // TODO: make sure dont need $(window).unbind(); /// for user authentication
                 window.open(`Waste.html?batch_id=${$('#checkWasteselect').val()}`, '_self');
             });
 
             // TODO
-            //setInterval(function () { checkExpiration_Brewmiester(); }, 15 * 60 * 1000); // 15 min Interval for user expiration
+            setInterval(function () { checkExpiration_Global(); }, 15 * 60 * 1000); // 15 min Interval for user expiration
         });
 
         function GetBatchSuccess(data) {

@@ -37,7 +37,7 @@
         $(document).ready(function () {
 
             Check_User("Brewmiester");
-
+  
             $("#addDiv").hide();
             $('#editDiv').hide();
             $('#add_prod_Div').hide();
@@ -217,7 +217,7 @@
 
             if ($("#prod_type_select").val() == "Select Product Type") { // product type validation
                 alert("Please Enter Product Type");
-                return false;
+                f1();
             }
 
             let prod = {
@@ -233,7 +233,7 @@
 
             ajaxCall('POST', '../../api/Product', JSON.stringify(prod), post_new_inventory_success, post_new_inventory_error);
 
-            return false;
+            f1();
 
         }
 
@@ -359,7 +359,7 @@
 
             ajaxCall("POST", "../../api/Inventory", JSON.stringify(prod), add_InventorySucess, add_InventoryError);
 
-            return false; // form submit
+            f1(); // form submit
         }
 
         function add_InventorySucess(data) {
@@ -389,12 +389,12 @@
 
             ajaxCall("PUT", "../../api/Inventory", JSON.stringify(prod), edit_InventorySucess, edit_InventoryError);
 
-            return false; // form control
+            f1(); // form control
         }
 
         function edit_InventorySucess(data) {
             console.log(data, 'record changed succefully');
-
+            $(window).unbind();
             refresh_table();
 
         }
@@ -434,14 +434,6 @@
                 }
             }
 
-        }
-
-        function refresh_table() {
-            location.reload();
-        }
-
-        function f1() {
-            return false; // form control
         }
 
         function Show_Add_prod_Div() {

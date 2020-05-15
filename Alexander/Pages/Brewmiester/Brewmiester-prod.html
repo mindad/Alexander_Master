@@ -324,12 +324,6 @@
             $("#inEditForm").append(st);
         }
 
-
-        function f1(e) {
-            e.preventDefault();
-            return false;
-        }
-
         //////// edit + delete
         function buttonEvents() {
 
@@ -366,7 +360,7 @@
                 if (batchArr[id_in_batchArr].BatchID == BrewArr[i].Batch_id) {
 
                     for (let prd of BrewArr[i].Prod_list) {
-                        prd.Amount = $(`#${prd.ProductName}`).val(); // update amounts
+                        prd.Amount = $(`#${prd.ProductName.replace(" ", "\\ ")}`).val(); // update amounts
                     }
 
                     prod_inRecipe = BrewArr[i].Prod_list; // prod arr to update
@@ -442,12 +436,8 @@
             Set_Edit_Form_Values(); // set form values and input fields based on certain recipe
         }
 
-        function refresh_table() {
-            location.reload();
-        }
-
         function GoToBatch(batch_id) { // Go To Batch.html
-
+            $(window).unbind(); // For user authentication
             window.open(`Batch.html?batch_id=${batch_id}`, '_self');
         }
 
@@ -457,7 +447,6 @@
             $("#btnDiv").show();
             $("#add_new_cook").show();
         }
-
 
 
         function GetMaxBatchID() { // returns next batch_id
@@ -471,8 +460,6 @@
         }
 
     </script>
-
-
 
     <style>
         #addprod {

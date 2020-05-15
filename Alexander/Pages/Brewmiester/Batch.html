@@ -42,6 +42,12 @@
         $(document).ready(function () {
 
             Check_User("Brewmiester");
+            //$(window).on('beforeunload', function (){
+            //    Clear_LocalStorage();
+            //});
+            //$("a").mousedown(function () {
+            //    $(window).unbind();
+            //});
 
             batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
             $("#headerline").html(`Batch # ${batch_id}`);
@@ -899,7 +905,7 @@
         function PutBatchError(err) {
             console.log(err);
         }
-        // ** EDIT DB
+        // ****** EDIT DB
 
         // Delete DB
         function DeleteSampleSucess(data) {
@@ -938,12 +944,8 @@
             console.log(err);
         }
 
-        // ** Delete DB
+        // ***** Delete DB
 
-
-        function refresh_table() {
-            location.reload();
-        }
 
         function hideDivs() {
             $("#editDiv_sample").hide();
