@@ -24,11 +24,14 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <link href="../CSS/styles.css" rel="stylesheet" />
+    <script src="../JS/glob_functions.js"></script>
 
     <script>
         ManagerInventoryArr = [];
 
         $(document).ready(function () {
+
+            Check_User("Manager");
 
             $('#editDiv').hide();
             $('#submit_edit').on('click', submitEdit);
@@ -43,6 +46,8 @@
             buttonEvents();
 
             //$('#add_new_batchbotteling').on('click', toggle_add_visibilty);
+
+            setInterval(function () { checkExpiration_Manager(); }, 15 * 60 * 1000);
 
         });
         //Batch_Botteling  API
@@ -275,7 +280,7 @@
                         <a class="nav-link" href="Alerts_Manager.html">Alerts</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="../Login.html">Exit</a>
+                        <a class="nav-link" href="../Login.html" onclick="Clear_LocalStorage()">Exit</a>
                     </li>
                     <!-- <li class="nav-item">
       <a class="nav-link disabled" href="#">Disabled</a>

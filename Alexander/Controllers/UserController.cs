@@ -10,25 +10,18 @@ namespace Alexander.Controllers
 {
     public class UserController : ApiController
     {
-        //post login user name
         public string Post([FromBody]User user)
         {
             return user.Check_Password();
         }
-        //End post login user name
 
-        // post forgot password
-        [HttpPost]
-        [Route("api/User/Forgotpass")]
-        public string PostForgot([FromBody]User user)
-        {
-
-            return user.get_oldpass();
-        }
-        // End post forgot password
-
-
-
+        //[HttpPost]
+        //[Route("api/User/Forgotpass")]
+        //public string PostForgot([FromBody]User user)
+        //{
+        //    User user = new User();
+        //    return user.get_oldpass(username);
+        //}
 
         //put change passowrd
         [HttpPut]

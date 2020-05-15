@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.Net.Mail;
 
 namespace Alexander.Models
 {
@@ -34,7 +35,6 @@ namespace Alexander.Models
             Email = email;
             NewPass = newPass;
             Question = question;
-
         }
 
         public string Check_Password()
@@ -105,7 +105,7 @@ namespace Alexander.Models
         //End update new passowrd
 
         //forgot password
-        public string get_oldpass()
+        public string get_oldpass(string send_address) // 
         {
 
             DBservices dbs = new DBservices();
@@ -129,9 +129,30 @@ namespace Alexander.Models
             }
 
             return "";
+        
+
+        SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new System.Net.NetworkCredential("alexanderbeers5@gmail.com", "amit$bg305");
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.EnableSsl = true;
+            
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress("alexanderbeers5@gmail.com", "Alexander pass Manager");
+            mail.To.Add(new MailAddress(send_address));
+            mail.Subject = "";
+            mail.Body = "<h1>Yor Password Is </h1><p>Insert pass here</p>";
+            mail.IsBodyHtml = true;
+
+            try
+            {
+                smtpClient.Send(mail);
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-
-        //end forgot password
-
     }
 }

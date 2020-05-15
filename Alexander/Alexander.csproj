@@ -174,7 +174,6 @@
     <Compile Include="Controllers\SampleDetailsController.cs" />
     <Compile Include="Controllers\SystemAlertsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Controllers\WasteController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -222,6 +221,7 @@
     <Content Include="Pages\Images\details_close.png" />
     <Content Include="Pages\Images\details_open.png" />
     <Content Include="Pages\Images\Logo_alexander.jpeg" />
+    <Content Include="Pages\JS\glob_functions.js" />
     <Content Include="Pages\Login.html" />
     <Content Include="Pages\Manager\Alerts_Manager.html" />
     <Content Include="Pages\Manager\Manager-dashboard.html" />

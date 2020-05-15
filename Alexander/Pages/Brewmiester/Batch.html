@@ -27,6 +27,8 @@
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <link href="../CSS/styles.css" rel="stylesheet" />
+    <script src="../JS/glob_functions.js"></script>
+
     <script>
 
         batch_id = null; // current batch
@@ -38,6 +40,8 @@
 
 
         $(document).ready(function () {
+
+            Check_User("Brewmiester");
 
             batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
             $("#headerline").html(`Batch # ${batch_id}`);
@@ -84,8 +88,9 @@
             $(".close_Btn_batch").on("click", Close_edit_batch);
 
             Hide_Tables('');
-        });
 
+            setInterval(function () { checkExpiration_Brewmiester(); }, 15 * 60 * 1000); // 15 min Interval for user expiration
+        });
 
 
         // Batch API
@@ -1030,7 +1035,7 @@
                         <a class="nav-link" href="Alerts.html">Alerts</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="../Login.html">Exit</a>
+                        <a class="nav-link" href="../Login.html" onclick="Clear_LocalStorage()">Exit</a>
                     </li>
                 </ul>
             </div>

@@ -25,6 +25,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="../../Scripts/ajaxCalls.js"></script>
     <link href="../CSS/styles.css" rel="stylesheet" />
+    <script src="../JS/glob_functions.js"></script>
 
     <script>
         Beers_arr = [];
@@ -45,6 +46,8 @@
 
         $(document).ready(function () {
 
+            Check_User("Manager");
+
             ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError); //GET BEER IN STOCK
 
             //ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError); //GET manager_products
@@ -63,6 +66,9 @@
             //    }
             //    return false; // Toast Not Deleted
             //});
+
+            setInterval(function () { checkExpiration_Manager(); }, 15 * 60 * 1000);
+
             document.querySelector("body").style.visibility = "hidden"; 
             document.querySelector("#loader").style.visibility = "visible"; 
 
@@ -784,7 +790,7 @@
                         <a class="nav-link" href="Alerts_Manager.html">Alerts</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="../Login.html">Exit</a>
+                        <a class="nav-link" href="../Login.html" onclick="Clear_LocalStorage()">Exit</a>
                     </li>
                 </ul>
             </div>
