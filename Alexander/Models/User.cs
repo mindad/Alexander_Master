@@ -62,7 +62,7 @@ namespace Alexander.Models
             return "";
         }
 
-        //update new passowrd
+        //update new passoword
         public string updatepass()
         {
             int effected = 0;
@@ -80,10 +80,12 @@ namespace Alexander.Models
                     {
                         dr[0]["password"] = NewPass;
 
-                    }// cahnge password  manager
+                    } // cahnge password  manager
                     else
+                    {
                         dr[0]["password"] = NewPass;
-
+                    }
+                        
                     effected = dbs.update(); // update DB
                 }
 
@@ -105,22 +107,19 @@ namespace Alexander.Models
         //End update new passowrd
 
         //forgot password
-        public string get_oldpass(string send_address) // 
+        public bool get_oldpass() //// TODO: make default email in DB only
         {
-
             DBservices dbs = new DBservices();
+            User admin = dbs.get_Single_UserDB("admin");
             dbs = dbs.read("[User_2020]");
 
             try
             {
-                DataRow[] dr = dbs.dt.Select("userName='" + username + "' AND question1='" + question + "'"); // 
+                DataRow[] dr = dbs.dt.Select("userName='" + username + "'");
                 if (dr.Length != 0)
                 {
-                    if ((string)dr[0]["userName"] == "sahar")
-                    {
-                        return (string)dr[0]["password"];
-                    }
-                    return (string)dr[0]["password"];
+                    Password = (string)dr[0]["password"];
+                    Email = (string)dr[0]["email"];
                 }
             }
             catch (Exception ex)
@@ -128,31 +127,37 @@ namespace Alexander.Models
                 throw ex;
             }
 
-            return "";
-        
-
-        SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new System.Net.NetworkCredential("alexanderbeers5@gmail.com", "amit$bg305");
-            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtpClient.EnableSsl = true;
-            
-            MailMessage mail = new MailMessage();
-            mail.From = new MailAddress("alexanderbeers5@gmail.com", "Alexander pass Manager");
-            mail.To.Add(new MailAddress(send_address));
-            mail.Subject = "";
-            mail.Body = "<h1>Yor Password Is </h1><p>Insert pass here</p>";
-            mail.IsBodyHtml = true;
-
-            try
+            if (password != "")
             {
-                smtpClient.Send(mail);
-                return "Success";
+                using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.Credentials = new System.Net.NetworkCredential(admin.email, admin.password);
+                    smtpClient.EnableSsl = true;
+                    smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+                    MailMessage mail = new MailMessage();
+                    mail.From = new MailAddress(admin.email, "Alexander System");
+                    mail.To.Add(new MailAddress(Email));
+                    mail.Subject = "Your Pass To Alexander System";
+                    mail.Body = $"<h1>Your Password Is: {password}</h1>";
+                    mail.IsBodyHtml = true;
+
+                    try
+                    {
+                        smtpClient.Send(mail);
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return false;
+
         }
+
+       
     }
 }

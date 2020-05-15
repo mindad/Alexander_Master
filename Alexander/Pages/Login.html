@@ -2,8 +2,6 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
     <meta charset="utf-8" />
     <title>Login</title>
 
@@ -62,23 +60,36 @@
 
 
         //forgot password
-        function forgotpass() {
+        function forgotpass() { 
 
             userForgot = $("#userforgotpass").val();
-            favoriteNumber = $("#favorite").val();
 
             userforgot = {
                 "username": userForgot,
-                "question": favoriteNumber
             }
-            console.log("forgot password data ", userforgot);
+
+            console.log('this is userforgot')
 
             ajaxCall('POST', "../api/User/Forgotpass", JSON.stringify(userforgot), PostUserForgotSucess, PostUserForgotError);
 
             return false;
 
         }
-        // end forgot password
+        
+        function PostUserForgotSucess(email_sent) {
+
+            if (email_sent) {
+                alert("Email with the password was sent to your email address");
+            }
+            else {
+                alert("Username is invalid, Please try again");
+            }
+        }
+        function PostUserForgotError(err) {
+            console.log(err);
+        }
+        
+        //********** end forgot password
 
 
         //change password
@@ -124,31 +135,7 @@
         }
 
 
-        //show function
-        function showforgotpass() {
-            $("#forgotpass").toggle()
-            $("#changepass").hide()
-        }
-        function showchangepass() {
-            $("#changepass").toggle()
-            $("#forgotpass").hide()
-
-        }
-
-        //end  show function
-
-        //post forgot password
-        function PostUserForgotSucess(password) {
-            console.log(password);
-            if (password == "")
-                alert("User name or answer for the question is incorrect")
-            else
-                alert("your password is: '" + password + "' please dont forget next time")
-        }
-        function PostUserForgotError(err) {
-            console.log(err);
-        }
-        /// ** end post Forgot passowrd User
+        
 
 
         //post Login user
@@ -182,7 +169,19 @@
             myHour.setHours(myHour.getHours() + 1); // one hour from now 
             localStorage.setItem(`${user_name}_Timeout`, JSON.stringify(myHour.toLocaleString()));
         }            
-       
+
+
+        //show function
+        function showforgotpass() {
+            $("#forgotpass").toggle()
+            $("#changepass").hide()
+        }
+        function showchangepass() {
+            $("#changepass").toggle()
+            $("#forgotpass").hide()
+
+        }
+        //***** show function
     </script>
 
 
@@ -294,19 +293,13 @@
 
     </div>
     <form id="forgotpass">
-
         <div class="container">
             <label for="uname"><b>Username</b></label>
             <input id="userforgotpass" type="text" placeholder="Enter Username" name="uname" required>
-
-            <label for="psw"><b>Question: Favorite number</b></label>
-            <input id="favorite" type="password" placeholder="Enter favorite number" name="psw" required>
-
             <input id="btnforgotpass" type="submit" style="margin-top:5px" value="ok">
-
         </div>
-
     </form>
+
     <form id="changepass">
 
         <div class="forgotpass">

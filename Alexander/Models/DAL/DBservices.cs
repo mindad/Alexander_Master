@@ -1054,6 +1054,42 @@ namespace Alexander.Models.DAL
             }
         }
 
+
+        public User get_Single_UserDB(string user_name)
+        {
+            User user = new User();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+                String query = $"SELECT * FROM [User_2020] WHERE userName='{user_name}'";
+                SqlCommand cmd = new SqlCommand(query, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+                    user.Password = (string)dr["password"];
+                    user.Email = (string)dr["email"];
+                    user.Question = (string)dr["question1"];
+                    user.Username = (string)dr["userName"];
+                }
+                return user;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
         public List<Waste> get_WasteDB(bool get_recent=false)
         {
             List<Waste> waste_list = new List<Waste>();

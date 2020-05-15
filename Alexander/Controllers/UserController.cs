@@ -15,13 +15,12 @@ namespace Alexander.Controllers
             return user.Check_Password();
         }
 
-        //[HttpPost]
-        //[Route("api/User/Forgotpass")]
-        //public string PostForgot([FromBody]User user)
-        //{
-        //    User user = new User();
-        //    return user.get_oldpass(username);
-        //}
+        [HttpPost]
+        [Route("api/User/Forgotpass")]
+        public bool PostForgot([FromBody]User user)
+        {
+            return user.get_oldpass();
+        }
 
         //put change passowrd
         [HttpPut]
