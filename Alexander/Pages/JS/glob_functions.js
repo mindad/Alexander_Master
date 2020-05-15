@@ -53,7 +53,6 @@ function Check_User(user_to_check) {
     if (user_to_check != user_name) {
         window.open('../Login.html', '_self');
     }
-
 }
 
 function Clear_LocalStorage() {

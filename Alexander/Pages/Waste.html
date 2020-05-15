@@ -37,6 +37,8 @@
             ajaxCall('GET', `../../api/Waste?get_recent=${true}`, '', GetWasteSuccess, GetWasteError); // get reuslts
             ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); 
             ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); 
+            // TODO
+            //setInterval(function () { checkExpiration_Brewmiester(); }, 15 * 60 * 1000); // 15 min Interval for user expiration
             
             document.querySelector("body").style.visibility = "hidden"; // loader
             document.querySelector("#loader").style.visibility = "visible"; 
@@ -343,7 +345,7 @@
                         <a class="nav-link" href="Brewmiester/Alerts.html">Alerts</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="Login.html">Exit</a>
+                        <a class="nav-link" href="Login.html" onclick="Clear_LocalStorage()">Exit</a>
                     </li>
                 </ul>
             </div>
