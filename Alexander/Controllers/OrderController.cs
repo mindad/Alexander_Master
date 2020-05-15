@@ -19,25 +19,37 @@ namespace Alexander.Controllers
 
 
 
+
+        //year ORDER  Annual Reports
+        [HttpGet]
+        [Route("api/Order/thisyear")]
+        public List<Order> Getthis(string year)
+        {
+            Order order = new Order();
+            return order.get_Orderthisyear(year);
+        }
+
+        //end  Annual Reports Order
+
         //post
-        //public HttpResponseMessage Post([FromBody]Order order)
-        //{
-        //    int numEffected = 0;
-        //    try
-        //    {
-        //        numEffected = order.CreateOrder();
+        public HttpResponseMessage Post([FromBody]Order order)
+        {
+            int numEffected = 0;
+            try
+            {
+                numEffected = order.CreateOrder();
 
-        //        if (numEffected > 0)
-        //            return Request.CreateResponse(HttpStatusCode.OK, numEffected);
-        //        else
-        //            return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not Found");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
-        //    }
+                if (numEffected > 0)
+                    return Request.CreateResponse(HttpStatusCode.OK, numEffected);
+                else
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not Found");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
 
-        //}
+        }
 
 
 

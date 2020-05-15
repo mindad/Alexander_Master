@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using Alexander.Models.DAL;
 
+
 namespace Alexander.Models
 {
     public class AlertsManager
@@ -77,6 +78,11 @@ namespace Alexander.Models
 
             return 1;
         }
+
+
+
+
+
 
     }
 }

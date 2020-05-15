@@ -15,7 +15,9 @@
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="../../Scripts/ajaxCalls.js"></script>
+
     <!--add pdf/print and excel options-->
+
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -23,16 +25,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <link href="../CSS/styles.css" rel="stylesheet" />
-    <script src="../JS/glob_functions.js"></script>
 
+    <!--add pdf/print and excel options-->
     <script>
         OrderArr = [];
         beertypeArr = [];
 
         $(document).ready(function () {
-
-            Check_User("Manager");
 
             $('#editDiv').hide();
             $('#submit_edit').on('click', submitEdit);
@@ -52,8 +51,6 @@
 
             //$('#add_new_batchbotteling').on('click', toggle_add_visibilty);
 
-            setInterval(function () { checkExpiration_Manager(); }, 15 * 60 * 1000);
-
         });
 
 
@@ -61,13 +58,13 @@
         function AddOrder() {
 
             let Order = {
-            
-                creationDate: $("#addDate").val(),
-                products_in_recipe: GetNewOrder()
+                OrderID: OrderArr[OrderArr.length - 1].OrderID + 1,
+                Date: $("#addDate").val(),
+                List_beer: GetNewOrder()//get list of beers in order
             }
 
             console.log("this is Order to post:", Order);
-PostOrderError
+
             ajaxCall("POST", "../../api/Order", JSON.stringify(Order), PostOrderSucess, PostOrderError);
 
             return false;
@@ -93,10 +90,10 @@ PostOrderError
                 if ($(`#beerSelect${i}`).val()) { //  >= 0
 
                     Orders.push({ // 
-                        "beerType": $(`#beerSelect${i}`).val(),
-                        "Amount_20": $(`#amount20_${i}`).val(),
-                        "Amount_30": $(`#amount30_${i}`).val(),
-                        "Amount_bottles": $(`#amountBoxes_${i}`).val()
+                        "BeerType": $(`#beerSelect${i}`).val(),
+                        "Keg20_amount": $(`#amount20_${i}`).val(),
+                        "Keg30_amount": $(`#amount30_${i}`).val(),
+                        "BottleCase_amount": $(`#amountBoxes_${i}`).val()
                     });
                 }
                 else {
@@ -396,6 +393,20 @@ PostOrderError
     </script>
 
     <style>
+
+        body {
+            background-color: #f7f6f6;
+            padding-bottom: 1%;
+        }
+
+        #headerRow {
+            height: 180px;
+        }
+
+        .navbar {
+            height: 70px;
+        }
+
         table {
             text-align: center;
             margin-right: 200px;
@@ -447,12 +458,15 @@ PostOrderError
                         <a class="nav-link" href="Alerts_Manager.html">Alerts</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="../Login.html" onclick="Clear_LocalStorage()">Exit</a>
+                        <a class="nav-link" href="Annual_Reports.html">Annual Reports</a>
                     </li>
-                 
-                    <!-- <li class="nav-item">
-      <a class="nav-link disabled" href="#">Disabled</a>
-    </li> -->
+
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="../WasteManager.html">Waste</a>
+                    </li>
+                    <li class="nav-item active px-2">
+                        <a class="nav-link" href="../Login.html">Exit</a>
+                    </li>
                 </ul>
             </div>
             <a class="navbar-brand" href="#">

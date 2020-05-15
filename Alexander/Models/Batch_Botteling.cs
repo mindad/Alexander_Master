@@ -15,6 +15,7 @@ namespace Alexander.Models
         private int bottels_qty;
         private float waste_litter;
         private float waste_percent;
+        private double waste_precent1;
 
         public int Keg20_amount { get => keg20_amount; set => keg20_amount = value; }
         public int Keg30_amount { get => keg30_amount; set => keg30_amount = value; }
@@ -22,21 +23,47 @@ namespace Alexander.Models
         public int Bottels_qty { get => bottels_qty; set => bottels_qty = value; }
         public float Waste_litter { get => waste_litter; set => waste_litter = value; }
         public float Waste_percent { get => waste_percent; set => waste_percent = value; }
+        public double Waste_precent1 { get => waste_precent1; set => waste_precent1 = value; }
 
         //public Waste waste;
 
         public Batch_Botteling() { }
 
-        public Batch_Botteling(int batchID, DateTime date, int tank, float wort_volume, string beerType, Recipe recipe_for_this_batch, int keg20_amount, int keg30_amount, int bottels_qty, float waste_litter, float waste_percent) : base(batchID, date, tank, wort_volume, beerType, recipe_for_this_batch)
+        public Batch_Botteling(int batchID, DateTime date, int tank, float wort_volume, string beerType, Recipe recipe_for_this_batch, int keg20_amount, int keg30_amount, int bottels_qty, float waste_litter, float waste_percent, double waste_percent1) : base(batchID, date, tank, wort_volume, beerType, recipe_for_this_batch)
         {
             this.Keg20_amount = keg20_amount;
             this.Keg30_amount = keg30_amount;
-
+            
             this.Bottels_qty = bottels_qty;
             this.Waste_litter = waste_litter;
             this.Waste_percent = waste_percent;
+            this.Waste_precent1 = waste_precent1;
         }
 
+        //  Annual Reports Get batches this year
+
+
+        //  // Annual Reports Get batches this year by tank
+        public List<Batch_Botteling> get_Batch_Bottelingyeartank(string year)
+        {
+            DBservices dbs = new DBservices();
+
+            List<Batch_Botteling> Batch_Botteling_arr_year = dbs.get_Batch_BottelingyeartankDB(year);
+
+            return Batch_Botteling_arr_year;
+        }
+
+
+        // Annual Reports Get batches this year by beertype
+        public List<Batch_Botteling> get_Batch_Bottelingyear(string year)
+        {
+            DBservices dbs = new DBservices();
+
+            List<Batch_Botteling> Batch_Botteling_arr_year = dbs.get_Batch_BottelingyearDB(year);
+
+            return Batch_Botteling_arr_year;
+        }
+        // End Annual Reports Get batches this year
 
         public List<Batch_Botteling> get_Batch_Botteling()
         {
@@ -103,8 +130,10 @@ namespace Alexander.Models
 
                 //call function update manager inventory 
                 if(bottletocheck< this.bottels_qty)//only if the number of bottles increased!!!!
-                Update_manager_inventory(beertype, this.bottels_qty- bottletocheck); 
+                Update_manager_inventory(beertype, this.bottels_qty- bottletocheck);
 
+                //check if there is alert to post
+                check_for_Alerts(beertype);
 
                 // update DB
             }
@@ -116,6 +145,51 @@ namespace Alexander.Models
 
             return effected;
         }
+
+        //post
+
+        ////check if there is alert to post
+        public void check_for_Alerts(string beertype)
+        {
+            try
+            {
+
+                DBservices dbs = new DBservices();
+                dbs = dbs.read("[manager_products_2020]");
+
+                DataRow dr2 = dbs.dt.Select("beerType='" + beertype + "' AND prodName='Box24'").First();
+
+                if (Convert.ToInt32(dr2["amount"]) < Convert.ToInt32(dr2["min_In_Stock"]))//boxes
+                {
+
+                    dbs.insertManagerAlert(beertype, "Boxes Stock");
+
+                }
+                 
+
+
+                DataRow[] data_rows = dbs.dt.Select("beerType='" + beertype + "' AND prodName LIKE 'Label%' ");//labels
+                //
+
+                foreach (var dr1 in data_rows)//foreach label in beertype
+                {
+                    if (Convert.ToInt32(dr1["amount"]) < Convert.ToInt32(dr1["min_In_Stock"]))
+                    { dbs.insertManagerAlert(beertype, "Label Stock");//if there is more then 1 label its stop check the labels
+                        break;
+                    }
+
+                }
+                dbs.update();
+                //
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
 
         //function to update manager inventory
         public void Update_manager_inventory(string beertype, int bottles )

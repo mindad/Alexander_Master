@@ -13,7 +13,7 @@ namespace Alexander.Models.DAL
     {
         public SqlDataAdapter da;
         public DataTable dt;
-
+        int manageralertid; //for alerts manager
         public DBservices()
         {
             //
@@ -253,6 +253,70 @@ namespace Alexander.Models.DAL
         // ** Batches END
 
 
+        /// 
+        /// INSERT all Orders
+        /// 
+        public int insert(Order order)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            int numEffected = 0;
+
+            var x = 0;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            try
+            {
+                foreach (var item in order.List_beer)//foreach beer in the list of order post
+                {
+                    
+                    String cStr = BuildInsertCommand(order, x);      // helper method to build the insert string
+                    cmd = CreateCommand(cStr, con);             // create the command
+                    numEffected += cmd.ExecuteNonQuery();       // Execute command
+                    x += 1;//for the beer numbers
+                }
+              
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            return numEffected;
+        }
+
+        private String BuildInsertCommand(Order order,int x)
+        {
+            String command;
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("Values({0}, '{1}', {2}, {3}, '{4}', '{5}')", order.OrderID, order.Date.ToString("yyyy-MM-dd"), order.List_beer[x].Keg20_amount, order.List_beer[x].Keg30_amount, order.List_beer[x].BottleCase_amount, order.List_beer[x].BeerType);
+            String prefix = "INSERT INTO Order_2020 " + "([Order_id], [SupplyDate], [keg_20_amount], [keg_30_amount], [box_24] ,[beerType]) ";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        // ** Order END
+
+
+
+
+
         /// INSERT all BatcheBatchebotteling
         /// 
         public int insert(Batch_Botteling Batch_Botteling)
@@ -443,8 +507,157 @@ namespace Alexander.Models.DAL
         }
 
 
-        /// 
+       
         /// GET all Beers
+        /// 
+        /// //get batches by year and beertype Annual Reports
+
+        public List<Batch_Botteling> get_Batch_BottelingyearDB(string year)
+        {
+            List<Batch_Botteling> Batch_Botteling_List = new List<Batch_Botteling>();
+            SqlConnection con = null;
+            //select * from [dbo].[BatchAfterProd_2020] INNER JOIN [dbo].[Batch_2020] ON [BatchAfterProd_2020].batch_id=[Batch_2020].batch_id
+            try
+            {
+                con = connect("DBConnectionString");
+                // connect 2 table to 1 table with ID key
+                String query = "SELECT beer_type, SUM([dbo].[BatchAfterProd_2020].[keg_20_amount])  as keg_20_amount, sum	([dbo].[BatchAfterProd_2020].[keg_30_amount])  as keg_30_amount,sum	([dbo].[BatchAfterProd_2020].[bottles_qty])  as [bottles_qty],AVG([dbo].[BatchAfterProd_2020].[waste_precent]) as waste FROM[dbo].[BatchAfterProd_2020]  right JOIN[dbo].[Batch_2020] ON[BatchAfterProd_2020].batch_id=[Batch_2020].batch_id where Year([date])="+ year+" group by beer_type";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+
+                    Batch_Botteling Batch_Botteling = new Batch_Botteling();
+
+                    //check if nul from SQL
+                    if (dr["beer_type"] != DBNull.Value)
+                    {
+                        Batch_Botteling.BeerType = (string)(dr["beer_type"]);
+                    }
+                    if (dr["keg_20_amount"] != DBNull.Value)
+                    {
+                        Batch_Botteling.Keg20_amount = Convert.ToInt32(dr["keg_20_amount"]);
+                    }
+                    if (dr["keg_30_amount"] != DBNull.Value)
+                    {
+                        Batch_Botteling.Keg30_amount = Convert.ToInt32(dr["keg_30_amount"]);
+                    }
+                    if (dr["bottles_qty"] != DBNull.Value)
+                    {
+                        Batch_Botteling.Bottels_qty = Convert.ToInt32(dr["bottles_qty"]);
+                    }
+                    if (dr["waste"] != DBNull.Value)
+                    {
+                    
+                        Batch_Botteling.Waste_precent1 = (double)dr["waste"];
+                    }
+
+               
+                 
+         
+
+                    Batch_Botteling_List.Add(Batch_Botteling);
+                }
+
+                return Batch_Botteling_List;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+
+
+        ///END get batches by year and beertype Annual Reports
+        ///
+
+
+
+        //get batches by tank and year Annual Reports
+
+
+        public List<Batch_Botteling> get_Batch_BottelingyeartankDB(string year)
+        {
+            List<Batch_Botteling> Batch_Botteling_List = new List<Batch_Botteling>();
+            SqlConnection con = null;
+            //select * from [dbo].[BatchAfterProd_2020] INNER JOIN [dbo].[Batch_2020] ON [BatchAfterProd_2020].batch_id=[Batch_2020].batch_id
+            try
+            {
+                con = connect("DBConnectionString");
+                // connect 2 table to 1 table with ID key
+                String query = "SELECT tank ,sum([dbo].[BatchAfterProd_2020].[keg_20_amount])   as keg_20_amount, sum	([dbo].[BatchAfterProd_2020].[keg_30_amount])  as keg_30_amount,sum	([dbo].[BatchAfterProd_2020].[bottles_qty])  as [bottles_qty],AVG([dbo].[BatchAfterProd_2020].[waste_precent]) as waste FROM[dbo].[BatchAfterProd_2020]  right JOIN[dbo].[Batch_2020] ON[BatchAfterProd_2020].batch_id=[Batch_2020].batch_id where Year([date])="+ year+" group by tank";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.CommandTimeout = 480; // enlarge T.O
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+
+                    Batch_Botteling Batch_Botteling = new Batch_Botteling();
+
+                    //check if nul from SQL
+                    if (dr["tank"] != DBNull.Value)
+                    {
+                        Batch_Botteling.Tank = Convert.ToInt32(dr["tank"]);
+                    }
+                    if (dr["keg_20_amount"] != DBNull.Value)
+                    {
+                        Batch_Botteling.Keg20_amount = Convert.ToInt32(dr["keg_20_amount"]);
+                    }
+                    if (dr["keg_30_amount"] != DBNull.Value)
+                    {
+                        Batch_Botteling.Keg30_amount = Convert.ToInt32(dr["keg_30_amount"]);
+                    }
+                    if (dr["bottles_qty"] != DBNull.Value)
+                    {
+                        Batch_Botteling.Bottels_qty = Convert.ToInt32(dr["bottles_qty"]);
+                    }
+                    if (dr["waste"] != DBNull.Value)
+                    {
+
+                        Batch_Botteling.Waste_precent1 = (double)dr["waste"];
+                    }
+
+
+
+
+
+                    Batch_Botteling_List.Add(Batch_Botteling);
+                }
+
+                return Batch_Botteling_List;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+
+
+        //end get batches by tank by year Annual Reports
+
         /// 
         public List<Beer> get_BeersDB()
         {
@@ -903,8 +1116,12 @@ namespace Alexander.Models.DAL
                     alert_to_add.Type = (string)dr["type"];
                     alert_to_add.Date = Convert.ToDateTime(dr["date"]);
                     alert_to_add.Description = (string)dr["description"];
-                    alert_to_add.Notes = (string)dr["notes"];
-
+                    if (dr["notes"] != DBNull.Value)
+                    {
+                        alert_to_add.Notes = (string)dr["notes"];
+                    }
+                    else
+                        alert_to_add.Notes = "";
                     alert_list_manager.Add(alert_to_add);
                 }
 
@@ -925,6 +1142,100 @@ namespace Alexander.Models.DAL
 
         //end Get all alert [Alert_Manager_2020]
 
+        /// INSERT  Insert AlertManager END
+        /// 
+        public int insertManagerAlert( string beer,string type)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            int numEffected = 0;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            try
+            {
+                String query = "SELECT MAX(alert_id) as 'alert' FROM[dbo].Alert_Manager_2020";
+                SqlCommand cmd1 = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd1.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+                while (dr.Read())
+                {
+                    manageralertid = Convert.ToInt32(dr["alert"]);
+                }
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            // SELECT MAX(alert_id) FROM[dbo].Alert_Manager_2020
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            try
+            {
+                manageralertid = manageralertid + 1;//next alertid
+                   AlertsManager amanager= new AlertsManager { };
+                amanager.Type = type;
+                amanager.Description ="Minimum In Stock";
+                amanager.AlertID = manageralertid;
+               var dd1 = DateTime.Now.Day;
+               var mm1 = DateTime.Now.Month;
+                var yy1 = DateTime.Now.Year;      
+                var date2= yy1.ToString()+'/'+mm1.ToString()+'/'+dd1.ToString();
+             
+            
+                amanager.Notes = date2;//add the date
+       
+                String cStr = BuildInsertCommand(amanager);      // helper method to build the insert string
+                cmd = CreateCommand(cStr, con);             // create the command
+                numEffected += cmd.ExecuteNonQuery();       // Execute command
+                                                            //nextalertid
+             
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            return numEffected;
+        }
+
+        private String BuildInsertCommand(AlertsManager amanager)
+        {
+            String command;
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("Values({0}, '{1}', '{2}', '{3}','{4}')", amanager.AlertID, amanager.Type, amanager.Notes, amanager.Description,"");
+            String prefix = "INSERT INTO Alert_Manager_2020 " + "([Alert_id], [type], [date], [description], [notes]) ";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        // ** Insert AlertManager END
 
 
 
@@ -1021,6 +1332,57 @@ namespace Alexander.Models.DAL
         }
 
         //end get order_2020 orders 
+
+        //get order this year Annual Reports
+
+
+
+        public List<Order> get_OrdersYearDB(string year)
+        {
+            List<Order> Order_List = new List<Order>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT beerType, sum([dbo].[Order_2020].[keg_20_amount]) as keg_20_amount, sum([dbo].[Order_2020].[keg_30_amount]) as keg_30_amount,sum([dbo].[Order_2020].[box_24]) as [box_24] FROM[dbo].[Order_2020] where Year([SupplyDate])=" + year + " group by beerType";
+
+                SqlCommand cmd = CreateCommand(query, con);//new SqlCommand(query, con);
+              
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
+                while (dr.Read())
+                {
+
+                    Order order = new Order();
+
+                    //TODO add the beer type
+
+                    order.Beer = new Beer((string)dr["beerType"], Convert.ToInt32(dr["keg_20_amount"]), Convert.ToInt32(dr["keg_30_amount"]), Convert.ToInt32(dr["box_24"]),0);
+
+                    Order_List.Add(order);
+                }
+                return Order_List;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+
+        //End get order this year Annual Reports
+
         public List<int> get_TanksDB()
         {
             List<int> tanks_list = new List<int>();

@@ -16,6 +16,33 @@ namespace Alexander.Controllers
             return batch.get_Batch_Botteling();
         }
 
+        /// <summary>
+        ///  Annual Reports
+        /// </summary>
+        /// <returns></returns>
+        //year batch botteling tank get  Annual Reports
+        [HttpGet]
+        [Route("api/Batch_Botteling/thisyeartank")]
+        public List<Batch_Botteling> Getthistank(string year)
+        {
+            Batch_Botteling batchyear = new Batch_Botteling();
+            return batchyear.get_Batch_Bottelingyeartank(year);
+        }
+
+        //year batch bottleing   Annual Reports
+        [HttpGet]
+        [Route("api/Batch_Botteling/thisyear")]
+        public List<Batch_Botteling> Getthis(string year)
+        {
+            Batch_Botteling batchyear = new Batch_Botteling();
+            return batchyear.get_Batch_Bottelingyear(year);
+        }
+
+        /// <summary>
+        /// End  Annual Reports
+        /// </summary>
+        /// <returns></returns>
+
 
         //post
         public int Post([FromBody]Batch_Botteling batchbotteling)

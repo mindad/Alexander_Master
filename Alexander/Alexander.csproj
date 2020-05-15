@@ -224,10 +224,12 @@
     <Content Include="Pages\JS\glob_functions.js" />
     <Content Include="Pages\Login.html" />
     <Content Include="Pages\Manager\Alerts_Manager.html" />
+    <Content Include="Pages\Manager\Annual_Reports.html" />
     <Content Include="Pages\Manager\Manager-dashboard.html" />
     <Content Include="Pages\Manager\Manager-prod.html" />
     <Content Include="Pages\Manager\Manager-ProductInventory.html" />
     <Content Include="Pages\Manager\Orders.html" />
+    <Content Include="Pages\WasteManager.html" />
     <Content Include="Pages\Waste.html" />
     <Content Include="Pages\Waste_transition.html" />
     <Content Include="Scripts\ajaxCalls.js" />
@@ -261,6 +263,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\Sql_DB_Scripts.txt" />
     <Content Include="Scripts\sql_tables.txt" />
+    <Content Include="Scripts\Annual_Report_querys.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
