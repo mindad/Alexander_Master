@@ -28,6 +28,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="../../Scripts/ajaxCalls.js"></script>
+    <script src="../JS/glob_functions.js"></script>
 
     <script>
         Beers_arr = [];
@@ -46,13 +47,16 @@
 
 
         $(document).ready(function () {
+
+            Check_User("Manager");
+
             $('#charts').hide();
 
             getyears();
 
             $("#yearchoosen").on('change', getannualreports); // Changes Order Chart Depands on Beer Type
 
-
+            setInterval(function () { checkExpiration_Manager(); }, 15 * 60 * 1000);
         });
 
         function getannualreports() {
@@ -592,17 +596,8 @@
     </script>
 
     <style>
-        body {
-            background-color: #f7f6f6;
-            padding-bottom: 1%;
-        }
-
         h4 {
             padding-bottom: 5%;
-        }
-
-        .navbar {
-            height: 70px;
         }
 
         #selectRow {
@@ -618,28 +613,6 @@
           margin-left:auto;
             align-self:center;
         }
-        /*#loader {
-            border: 12px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 12px solid #444444;
-            width: 70px;
-            height: 70px;
-            animation: spin 1s linear infinite;
-        }*/
-        @keyframes spin {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /*.centerLoader {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            margin: auto;
-        }*/
     </style>
 
 </head>
@@ -677,7 +650,7 @@
                         <a class="nav-link" href="../WasteManager.html"  >Waste</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="../Login.html">Exit</a>
+                        <a class="nav-link" href="../Login.html" onclick="Clear_LocalStorage()">Exit</a>
                     </li>
                 </ul>
             </div>

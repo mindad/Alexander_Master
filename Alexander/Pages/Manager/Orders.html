@@ -14,9 +14,6 @@
             crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
-    <script src="../../Scripts/ajaxCalls.js"></script>
-
-    <!--add pdf/print and excel options-->
 
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
@@ -25,17 +22,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <script src="../../Scripts/ajaxCalls.js"></script>
+    <script src="../JS/glob_functions.js"></script>
 
-    <!--add pdf/print and excel options-->
     <script>
         OrderArr = [];
         beertypeArr = [];
 
         $(document).ready(function () {
 
+            Check_User("Manager");
+
             $('#editDiv').hide();
             $('#submit_edit').on('click', submitEdit);
-         
+
             $('#addForm').on('submit', AddOrder);//add order
             $('#editDiv').on('submit', f1);
 
@@ -46,10 +46,12 @@
             ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError); //beerinstock
             //add Order BTN
             $('#addBtn').on("click", OpenAddDiv);
-       
+
             buttonEvents();
 
             //$('#add_new_batchbotteling').on('click', toggle_add_visibilty);
+
+            setInterval(function () { checkExpiration_Manager(); }, 15 * 60 * 1000);
 
         });
 
@@ -89,7 +91,7 @@
 
                 if ($(`#beerSelect${i}`).val()) { //  >= 0
 
-                    Orders.push({ // 
+                    Orders.push({ //
                         "BeerType": $(`#beerSelect${i}`).val(),
                         "Keg20_amount": $(`#amount20_${i}`).val(),
                         "Keg30_amount": $(`#amount30_${i}`).val(),
@@ -175,24 +177,24 @@
         }
 
 
-       // API BEERTYPES
+        // API BEERTYPES
         function GetBeerSucess(data) {
-            
-         
+
+
             for (let i = 0; i < data.length; i++) {
-                beertypeArr.push(data[i].BeerType);   
+                beertypeArr.push(data[i].BeerType);
             }
             console.log('this is BeerTypes:', beertypeArr);
             let BeerTypes = "";
             beertypeArr = beertypeArr.sort().map(beer => `<option>${beer}</option>`); // sets beerType arr values
-       
+
             //document.getElementById("beerSelect").innerHTML = BeerTypes;
         }
 
         function GetBeerError(err) {
             console.log(err);
         }
-        
+
 
         function buttonEvents() {
 
@@ -325,7 +327,7 @@
 
         }
 
-            //End close edit div function
+        //End close edit div function
 
 
 
@@ -341,46 +343,46 @@
             console.log(beertypeArr);
             let st = '';
 
-           
+
             for (var i = 0; i < num_Beers_in_Order; i++) {
 
-                    st += `<div class="row">\
-                                    <div class="col">\
-                                        <label>Beer Type</label>
-                                        <select name="Beer" id="beerSelect${i}" class="form-control">${beertypeArr}</select>
-                                    </div>\
-                                   <div class="col">
-                                        <label>Amount20</label>
-                                        <input type="number" min="0" class="form-control" id="amount20_${i}" />
-                                    </div>
-                                     <div class="col">
-                                        <label>Amount30</label>
-                                        <input type="number" min="0" class="form-control" id="amount30_${i}" />
-                                    </div>
-                                    <div class="col">
-                                        <label>AmountBoxes</label>
-                                        <input type="number" min="0" class="form-control" id="amountBoxes_${i}" />
-                                    </div>
+                st += `<div class="row">\
+                                        <div class="col">\
+                                            <label>Beer Type</label>
+                                            <select name="Beer" id="beerSelect${i}" class="form-control">${beertypeArr}</select>
+                                        </div>\
+                                       <div class="col">
+                                            <label>Amount20</label>
+                                            <input type="number" min="0" class="form-control" id="amount20_${i}" />
+                                        </div>
+                                         <div class="col">
+                                            <label>Amount30</label>
+                                            <input type="number" min="0" class="form-control" id="amount30_${i}" />
+                                        </div>
+                                        <div class="col">
+                                            <label>AmountBoxes</label>
+                                            <input type="number" min="0" class="form-control" id="amountBoxes_${i}" />
+                                        </div>
 
 
 </div>`;
-                }
-            //document.getElementById("beerSelect").innerHTML = BeerTypes;
-                $("#inAddForm").append(st);
-        
- 
-     
             }
-      
+            //document.getElementById("beerSelect").innerHTML = BeerTypes;
+            $("#inAddForm").append(st);
+
+
+
+        }
+
         //hide/show divs
         function OpenEditDiv() {
-       
+
             $("#addDiv").hide();
         }
         function Close_Div() {
             $("#addDiv").hide();
-         
-          
+
+
         }
         function Close_AddDiv() {
             $("#addBtn").show();
@@ -388,23 +390,14 @@
             $("#addDiv").hide();
 
         }
-        
-         //End hide/show divs
+
+             //End hide/show divs
     </script>
 
     <style>
 
-        body {
-            background-color: #f7f6f6;
-            padding-bottom: 1%;
-        }
-
         #headerRow {
             height: 180px;
-        }
-
-        .navbar {
-            height: 70px;
         }
 
         table {
@@ -465,13 +458,12 @@
                         <a class="nav-link" href="../WasteManager.html">Waste</a>
                     </li>
                     <li class="nav-item active px-2">
-                        <a class="nav-link" href="../Login.html">Exit</a>
+                        <a class="nav-link" href="../Login.html" onclick="Clear_LocalStorage()">Exit</a>
                     </li>
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
                 <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
-
             </a>
         </nav>
     </div>
