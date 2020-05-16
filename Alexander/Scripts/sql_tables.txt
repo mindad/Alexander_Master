@@ -77,6 +77,7 @@ create table Alert_2020(
 	[description] nvarchar(255),
 	[notes] nvarchar(255),
 	[batch_or_product] nvarchar(255),
+	[deleted] bit,
 	FOREIGN KEY ([type]) REFERENCES Alert_Types_2020([type]),
 	Primary key ([Alert_id])
 )

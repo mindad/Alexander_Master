@@ -59,7 +59,7 @@
 
             let prodTypesNames = ['Hops', 'Malt', 'Minerals', 'Yeast'];
             let locationArr = [ctx_leftTop, ctx_rightTop, ctx_leftBottom, ctx_rightBottom];
-            let arrayNames = [Hops_arr, Malt_arr, Minerals_arr, Yeast_arr]
+            let arrayNames = [Hops_arr, Malt_arr, Minerals_arr, Yeast_arr];
 
             // Build all charts
             for (var i = 0; i < 4; i++) { 
@@ -86,7 +86,7 @@
                 else if (data[i].ProductType == 'Minerals') {
                     Minerals_arr.push(data[i]);
                 }
-                else if (data[i].ProductType == 'yeast') {
+                else if (data[i].ProductType == 'Yeast') {
                     Yeast_arr.push(data[i]);
                 }
                 else {
@@ -216,7 +216,7 @@
                     }
                 }
 
-                f1(); // Toast Not Deleted
+                return false; // Toast Not Deleted
             });
 
         }
@@ -234,8 +234,6 @@
 
                         if (toast_id[1] == this.id) {
                             toasts_arr.splice(i, 1);
-                            console.log("this is toast_id", toast_id[1]);
-                            console.log("deleted at toast_id place",toasts_arr);
                             break;
                         }
                     }
@@ -260,7 +258,7 @@
                         return;
                     }
                 }
-                f1(); // Toast Not Deleted
+                return false; // Toast Not Deleted
             });
         }
         // ** Alert API

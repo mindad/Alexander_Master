@@ -187,7 +187,7 @@
 
             ajaxCall("PUT", "../../api/Recipe", JSON.stringify(recipe), PutRecipeSucess, PutRecipeError);
 
-            f1();
+            return false;
         }
 
         function GetNewProds() { // Get New Products arr
@@ -372,7 +372,7 @@
 
             ajaxCall("POST", "../../api/Recipe", JSON.stringify(recipe), PostRecipeSucess, PostRecipeError);
 
-            f1();
+            return false;
         }
 
         function PostRecipeSucess(data) {

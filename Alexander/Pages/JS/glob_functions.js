@@ -63,7 +63,7 @@ function checkExpiration_Global() { //check if past expiration date
         window.open('../Login.html', '_self');
     }
 }
-
+/// User Validation
 function Check_User(user_to_check) {
 
     $(window).on('beforeunload', function () { // Clear localStorage
@@ -118,6 +118,7 @@ function Check_User_Global() {
         window.open('Login.html', '_self');
     }
 }
+/// ******** User Validation
 
 function refresh_table() {
     $(window).unbind();
@@ -127,7 +128,6 @@ function refresh_table() {
 function Clear_LocalStorage() {
     localStorage.clear();
 }
-
 
 function f1() {
     return false;
