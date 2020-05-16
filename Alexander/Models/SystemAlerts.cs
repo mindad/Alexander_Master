@@ -91,7 +91,7 @@ namespace Alexander.Models
                                 if (number_of_deviations == 2) 
                                 {
                                     Create_Brewmiester_Alert("Waste value: " + batch.Waste_percent.ToString(), "Waste", batch.BatchID.ToString()); // more then 2 deviations
-                                    //Create_Manager_Alert() //// AMIT
+                                    //Create_Manager_Alert(); //// AMIT
                                 }
                             }
                             if (num_of_iterations == 2) // out of last 2 batches for a certain beer type

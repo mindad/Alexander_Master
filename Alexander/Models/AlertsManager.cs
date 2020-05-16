@@ -81,8 +81,36 @@ namespace Alexander.Models
 
 
 
+        //////////////// AMIT
+        //public void CreateAlert()
+        //{
+        //    try
+        //    {
+        //        DBservices dbs = new DBservices();
+        //        dbs = dbs.read("[Alert_2020]");
+        //        if (CheckIfAlertExsist(dbs))
+        //        {
+        //            dbs.dt.Rows.Add(null, type, date, description, "", batch_or_prod);
+        //            dbs.update();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
-
+        //private bool CheckIfAlertExsist(DBservices dbs)
+        //{
+        //    foreach (DataRow dr in dbs.dt.Rows)
+        //    {
+        //        if ((string)dr["batch_or_product"] == batch_or_prod && (string)dr["type"] == type)
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //    return true;
+        //}
 
     }
 }
