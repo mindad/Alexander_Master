@@ -670,6 +670,7 @@
             st = toasts_arr[toasts_arr.length - 1] + toasts_arr[toasts_arr.length - 2];
 
             $('#toastdiv').html(st); // insert toast alerts into div
+            unbind_a_tag();
 
             $('.toast').toast('show'); // Shows toast without event!!! very important!!
 
