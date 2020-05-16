@@ -341,13 +341,14 @@
 
             console.log(OrderArr);
             var num_Beers_in_Order = prompt("How Many Beers Included In The Order?");
+            
             console.log(beertypeArr);
             let st = '';
 
+            if (num_Beers_in_Order && num_Beers_in_Order < 8) {
+                for (var i = 0; i < num_Beers_in_Order; i++) {
 
-            for (var i = 0; i < num_Beers_in_Order; i++) {
-
-                st += `<div class="row">\
+                    st += `<div class="row">\
                                             <div class="col">\
                                                 <label>Beer Type</label>
                                                 <select name="Beer" id="beerSelect${i}" class="form-control">${beertypeArr}</select>
@@ -367,11 +368,21 @@
 
 
 </div>`;
+                }
+                //document.getElementById("beerSelect").innerHTML = BeerTypes;
+                $("#inAddForm").append(st);
+              
             }
-            //document.getElementById("beerSelect").innerHTML = BeerTypes;
-            $("#inAddForm").append(st);
 
+            else {
+                $("#inAddForm").html('');
+                $("#addDiv").hide();
+                $("#addBtn").show();
 
+                $("#tbl").show();
+                    }
+               
+             
 
         }
 
