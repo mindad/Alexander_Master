@@ -30,6 +30,8 @@
 
             Check_User("Brewmiester");
 
+            ajaxCall("GET", "../../api/SystemAlerts", "", GetSystemAlerts, GetSystemAlertsError);
+
             ajaxCall("GET", "../../api/Product", "", GetProductSucess, GetProductError); 
 
             ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError);
@@ -295,6 +297,16 @@
         }
         
         // ** Batch API
+
+
+        // System Alerts
+        function GetSystemAlerts(data) {
+            console.log(data);
+        }
+        function GetSystemAlertsError(err) {
+             console.log(err);
+        }
+        // ***** System Alerts
     </script>
 
     <style>
@@ -307,9 +319,6 @@
         #headerRow {
             height: 180px;
         }
-        /*.toast {
-            height: 80px;
-        }*/
     </style>
 
 </head>
