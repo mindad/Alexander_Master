@@ -16,16 +16,19 @@ namespace Alexander.Models
         private DateTime date;
         private string description;
         private string notes;
+        private string beertype;
+
 
         public AlertsManager() { }
 
-        public AlertsManager(int alertID, string type, DateTime date, string description, string notes)
+        public AlertsManager(int alertID, string type, DateTime date, string description, string notes, string beertype)
         {
             this.alertID = alertID;
             this.type = type;
             this.date = date;
             this.description = description;
             this.notes = notes;
+            this.beertype = beertype;
         }
 
         public int AlertID { get => alertID; set => alertID = value; }
@@ -33,7 +36,7 @@ namespace Alexander.Models
         public DateTime Date { get => date; set => date = value; }
         public string Description { get => description; set => description = value; }
         public string Notes { get => notes; set => notes = value; }
-
+        public string Beertype { get => beertype; set => beertype = value; }
 
         public List<AlertsManager> get_AlertsManager()
         {

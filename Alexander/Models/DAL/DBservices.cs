@@ -1120,6 +1120,10 @@ namespace Alexander.Models.DAL
                     {
                         alert_to_add.Notes = (string)dr["notes"];
                     }
+                    if (dr["notes"] != DBNull.Value)
+                    {
+                        alert_to_add.Beertype = (string)dr["batch_or_product"];
+                    }
                     else
                         alert_to_add.Notes = "";
                     alert_list_manager.Add(alert_to_add);
@@ -1197,8 +1201,9 @@ namespace Alexander.Models.DAL
                var mm1 = DateTime.Now.Month;
                 var yy1 = DateTime.Now.Year;      
                 var date2= yy1.ToString()+'/'+mm1.ToString()+'/'+dd1.ToString();
-             
-            
+                amanager.Beertype = beer;
+
+
                 amanager.Notes = date2;//add the date
        
                 String cStr = BuildInsertCommand(amanager);      // helper method to build the insert string
@@ -1228,8 +1233,8 @@ namespace Alexander.Models.DAL
 
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("Values({0}, '{1}', '{2}', '{3}','{4}')", amanager.AlertID, amanager.Type, amanager.Notes, amanager.Description,"");
-            String prefix = "INSERT INTO Alert_Manager_2020 " + "([Alert_id], [type], [date], [description], [notes]) ";
+            sb.AppendFormat("Values({0}, '{1}', '{2}', '{3}','{4}','{5}')", amanager.AlertID, amanager.Type, amanager.Notes, amanager.Description,"", amanager.Beertype);
+            String prefix = "INSERT INTO Alert_Manager_2020 " + "([Alert_id], [type], [date], [description], [notes], [batch_or_product]) ";
             command = prefix + sb.ToString();
 
             return command;
