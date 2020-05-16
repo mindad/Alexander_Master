@@ -34,7 +34,7 @@
             ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
 
             $('#checkWastebtn').on('click', function () {
-                $(window).unbind(); /// for user authentication
+                $(window).unbind(); /// user authentication
                 window.open(`Waste.html?batch_id=${$('#checkWasteselect').val()}`, '_self');
             });
 
@@ -76,9 +76,7 @@
 
 <body>
     <!-- NavBar Template -->
-    <div class="header text-center" id="which_navbar">
-        
-    </div>
+    <div class="header text-center" id="which_navbar"></div>
     <br>
     <!-- NavBar Template -->
     <div class="container center" id="selectDiv">

@@ -38,7 +38,6 @@ namespace Alexander.Models
             DBservices dbs = new DBservices();
             string st="";
 
-
             try
             {
                 foreach (var prod in prod_list)
