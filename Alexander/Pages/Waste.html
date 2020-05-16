@@ -33,6 +33,8 @@
 
             Check_User_Global();
 
+            Create_Navbar();
+
             batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
 
             ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
@@ -322,39 +324,8 @@
 <body>
     <div id="loader" class="centerLoader"></div>
     <!-- NavBar Template -->
-    <div class="header text-center">
-        <nav class="navbar navbar-expand-sm navbar-light border-bottom" style="background-color: #f7f6f6;">
-            <a class="navbar-brand" href="Brewmiester-dashboard.html">Home</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="Brewmiester/Brewmiester-prod.html">Production</a>
-                    </li>
-                    <li class="nav-item active px-2">
-                        <a class="nav-link" href="Brewmiester/Inventory.html">Inventory</a>
-                    </li>
-                    <li class="nav-item active px-2">
-                        <a class="nav-link" href="Brewmiester/Recipes.html">Recipes</a>
-                    </li>
-                    <li class="nav-item active px-2">
-                        <a class="nav-link" href="Waste_transition.html">Waste</a>
-                    </li>
-                    <li class="nav-item active px-2">
-                        <a class="nav-link" href="Brewmiester/Alerts.html">Alerts</a>
-                    </li>
-                    <li class="nav-item active px-2">
-                        <a class="nav-link" href="Login.html" onclick="Clear_LocalStorage()">Exit</a>
-                    </li>
-                </ul>
-            </div>
-            <a class="navbar-brand" href="Login.html">
-                <img src="Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
-            </a>
-        </nav>
+    <div class="header text-center" id="which_navbar">
+        
     </div>
     <br>
     <!-- NavBar Template -->

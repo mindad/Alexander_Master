@@ -229,7 +229,6 @@
     <Content Include="Pages\Manager\Manager-prod.html" />
     <Content Include="Pages\Manager\Manager-ProductInventory.html" />
     <Content Include="Pages\Manager\Orders.html" />
-    <Content Include="Pages\WasteManager.html" />
     <Content Include="Pages\Waste.html" />
     <Content Include="Pages\Waste_transition.html" />
     <Content Include="Scripts\ajaxCalls.js" />
