@@ -67,7 +67,6 @@ function checkExpiration_Global() { //check if past expiration date
 function Check_User(user_to_check) {
 
     $(window).on('beforeunload', function () { // Clear localStorage
-        
         if (performance.navigation.type in [0,1]) {
 
         }
@@ -96,7 +95,12 @@ function Check_User(user_to_check) {
 function Check_User_Global() {
 
     $(window).on('beforeunload', function () { // Clear localStorage
-        Clear_LocalStorage();
+        if (performance.navigation.type in [0, 1]) {
+
+        }
+        else {
+            Clear_LocalStorage();
+        }
     });
     $("a").on('mousedown', function () { // Unclear localStorage in case of moving between pages
         $(window).unbind();
