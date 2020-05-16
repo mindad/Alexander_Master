@@ -122,3 +122,8 @@ function f1() {
     return false;
 }
 
+function unbind_a_tag() {
+    $("a").on('mousedown', function () { // Unclear localStorage in case of moving between pages
+        $(window).unbind();
+    });
+}

@@ -178,8 +178,10 @@
             st = toasts_arr[toasts_arr.length - 1] + toasts_arr[toasts_arr.length - 2];
 
             $('#toastdiv').html(st); // insert toast alerts into div
-
+            
             $('.toast').toast('show'); // Shows toast without event!!! very important!!
+
+            unbind_a_tag(); /////////// TODO
 
             $('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
                 if (confirm('are you sure yow want to delete this alert?')) {
@@ -195,22 +197,26 @@
 
                     if (toasts_arr.length == 0) { // no toasts left
                         $('#toastdiv').html("");
+                        unbind_a_tag();
                         return;
                     }
                     if (toasts_arr.length == 1) {
                         $('#toastdiv').html(toasts_arr[toasts_arr.length - 1]);
                         ToastEvents();
                         $('.toast').toast('show');
+                        unbind_a_tag();
                         return;
                     }
                     if (toasts_arr.length >= 2) {
                         $('#toastdiv').html(toasts_arr[toasts_arr.length - 1] + toasts_arr[toasts_arr.length - 2]);
                         ToastEvents();
                         $('.toast').toast('show');
+                        unbind_a_tag();
                         return;
                     }
                 }
-                return false; // Toast Not Deleted
+
+                f1(); // Toast Not Deleted
             });
 
         }
@@ -235,6 +241,7 @@
                     }
                     if (toasts_arr.length == 0) { // no toasts left
                         $('#toastdiv').html("");
+                        unbind_a_tag();
                         return;
                     }
                     if (toasts_arr.length == 1) { // one toast left
@@ -242,17 +249,18 @@
 
                         ToastEvents();
                         $('.toast').toast('show');
-                        
+                        unbind_a_tag();
                         return;
                     }
                     if (toasts_arr.length >= 2) { // more toasts to show
                         $('#toastdiv').html(toasts_arr[toasts_arr.length - 1] + toasts_arr[toasts_arr.length - 2]);
                         ToastEvents();
                         $('.toast').toast('show');
+                        unbind_a_tag();
                         return;
                     }
                 }
-                return false; // Toast Not Deleted
+                f1(); // Toast Not Deleted
             });
         }
         // ** Alert API
