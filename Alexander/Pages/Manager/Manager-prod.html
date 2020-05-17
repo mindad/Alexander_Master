@@ -146,7 +146,7 @@
                             data: {},
                             render: function (data, type, row, meta) {
 
-                                return ((data.Wort_volume - data.Keg20_amount * 20 - data.Keg30_amount * 30 - data.Bottels_qty * 0.33) / data.Wort_volume).toFixed(2)
+                                return ((data.Wort_volume - data.Keg20_amount * 20 - data.Keg30_amount * 30 - data.Bottels_qty * 0.33)*100 / data.Wort_volume).toFixed(2)
 
                             }
                         },
@@ -257,8 +257,8 @@
             }
 
             let wastelitter = batch1.Wort_volume - $('#Keg20_amountInput_edit').val() * 20 - $('#Keg30_amountInput_edit').val() * 30 - $('#Bottles_qtyInput_edit').val() * 0.33;//calc waste in litter
-            let wasteprecent = (wastelitter / batch1.Wort_volume);
-            if ((wastelitter / batch1.Wort_volume) == 1) {
+            let wasteprecent = (wastelitter / batch1.Wort_volume)*100;
+            if ((wastelitter / batch1.Wort_volume) == 100) {
                 wasteprecent = 0;
             }
 

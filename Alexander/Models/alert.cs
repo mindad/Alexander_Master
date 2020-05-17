@@ -91,10 +91,32 @@ namespace Alexander.Models
             {
                 DBservices dbs = new DBservices();
                 dbs = dbs.read("[Alert_2020]");
-                if (CheckIfAlertExsist(dbs))
+                if (CheckIfAlertExsist(dbs) )
                 {
                     dbs.dt.Rows.Add(null, type, date, description, "", batch_or_prod);
                     dbs.update();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+  
+            try
+            {
+                
+                DBservices dbs1 = new DBservices();
+                dbs1 = dbs1.read("[Alert_Manager_2020]");
+                if (CheckIfAlertExsist(dbs1) /*&& type == "Waste"*/)
+                {
+                    if (type == "Waste")
+                    {
+                        dbs1.insert_managerWaste(type, date, description, "", batch_or_prod);
+
+                        dbs1.update();
+                    }
+                
+                   
                 }
             }
             catch (Exception ex)

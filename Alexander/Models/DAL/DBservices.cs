@@ -1241,6 +1241,102 @@ namespace Alexander.Models.DAL
         }
 
         // ** Insert AlertManager END
+        //insert alert manager waste
+        /// 
+        public int insert_managerWaste(string type,DateTime date, string descripsion,string note,string batch_or_prod)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            int numEffected = 0;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            try
+            {
+                String query = "SELECT MAX(alert_id) as 'alert' FROM[dbo].Alert_Manager_2020";
+                SqlCommand cmd1 = new SqlCommand(query, con);
+
+                SqlDataReader dr = cmd1.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+                while (dr.Read())
+                {
+                    manageralertid = Convert.ToInt32(dr["alert"]);
+                }
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            // SELECT MAX(alert_id) FROM[dbo].Alert_Manager_2020
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            try
+            {
+                manageralertid = manageralertid + 1;//next alertid
+                AlertsManager amanager12 = new AlertsManager { };
+                amanager12.Type = type;
+                amanager12.Description = descripsion;
+                amanager12.AlertID = manageralertid;
+                var dd1 = DateTime.Now.Day;
+                var mm1 = DateTime.Now.Month;
+                var yy1 = DateTime.Now.Year;
+                var date2 = yy1.ToString() + '/' + mm1.ToString() + '/' + dd1.ToString();
+                amanager12.Beertype = batch_or_prod;
+
+
+                amanager12.Notes = date2;//add the date
+
+                String cStr = BuildInsertCommand1(amanager12);      // helper method to build the insert string
+                cmd = CreateCommand(cStr, con);             // create the command
+                numEffected += cmd.ExecuteNonQuery();       // Execute command
+                                                            //nextalertid
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            return numEffected;
+        }
+
+        private String BuildInsertCommand1(AlertsManager amanager12)
+        {
+            String command;
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("Values({0}, '{1}', '{2}', '{3}','{4}','{5}')", amanager12.AlertID, amanager12.Type, amanager12.Notes, amanager12.Description, "", amanager12.Beertype);
+            String prefix = "INSERT INTO Alert_Manager_2020 " + "([Alert_id], [type], [date], [description], [notes], [batch_or_product]) ";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        //END insert alert manager waste
+
 
 
 

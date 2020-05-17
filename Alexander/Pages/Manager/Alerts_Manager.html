@@ -85,7 +85,18 @@
                         },
                         { data: "Description" },
                         { data: "Notes" },
-                        { data: "Beertype" }
+                       
+                                  {
+                            data: {},
+                            render: function (data) {
+                           
+                                    if (data.Type == "Waste") {
+                                        return `<a href="../Waste.html?batch_id=${data.Beertype}">${data.Beertype}</a>`;
+                                    }
+                                    else return data.Type
+                         
+                            }
+                        },
                     ]
                 });
             }
