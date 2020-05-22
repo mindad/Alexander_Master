@@ -72,9 +72,7 @@
             try {
                 $('#tbl').DataTable({
                     dom: 'Bfrtip',
-                    buttons: [
-                        'excel', 'pdf', 'print'
-                    ],
+                    buttons: ['excel', 'pdf', 'print'],
                     data: Recipedata,
                     pageLength: 8,
                     columns: [
@@ -355,6 +353,7 @@
                     Close_Div();
                     return;
                 }
+                Close_Div();
                 alert("Please enter a valid number of products !");
             }
         }

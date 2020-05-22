@@ -653,15 +653,15 @@
                         <div class="toast" data-autohide="false" id="${toast_Count}"><div class="toast-header">
                         <strong class="mr-auto text-primary"><a href="Alerts_Manager.html">${alert.Type}</a></strong>
                         <small class="text-muted">${alert.Date.substr(0, 10)}</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
-                        </div><div class="toast-body">${alert.Description} -(${alert.Beertype})</div></div>`);
+                        </div><div class="toast-body">${alert.Description} -(${alert.Batch_or_prod})</div></div>`);
                     toast_Count += 1;
                 }
                 else if (alert.Type == "Waste") {
                     toasts_arr.push(
                         `<div class="toast" data-autohide="false" id="${toast_Count}"><div class="toast-header">\
-                    <strong class="mr-auto text-primary"><a href="../Waste.html?batch_id=${alert.Beertype}">${alert.Type}</a></strong>\
+                    <strong class="mr-auto text-primary"><a href="../Waste.html?batch_id=${alert.Batch_or_prod}">${alert.Type}</a></strong>\
                     <small class="text-muted">${alert.Date.substr(0, 10)}</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>\
-                    </div><div class="toast-body">${alert.Description} - ${alert.Beertype}</div></div>`);
+                    </div><div class="toast-body">${alert.Description} - ${alert.Batch_or_prod}</div></div>`);
                 }
             }
 
