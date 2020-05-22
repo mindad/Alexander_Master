@@ -95,32 +95,10 @@ namespace Alexander.Models
             {
                 DBservices dbs = new DBservices();
                 dbs = dbs.read("[Alert_2020]");
-                if (CheckIfAlertExsist(dbs) )
+                if (CheckIfAlertExist(dbs))
                 {
-                    dbs.dt.Rows.Add(null, type, date, description, "", batch_or_prod, 0);
+                    dbs.dt.Rows.Add(null, type, date, description, "", batch_or_prod, deleted);
                     dbs.update();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-  //manageralert
-            try
-            {
-                
-                DBservices dbs1 = new DBservices();
-                dbs1 = dbs1.read("[Alert_Manager_2020]");
-                if (CheckIfAlertExsist(dbs1) /*&& type == "Waste"*/)
-                {
-                    if (type == "Waste")
-                    {
-                        dbs1.insert_managerWaste(type, date, description, "", batch_or_prod);
-
-                        dbs1.update();
-                    }
-                
-                   
                 }
             }
             catch (Exception ex)
@@ -129,7 +107,7 @@ namespace Alexander.Models
             }
         }
 
-        private bool CheckIfAlertExsist(DBservices dbs)
+        private bool CheckIfAlertExist(DBservices dbs)
         {
             foreach (DataRow dr in dbs.dt.Rows)
             {

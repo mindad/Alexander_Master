@@ -14,11 +14,9 @@ namespace Alexander.Models.DAL
         public SqlDataAdapter da;
         public DataTable dt;
         int manageralertid; //for alerts manager
+
         public DBservices()
         {
-            //
-            // TODO: Add constructor logic here
-            //
         }
 
         public SqlConnection connect(String conString)
@@ -90,7 +88,7 @@ namespace Alexander.Models.DAL
             return 1;
         }
 
-        ///
+        
         public List<Brew> get_BrewDB()
         {
             List<Brew> brew_list = new List<Brew>();
@@ -314,9 +312,6 @@ namespace Alexander.Models.DAL
         // ** Order END
 
 
-
-
-
         /// INSERT all BatcheBatchebotteling
         /// 
         public int insert(Batch_Botteling Batch_Botteling)
@@ -390,10 +385,10 @@ namespace Alexander.Models.DAL
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.CommandTimeout = 480; // enlarge T.O
 
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
                 while (dr.Read())
-                {   // Read till the end of the data into a row
+                {  
 
                     Recipe recipe = new Recipe();
 
@@ -412,12 +407,7 @@ namespace Alexander.Models.DAL
                         prod.Amount = (float)Convert.ToDouble(parsed_items_in_recipe[i].Split(':')[1]);
                         prod.Min_amount = 0;
                         
-                        //prod.Last_arrivalTime = new DateTime(); // not needed
-
-                        //TODO make sure what ever happns here works
-
                         prd_lst.Add(prod);
-                        
                     }
 
                     recipe.Products_in_recipe = prd_lst;
@@ -552,13 +542,9 @@ namespace Alexander.Models.DAL
                     }
                     if (dr["waste"] != DBNull.Value)
                     {
-                    
                         Batch_Botteling.Waste_precent1 = (double)dr["waste"];
                     }
 
-               
-                 
-         
 
                     Batch_Botteling_List.Add(Batch_Botteling);
                 }
@@ -586,8 +572,6 @@ namespace Alexander.Models.DAL
 
 
         //get batches by tank and year Annual Reports
-
-
         public List<Batch_Botteling> get_Batch_BottelingyeartankDB(string year)
         {
             List<Batch_Botteling> Batch_Botteling_List = new List<Batch_Botteling>();
@@ -628,13 +612,8 @@ namespace Alexander.Models.DAL
                     }
                     if (dr["waste"] != DBNull.Value)
                     {
-
                         Batch_Botteling.Waste_precent1 = (double)dr["waste"];
                     }
-
-
-
-
 
                     Batch_Botteling_List.Add(Batch_Botteling);
                 }
@@ -1120,13 +1099,12 @@ namespace Alexander.Models.DAL
                     if (dr["notes"] != DBNull.Value)
                     {
                         alert_to_add.Notes = (string)dr["notes"];
-                    }
-                    if (dr["notes"] != DBNull.Value)
-                    {
-                        alert_to_add.Beertype = (string)dr["batch_or_product"];
+                        alert_to_add.Batch_or_prod = (string)dr["batch_or_product"];
                     }
                     else
+                    {
                         alert_to_add.Notes = "";
+                    }
                     alert_list_manager.Add(alert_to_add);
                 }
 
@@ -1202,7 +1180,7 @@ namespace Alexander.Models.DAL
                var mm1 = DateTime.Now.Month;
                 var yy1 = DateTime.Now.Year;      
                 var date2= yy1.ToString()+'/'+mm1.ToString()+'/'+dd1.ToString();
-                amanager.Beertype = beer;
+                amanager.Batch_or_prod = beer;
 
 
                 amanager.Notes = date2;//add the date
@@ -1234,7 +1212,7 @@ namespace Alexander.Models.DAL
 
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("Values({0}, '{1}', '{2}', '{3}','{4}','{5}')", amanager.AlertID, amanager.Type, amanager.Notes, amanager.Description,"", amanager.Beertype);
+            sb.AppendFormat("Values({0}, '{1}', '{2}', '{3}','{4}','{5}')", amanager.AlertID, amanager.Type, amanager.Notes, amanager.Description,"", amanager.Batch_or_prod);
             String prefix = "INSERT INTO Alert_Manager_2020 " + "([Alert_id], [type], [date], [description], [notes], [batch_or_product]) ";
             command = prefix + sb.ToString();
 
@@ -1253,24 +1231,17 @@ namespace Alexander.Models.DAL
             try
             {
                 con = connect("DBConnectionString"); // create the connection
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
-            try
-            {
                 String query = "SELECT MAX(alert_id) as 'alert' FROM[dbo].Alert_Manager_2020";
                 SqlCommand cmd1 = new SqlCommand(query, con);
-
                 SqlDataReader dr = cmd1.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+
                 while (dr.Read())
                 {
                     manageralertid = Convert.ToInt32(dr["alert"]);
                 }
                 if (con != null)
                 {
-                    con.Close();
+                    con.Close(); // AMIT I DONT THINK YOU NEEED THIS
                 }
             }
             catch (Exception ex)
@@ -1281,14 +1252,7 @@ namespace Alexander.Models.DAL
             try
             {
                 con = connect("DBConnectionString"); // create the connection
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
-            try
-            {
-                manageralertid = manageralertid + 1;//next alertid
+                manageralertid = manageralertid + 1; //next alertid
                 AlertsManager amanager12 = new AlertsManager { };
                 amanager12.Type = type;
                 amanager12.Description = descripsion;
@@ -1297,16 +1261,14 @@ namespace Alexander.Models.DAL
                 var mm1 = DateTime.Now.Month;
                 var yy1 = DateTime.Now.Year;
                 var date2 = yy1.ToString() + '/' + mm1.ToString() + '/' + dd1.ToString();
-                amanager12.Beertype = batch_or_prod;
+                amanager12.Batch_or_prod = batch_or_prod;
 
-
-                amanager12.Notes = date2;//add the date
+                amanager12.Notes = date2; //add the date
 
                 String cStr = BuildInsertCommand1(amanager12);      // helper method to build the insert string
                 cmd = CreateCommand(cStr, con);             // create the command
                 numEffected += cmd.ExecuteNonQuery();       // Execute command
                                                             //nextalertid
-
             }
             catch (Exception ex)
             {
@@ -1329,7 +1291,7 @@ namespace Alexander.Models.DAL
 
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("Values({0}, '{1}', '{2}', '{3}','{4}','{5}')", amanager12.AlertID, amanager12.Type, amanager12.Notes, amanager12.Description, "", amanager12.Beertype);
+            sb.AppendFormat("Values({0}, '{1}', '{2}', '{3}','{4}','{5}')", amanager12.AlertID, amanager12.Type, amanager12.Notes, amanager12.Description, "", amanager12.Batch_or_prod);
             String prefix = "INSERT INTO Alert_Manager_2020 " + "([Alert_id], [type], [date], [description], [notes], [batch_or_product]) ";
             command = prefix + sb.ToString();
 
@@ -1337,9 +1299,6 @@ namespace Alexander.Models.DAL
         }
 
         //END insert alert manager waste
-
-
-
 
 
         //GET ALL MANAGER PRODUCT
@@ -1359,7 +1318,7 @@ namespace Alexander.Models.DAL
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
 
                 while (dr.Read())
-                {   // Read till the end of the data into a row
+                {   
 
                     managerproducts mp = new managerproducts();
                     mp.ProdName = (string)dr["prodName"];
@@ -1367,7 +1326,6 @@ namespace Alexander.Models.DAL
                     mp.BeerType = (string)dr["beerType"];
                     mp.Amount = Convert.ToInt32(dr["amount"]);
                     mp.Min_in_stock = Convert.ToInt32(dr["min_In_Stock"]);
-
 
                     manager_products_List.Add(mp);
                 }
@@ -1390,7 +1348,6 @@ namespace Alexander.Models.DAL
 
 
         //get order_2020
-
         public List<Order> get_OrdersDB()
         {
             List<Order> Order_List = new List<Order>();
@@ -1450,7 +1407,7 @@ namespace Alexander.Models.DAL
 
                 String query = "SELECT beerType, sum([dbo].[Order_2020].[keg_20_amount]) as keg_20_amount, sum([dbo].[Order_2020].[keg_30_amount]) as keg_30_amount,sum([dbo].[Order_2020].[box_24]) as [box_24] FROM[dbo].[Order_2020] where Year([SupplyDate])=" + year + " group by beerType";
 
-                SqlCommand cmd = CreateCommand(query, con);//new SqlCommand(query, con);
+                SqlCommand cmd = CreateCommand(query, con);
               
 
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
@@ -1495,7 +1452,7 @@ namespace Alexander.Models.DAL
                 con = connect("DBConnectionString");
                 String query = "SELECT * FROM [Tank_2020]";
                 SqlCommand cmd = new SqlCommand(query, con);
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); 
 
                 while (dr.Read())
                 {
@@ -1529,7 +1486,7 @@ namespace Alexander.Models.DAL
                 con = connect("DBConnectionString");
                 String query = $"SELECT * FROM [User_2020] WHERE userName='{user_name}'";
                 SqlCommand cmd = new SqlCommand(query, con);
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); 
 
                 while (dr.Read())
                 {
@@ -1569,7 +1526,7 @@ namespace Alexander.Models.DAL
                 }
                
                 SqlCommand cmd = new SqlCommand(query, con);
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // the connection will close as reading completes
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
                 while (dr.Read())
                 {

@@ -45,7 +45,6 @@
 
             $("#submit_edit", "#editForm").submit(f1);
 
-
             $("#close_editDiv_Btn").on("click", CloseEditDiv) //close edit div
 
             setInterval(function () { checkExpiration_Manager(); }, 15 * 60 * 1000);
@@ -85,22 +84,19 @@
                         },
                         { data: "Description" },
                         { data: "Notes" },
-                       
-                                  {
+                        {
                             data: {},
                             render: function (data) {
                            
-                                    if (data.Type == "Waste") {
-                                        return `<a href="../Waste.html?batch_id=${data.Beertype}">${data.Beertype}</a>`;
-                                    }
-                                    else return data.Type
-                         
+                                if (data.Type == "Waste") {
+                                    return `<a href="../Waste.html?batch_id=${data.Batch_or_prod}">${data.Batch_or_prod}</a>`;
+                                }
+                                else return data.Type;
                             }
                         },
                     ]
                 });
             }
-
             catch (err) {
                 alert(err);
             }
@@ -208,7 +204,6 @@
         .container {
             padding-bottom: 4%;
         }
-
         #notes_input {
             height: 15%;
             width: 80%;
@@ -243,7 +238,6 @@
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="Annual_Reports.html">Annual Reports</a>
                     </li>
-
                     <li class="nav-item active px-2">
                         <a class="nav-link" href="../Waste_transition.html">Waste</a>
                     </li>
@@ -279,7 +273,6 @@
     </div>
     <!-- table -->
     <!--Edit Row In  Table-->
-
     <div class="container" id="editDiv">
         <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -293,7 +286,6 @@
             </div>
         </form>
     </div>
-
     <!--Edit Row In  Table-->
     <div id="ph" hidden></div>
 </body>

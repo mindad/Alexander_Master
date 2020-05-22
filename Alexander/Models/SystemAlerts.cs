@@ -91,7 +91,7 @@ namespace Alexander.Models
                                 if (number_of_deviations == 2) 
                                 {
                                     Create_Brewmiester_Alert("Waste value: " + batch.Waste_percent.ToString(), "Waste", batch.BatchID.ToString()); // more then 2 deviations
-                                    //Create_Manager_Alert(); //// AMIT /// TODO
+                                    Create_Manager_Alert("Waste value: " + batch.Waste_percent.ToString(), "Waste", batch.BatchID.ToString());
                                 }
                             }
                             if (num_of_iterations == 2) // out of last 2 batches for a certain beer type
@@ -143,9 +143,24 @@ namespace Alexander.Models
             }
 
         }
-        private void Create_Manager_Alert(string alert_value, string alertType)
+        private void Create_Manager_Alert(string alert_value, string alertType, string batch_or_product)
         {
+            String st = message_with_batch + alert_value;
+            try
+            {
+                AlertsManager al = new AlertsManager();
+                al.Date = DateTime.Now.Date;
+                al.Description = st;
+                al.Type = alertType;
+                al.Batch_or_prod = batch_or_product;
 
+                al.Create_Waste_Alert();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
      
