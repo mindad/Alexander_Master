@@ -71,7 +71,7 @@
 
             ajaxCall('POST', "../api/User/Forgotpass", JSON.stringify(userforgot), PostUserForgotSucess, PostUserForgotError);
 
-            f1();
+            return false;
 
         }
         
@@ -113,7 +113,7 @@
             }
             else {
                 alert("new password and confirm new password must be the same");
-                f1();
+                return false;
             }
         }
         //end change password

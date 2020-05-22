@@ -63,16 +63,22 @@ function checkExpiration_Global() { //check if past expiration date
         window.open('../Login.html', '_self');
     }
 }
-
+/// User Validation
 function Check_User(user_to_check) {
 
     $(window).on('beforeunload', function () { // Clear localStorage
-        Clear_LocalStorage();
+        if (performance.navigation.type in [0,1]) {
+
+        }
+        else {
+            Clear_LocalStorage();
+        }
     });
     $("a").on('mousedown', function () { // Unclear localStorage in case of moving between pages
         $(window).unbind();
     });
-    $(window).on('submit', function () { $(window).unbind();})
+    $(window).on('submit', function () { $(window).unbind(); })
+
 
     try {
         user_name = localStorage.getItem('user');
@@ -89,7 +95,12 @@ function Check_User(user_to_check) {
 function Check_User_Global() {
 
     $(window).on('beforeunload', function () { // Clear localStorage
-        Clear_LocalStorage();
+        if (performance.navigation.type in [0, 1]) {
+
+        }
+        else {
+            Clear_LocalStorage();
+        }
     });
     $("a").on('mousedown', function () { // Unclear localStorage in case of moving between pages
         $(window).unbind();
@@ -107,6 +118,7 @@ function Check_User_Global() {
         window.open('Login.html', '_self');
     }
 }
+/// ******** User Validation
 
 function refresh_table() {
     $(window).unbind();
@@ -116,7 +128,6 @@ function refresh_table() {
 function Clear_LocalStorage() {
     localStorage.clear();
 }
-
 
 function f1() {
     return false;
@@ -133,20 +144,20 @@ function Create_Navbar() {
     try {
         user_name = localStorage.getItem('user');
     } catch (e) {
-        //window.open('Login.html', '_self');
+        window.open('Login.html', '_self');
     }
     
     if (user_name == 'Manager') {
         $('#which_navbar').html(MANAGER_NAVBAR);
     }
     else {
-        $('#BREWMIESTER_NAVBAR').html(MANAGER_NAVBAR);
+        $('#which_navbar').html(BREWMIESTER_NAVBAR);
     }
     unbind_a_tag();
 }
 
 MANAGER_NAVBAR = `<nav class="navbar navbar-expand-sm navbar-light border-bottom" style="background-color: #f7f6f6;">
-            <a class="navbar-brand" href="Manager\Manager-dashboard.html">Home</a>
+            <a class="navbar-brand" href="Manager/Manager-dashboard.html">Home</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -182,7 +193,7 @@ MANAGER_NAVBAR = `<nav class="navbar navbar-expand-sm navbar-light border-bottom
         </nav>`;
 
 BREWMIESTER_NAVBAR = `<nav class="navbar navbar-expand-sm navbar-light border-bottom" style="background-color: #f7f6f6;">
-            <a class="navbar-brand" href="Brewmiester-dashboard.html">Home</a>
+            <a class="navbar-brand" href="Brewmiester/Brewmiester-dashboard.html">Home</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

@@ -37,7 +37,7 @@
 
             $('#editDiv').hide();
 
-            ajaxCall("GET", "../../api/SystemAlerts", "", console.log(1), console.log(0));
+            ajaxCall("GET", "../../api/SystemAlerts", "", GetSystemAlerts, GetSystemAlertsError);
 
             ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError);
 
@@ -58,12 +58,17 @@
 
             console.log('this is Alert data:', Alertdata);
 
+            for (var i = 0; i < Alertdata.length; i++) {
+                if (Alertdata[i].Deleted) {
+                    Alertdata.splice(i,1);
+                }
+            }
+            console.log('this is Alert data after delete:', Alertdata);
+
             try {
                 $('#tbl').DataTable({
                     dom: 'Bfrtip',
-                    buttons: [
-                        'excel', 'pdf', 'print'
-                    ],
+                    buttons: ['excel', 'pdf', 'print'],
                     data: Alertdata,
                     pageLength: 8,
                     columns: [
@@ -82,7 +87,7 @@
                         {
                             data: "Date",
                             render: function (data) {
-                                return data.substr(0, 10);
+                                return new Date(data.substr(0, 10)).toLocaleDateString();
                             }
                         },
                         { data: "Description" },
@@ -109,7 +114,6 @@
         function GetAlertError(err) {
             console.log(err);
         }
-
 
 
         //////// edit + delete
@@ -169,8 +173,7 @@
         function DeleteAlertSucess(data) {
             console.log(data, "Record Deleted");
 
-            refresh_alert_table();
-
+            refresh_table();
         }
 
         function DeleteAlertError(err) {
@@ -178,18 +181,14 @@
         }
         //****** Delete Alert
 
-
-        function refresh_alert_table() {
-
-            $('#tbl').DataTable().destroy(); // destory table so it could be refreshed
-            $('#notes_input').val('');
-
-            $("#editDiv").hide();
-
-            ajaxCall("GET", "../../api/Alert", "", GetAlertSucess, GetAlertError); // get all Alerts
+        // System Alerts
+        function GetSystemAlerts(data) {
+            console.log(data);
         }
-
-        
+        function GetSystemAlertsError(err) {
+             console.log(err);
+        }
+        // ***** System Alerts
 
         function CloseEditDiv() {
             $("#editDiv").hide();

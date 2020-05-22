@@ -33,6 +33,7 @@
     <script>
 
         inventoryArr = [];
+        products_names = [];
 
         $(document).ready(function () {
 
@@ -116,7 +117,7 @@
                         {
                             data: "Last_arrivalTime",
                             render: function (data) {
-                                return data.substr(0, 10);
+                                return new Date(data.substr(0, 10)).toLocaleDateString();
                             }
 
                         },
@@ -161,15 +162,15 @@
         function GetProductSucess(Product_data) {
 
             console.log('this is product data:', Product_data);
+            insertValues_prodType_select(Product_data);
+            products_names = Product_data.map(x => x.ProductName);
 
             try {
                 $('#tbl').DataTable({
                     dom: 'Bfrtip',
-                    buttons: [
-                        'excel', 'pdf', 'print'
-                    ],
+                    buttons: ['excel', 'pdf', 'print'],
                     data: Product_data,
-                    pageLength: 8,
+                    pageLength: 10,
                     columns: [
                         {
                             "className": 'details-control',
@@ -182,7 +183,7 @@
                         {
                             data: "Last_arrivalTime",
                             render: function (data, type, row, meta) {
-                                return data.substr(0, 10);
+                                return new Date(data.substr(0, 10)).toLocaleDateString();
                             }
                         },
                         { data: "Min_amount" },
@@ -200,13 +201,9 @@
                     ]
                 });
             }
-
             catch (err) {
                 alert(err);
             }
-
-            insertValues_prodType_select(Product_data);
-
         }
 
         function GetProductError(err) {
@@ -217,7 +214,11 @@
 
             if ($("#prod_type_select").val() == "Select Product Type") { // product type validation
                 alert("Please Enter Product Type");
-                f1();
+                return false;
+            }
+            if (products_names.includes($('#TB_name').val())) {
+                alert("Please Enter A New And Unique Product Name");
+                return false;
             }
 
             let prod = {
@@ -233,7 +234,7 @@
 
             ajaxCall('POST', '../../api/Product', JSON.stringify(prod), post_new_inventory_success, post_new_inventory_error);
 
-            f1();
+            return false;
 
         }
 
@@ -359,7 +360,7 @@
 
             ajaxCall("POST", "../../api/Inventory", JSON.stringify(prod), add_InventorySucess, add_InventoryError);
 
-            f1(); // form submit
+            return false; // form submit
         }
 
         function add_InventorySucess(data) {
@@ -389,7 +390,7 @@
 
             ajaxCall("PUT", "../../api/Inventory", JSON.stringify(prod), edit_InventorySucess, edit_InventoryError);
 
-            f1(); // form control
+            return false; // form control
         }
 
         function edit_InventorySucess(data) {

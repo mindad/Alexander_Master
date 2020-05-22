@@ -17,17 +17,19 @@ namespace Alexander.Models
         private string description;
         private string notes;
         private string batch_or_prod;
+        private bool deleted;
 
         public alert() { }
 
-        public alert(int alertID, string type, DateTime date, string description, string notes, string batch_or_prod)
+        public alert(int alertID, string type, DateTime date, string description, string notes, string batch_or_prod, bool deleted)
         {
             this.alertID = alertID;
             this.type = type;
             this.date = date;
             this.description = description;
             this.notes = notes;
-            this.Batch_or_prod = batch_or_prod;
+            this.batch_or_prod = batch_or_prod;
+            this.deleted = deleted;
         }
 
         public int AlertID { get => alertID; set => alertID = value; }
@@ -36,6 +38,7 @@ namespace Alexander.Models
         public string Description { get => description; set => description = value; }
         public string Notes { get => notes; set => notes = value; }
         public string Batch_or_prod { get => batch_or_prod; set => batch_or_prod = value; }
+        public bool Deleted { get => deleted; set => deleted = value; }
 
         public List<alert> get_Alerts()
         {
@@ -68,13 +71,14 @@ namespace Alexander.Models
             return effected;
         }
 
-        public int delete_line(int row)
+        public int delete_line(int row) // alert will not be deleted, [deleted] value will be st to False
         {
             try
             {
                 DBservices dbs = new DBservices();
                 dbs = dbs.read("[Alert_2020]");
-                dbs.dt.Select("Alert_id=" + row).First().Delete(); // Delete a line in DataTable
+                DataRow dr = dbs.dt.Select("Alert_id=" + row).First();  
+                dr["deleted"] = 1;
                 dbs.update(); // update the DB
             }
             catch (Exception ex)
@@ -93,7 +97,7 @@ namespace Alexander.Models
                 dbs = dbs.read("[Alert_2020]");
                 if (CheckIfAlertExsist(dbs) )
                 {
-                    dbs.dt.Rows.Add(null, type, date, description, "", batch_or_prod);
+                    dbs.dt.Rows.Add(null, type, date, description, "", batch_or_prod, 0);
                     dbs.update();
                 }
             }
@@ -129,6 +133,10 @@ namespace Alexander.Models
         {
             foreach (DataRow dr in dbs.dt.Rows)
             {
+                if (Convert.ToBoolean(dr["deleted"]))
+                {
+                    return false;
+                }
                 if ((string)dr["batch_or_product"] == batch_or_prod && (string)dr["type"] == type)
                 {
                     return false;

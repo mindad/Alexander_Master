@@ -827,6 +827,7 @@ namespace Alexander.Models.DAL
                     alert_to_add.Description = (string)dr["description"];
                     alert_to_add.Notes = (string)dr["notes"];
                     alert_to_add.Batch_or_prod = (string)dr["batch_or_product"];
+                    alert_to_add.Deleted = Convert.ToBoolean(dr["deleted"]);
 
                     alert_list.Add(alert_to_add);
                 }

@@ -92,17 +92,24 @@
                 }
             }
 
+            let disabled = '';
+            if (localStorage.getItem('user') == "Manager") {
+                disabled = 'onclick="return false;"';
+            }
+
             card_details = `<h5 class="card-title">${beer.BeerType}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">${beer.Date.substr(0,10)}</h6>
                         <p><strong>Wort vol: ${beer.Wort_volume} litters</strong></p>
                         <p class="card-text">
                             Waste Alert For Batch # ${beer.BatchID}
                         </p>
-                        <a href="Brewmiester/Batch.html?batch_id=${beer.BatchID}" class="card-link">Batch #${beer.BatchID}</a>`
+                        <a ${disabled} href="Brewmiester/Batch.html?batch_id=${beer.BatchID}" class="card-link">Batch #${beer.BatchID}</a>`
 
             $(".card-body").html(card_details); // set card details
 
             $('#beerType_header').html(`${beer.BeerType} Average Waste %`);
+
+            unbind_a_tag();
 
             ajaxCall('GET', `../../api/Batch/Beer_avg?beer_name=${beer.BeerType}`, '', GetAVGSuccess, GetAVGError); // AVG wate for beerType
 
@@ -141,7 +148,7 @@
                 CreateBarChart(similar_batches_arr);
             }
             
-
+            // Remove loader
             document.querySelector("#loader").style.display = "none";
             document.querySelector("body").style.visibility = "visible";
         }
@@ -324,9 +331,7 @@
 <body>
     <div id="loader" class="centerLoader"></div>
     <!-- NavBar Template -->
-    <div class="header text-center" id="which_navbar">
-        
-    </div>
+    <div class="header text-center" id="which_navbar"></div>
     <br>
     <!-- NavBar Template -->
     <!-- left Card -->

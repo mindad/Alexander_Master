@@ -129,6 +129,7 @@ namespace Alexander.Models
                 al.Description = st;
                 al.Type = alertType;
                 al.Batch_or_prod = batch_or_product;
+                al.Deleted = false;
 
                 al.CreateAlert();
             }
