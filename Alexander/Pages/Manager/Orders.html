@@ -250,6 +250,7 @@
 
         function DeleteOrderError(err) {
             console.log(err);
+            alert("Unable To Delete Order");
         }
 
         // Edit Order
@@ -304,13 +305,15 @@
 
 
         function Put_success(data) {
-            console.log(data);
+          
 
             return false;
+
         }
 
         function Put_Error(err) {
             console.log(err);
+            alert("Edit Failed !");
         }
 
 
@@ -375,8 +378,9 @@
                 $("#inAddForm").html('');
                 $("#addDiv").hide();
                 $("#addBtn").show();
-
+                $("#inAddForm").html('');
                 $("#tbl").show();
+                alert("Please enter a valid number of Orders !");
                 }
         }
 
