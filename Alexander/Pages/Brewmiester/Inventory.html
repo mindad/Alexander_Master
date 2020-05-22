@@ -171,6 +171,9 @@
                     buttons: ['excel', 'pdf', 'print'],
                     data: Product_data,
                     pageLength: 10,
+                    columnDefs: [
+                    { className: "bolded", targets: 3 },
+                    ],
                     columns: [
                         {
                             "className": 'details-control',
@@ -179,13 +182,13 @@
                             "defaultContent": ''
                         },
                         { data: "ProductName" },
-                        { data: "Amount" },
                         {
                             data: "Last_arrivalTime",
                             render: function (data, type, row, meta) {
                                 return new Date(data.substr(0, 10)).toLocaleDateString();
                             }
                         },
+                        { data: "Amount" },
                         { data: "Min_amount" },
                         {
                             data: {},
@@ -482,6 +485,9 @@
             width: 50%;
             /*bottom add new product button*/
         }
+        .bolded{
+            font-weight: bold;
+        }
     </style>
 
 </head>
@@ -532,8 +538,8 @@
                 <tr>
                     <th></th> <!--Plus sign-->
                     <th>Product Name</th>
-                    <th>Amount</th>
                     <th>Last Arrival Date</th>
+                    <th>Amount</th>
                     <th>Minimum Amount</th>
                     <th></th> <!--Edit + Add-->
                 </tr>
@@ -601,7 +607,9 @@
                 <input type="date" class="form-control" id="DateInput_add" required />
                 <br />
             </div>
-            <button id="submit_add" type="submit">Submit</button>
+            <div id="btnDiv" class="container">
+                <button id="submit_add" type="submit" class="btn btn-primary btn-block">Submit</button>
+            </div>
         </form>
     </div>
     <!--ADD Row In Table-->

@@ -93,14 +93,13 @@ namespace Alexander.Models
             catch (Exception ex)
             {
                 throw ex;
-
             }
 
             if (effected == 1) // true
             {
                 return "Password Changed Successfuly";
             }
-            return "Password Didnt Change";
+            return "Password Did Not Changed";
 
         }
 

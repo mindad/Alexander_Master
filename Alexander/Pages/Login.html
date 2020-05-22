@@ -51,7 +51,6 @@
                 "username": $("#username").val(),
                 "password": $("#password").val()
             }
-            console.log(userlogin);
             ajaxCall('POST', "../api/User", JSON.stringify(userlogin), PostUserSucess, PostUserError);
             return false;
         }
@@ -272,7 +271,6 @@
                 <img src="Images/alexanderlogo.png" alt="alexanderlogo" class="avatar">
             </div>
 
-
             <div class="container">
                 <label for="uname"><b>Username</b></label>
                 <input id="username" type="text" placeholder="Enter Username" name="uname" required>
@@ -280,13 +278,13 @@
                 <label for="psw"><b>Password</b></label>
                 <input id="password" type="password" placeholder="Enter Password" name="psw" required>
 
-                <input id="btn" type="submit" style="margin-top:5px" value="Login">
+                <input id="btn" type="submit" style="margin-top:5px" value="Login" class="btn btn-dark">
 
             </div>
 
             <div class="container">
-                <input id="forgotpassB" type="button" style="margin-top:5px" value="Forgot password">
-                <input id="changepassB" type="button" style="margin-top:5px" value="Change password">
+                <input id="forgotpassB" type="button" style="margin-top:5px" value="Forgot password" class="btn btn-secondary">
+                <input id="changepassB" type="button" style="margin-top:5px" value="Change password" class="btn btn-secondary">
             </div>
         </form>
 
@@ -305,8 +303,8 @@
 
             <input id="changepassuser" type="text" placeholder="Enter Username" name="uname" required>
             <input id="oldpass" type="password" placeholder="Enter old password" name="psw" required>
-            <input id="newpass" type="password" placeholder="Enter new password" name="psw" required>
-            <input id="confirmpass" type="password" placeholder="confirm new password" name="psw" required>
+            <input id="newpass" type="password" placeholder="Enter new password" name="psw" required pattern="{5,}">
+            <input id="confirmpass" type="password" placeholder="confirm new password" name="psw" required pattern="{5,}">
             <input id="btnchangepass" type="submit" style="margin-top:2px" value="ok">
 
         </div>

@@ -25,9 +25,8 @@ namespace Alexander.Controllers
         //put change passowrd
         [HttpPut]
         [Route("api/User/Changepass")]
-        public HttpResponseMessage Put([FromBody]User u) // 
+        public HttpResponseMessage Put([FromBody]User u)  
         {
-
             try
             {
                 string Effected = u.updatepass();

@@ -463,6 +463,10 @@
             margin: auto;
             width: 60%;
         }
+        #editprod{
+            margin: auto;
+            width: 60%;
+        }
         #addprodContainer {
             padding-top: 1%;
         }
@@ -571,20 +575,22 @@
         <button id="close_editDiv_Btn" type="button" class="close close_Btn" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
-        <form id="editForm">
-            <h4 id="edit_batch_header"></h4>
-            <div class="form-group">
-                <label for="">Beer Type</label>
-                <input type="text" class="form-control" id="beerTypeInput" required pattern="[a-zA-Z\s]*" />
-                <br />
-                <label for="fromDate">Date</label>
-                <input type="date" class="form-control" id="batchDateInput" required />
-                <br /><div id="inEditForm"></div>
-                <div id="btnDiv" class="container">
-                    <button class="btn btn-primary btn-block" type="submit">Submit</button>
+        <div id="editprod">
+            <form id="editForm">
+                <h4 id="edit_batch_header"></h4>
+                <div class="form-group">
+                    <label for="">Beer Type</label>
+                    <input type="text" class="form-control" id="beerTypeInput" required pattern="[a-zA-Z\s]*" />
+                    <br />
+                    <label for="fromDate">Date</label>
+                    <input type="date" class="form-control" id="batchDateInput" required />
+                    <br /><div id="inEditForm"></div>
+                    <div id="btnDiv" class="container">
+                        <button class="btn btn-primary btn-block" type="submit">Submit</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
     <!--Edit Row In  Table-->
 
