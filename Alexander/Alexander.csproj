@@ -263,6 +263,7 @@
     <Content Include="Scripts\Sql_DB_Scripts.txt" />
     <Content Include="Scripts\sql_tables.txt" />
     <Content Include="Scripts\Annual_Report_querys.txt" />
+    <Content Include="Scripts\waste.py" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
