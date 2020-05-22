@@ -106,8 +106,6 @@
             console.log(err);
         }
 
-
-
         //////// edit + delete
         function buttonEvents() {
 
@@ -154,7 +152,6 @@
             console.log(data, 'record changed succefully');
 
             refresh_tableAlert();
-
         }
         function editAlertError(err) {
             console.log(err);
@@ -166,9 +163,7 @@
             console.log(data, "Record Deleted");
 
             refresh_tableAlert();
-
         }
-
         function DeleteAlertError(err) {
             console.log(err);
         }
@@ -185,17 +180,12 @@
             ajaxCall("GET", "../../api/AlertsManager", "", GetAlertSucess, GetAlertError); // get all Alerts
         }
 
-        function f1(e) {
-            return false;
-        }
-
 
         // close edit div function
         function CloseEditDiv() {
             $("#editDiv").hide();
             $("#notes_input").val("");
         }
-
         //*** End close edit div function
     </script>
 

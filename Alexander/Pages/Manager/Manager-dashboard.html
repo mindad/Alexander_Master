@@ -552,7 +552,6 @@
 
             document.querySelector( "#loader").style.display = "none";
             document.querySelector("body").style.visibility = "visible";
-
         }
 
         // ** Orders API
@@ -606,12 +605,11 @@
                 const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
 
                 //end get today
-                //end
-                if ((firstDate - secondDate) < 0)///only if the date didnt passed enter
+                if ((firstDate - secondDate) < 0) ///only if the date didnt passed enter
                 {
                     let diffDays2 = Math.round(Math.abs((firstDate - secondDate) / oneDay));//check how many days between 2 dates
          
-                    if (diffDays2 < closedate)///take the closest date
+                    if (diffDays2 < closedate) ///take the closest date
                     {
                         closedate = diffDays2;
                         closeorderid = selectedBeer_arr[i].OrderID;
@@ -650,7 +648,7 @@
 
             for (alert of Alertdata) {
 
-                if (alert.Type == 'Boxes Stock' || alert.Type == 'Label Stock') { // only brewmiester alerts
+                if (alert.Type == 'Boxes Stock' || alert.Type == 'Label Stock') { // only Manager alerts
                     toasts_arr.push(`
                         <div class="toast" data-autohide="false" id="${toast_Count}"><div class="toast-header">
                         <strong class="mr-auto text-primary"><a href="Alerts_Manager.html">${alert.Type}</a></strong>

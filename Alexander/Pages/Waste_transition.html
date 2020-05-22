@@ -29,7 +29,7 @@
 
             Check_User_Global();
 
-            Create_Navbar();
+            Create_Navbar(); // Check Manager OR Brewmiester
 
             ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
 
@@ -71,13 +71,11 @@
             text-align-last: center;
         }
     </style>
-
 </head>
 
 <body>
     <!-- NavBar Template -->
-    <div class="header text-center" id="which_navbar"></div>
-    <br>
+    <div class="header text-center" id="which_navbar"></div><br>
     <!-- NavBar Template -->
     <div class="container center" id="selectDiv">
         <div class="row">
