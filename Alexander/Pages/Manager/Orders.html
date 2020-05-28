@@ -107,11 +107,7 @@
             return Orders;
         }
 
-
-
-
         //Batch_Botteling  API
-
         function GetOrderSucess(data) {
 
             console.log('this is OrderArr:', data);
@@ -121,11 +117,8 @@
             try {
                 $('#tbl').DataTable({
                     dom: 'Bfrtip',
-                    buttons: [
-                        'excel', 'pdf', 'print'
-                    ],
+                    buttons: ['excel', 'pdf', 'print'],
                     data: data,
-
                     pageLength: 7,
                     columns: [
                         {
@@ -141,24 +134,16 @@
                             }
                         },
                         { data: "OrderID" },
-
                         {
                             data: "Date",
                             render: function (data) {
                                 return data.substr(0, 10);
                             }
-
                         },
-
                         { data: "Beer.BeerType" },
                         { data: "Beer.Keg20_amount" },
                         { data: "Beer.Keg30_amount" },
                         { data: "Beer.BottleCase_amount" },
-
-
-
-
-
                     ]
                 });
             }
@@ -186,7 +171,6 @@
                 beertypeArr.push(data[i].BeerType);
             }
             console.log('this is BeerTypes:', beertypeArr);
-            let BeerTypes = "";
             beertypeArr = beertypeArr.sort().map(beer => `<option>${beer}</option>`); // sets beerType arr values
 
             //document.getElementById("beerSelect").innerHTML = BeerTypes;
@@ -205,28 +189,21 @@
                 console.log('data-btnBeerType is:', this.getAttribute('data-btnBeerType'));
 
                 $('#editDiv').show();
+                $('#addBtn').hide();
 
                 populateFields(this.getAttribute('data-btnId'), this.getAttribute('data-btnBeerType')); // fill the form fields according to the selected row
 
             });
 
-            ///
-
-
-
-            ///
-
             $(document).on("click", ".deleteBtn", function () {
 
 
                 let beer = {
-
                     beerType: this.getAttribute('data-btnBeerType')
                 }
                 let Order = {
                     orderID: this.getAttribute('data-btnId'),
                     beer,
-
                 }
                 console.log("order to delete", Order);
 
@@ -245,7 +222,6 @@
             console.log(data, "Record Deleted");
 
             location.reload();
-
         }
 
         function DeleteOrderError(err) {
@@ -297,7 +273,6 @@
 
 
             refresh_table();
-
         }
         // ** Edit Batch
 
@@ -306,9 +281,7 @@
 
         function Put_success(data) {
           
-
             return false;
-
         }
 
         function Put_Error(err) {
@@ -328,7 +301,7 @@
         //close edit div function
         function CloseEditDiv() {
             $("#editDiv").hide();
-
+            $('#addBtn').show();
         }
 
         //End close edit div function
@@ -337,9 +310,7 @@
 
         function OpenAddDiv() {
             $("#addDiv").show();
-            $("#addBtn").hide();
-            $("#editDiv").hide();
-            $("#tbl").hide();
+            $("#addBtn, #editDiv, #container_tbl").hide();
             $("#inAddForm").html('');
 
             console.log(OrderArr);
@@ -379,26 +350,21 @@
                 $("#addDiv").hide();
                 $("#addBtn").show();
                 $("#inAddForm").html('');
-                $("#tbl").show();
+                $("#container_tbl").show();
                 alert("Please enter a valid number of Orders !");
                 }
         }
 
         //hide/show divs
         function OpenEditDiv() {
-
             $("#addDiv").hide();
         }
         function Close_Div() {
             $("#addDiv").hide();
-
-
         }
         function Close_AddDiv() {
-            $("#addBtn").show();
-            $("#tbl").show();
+            $("#addBtn, #container_tbl").show();
             $("#addDiv").hide();
-
         }
         //End hide/show divs
     </script>
@@ -412,11 +378,12 @@
 
         #addprod {
             text-align: center;
-            margin-top: 100px;
             margin: auto;
-            width: 60%;
+            margin-top: 10%;
+            width: 80%;
             border: solid 2px;
             background-color: aliceblue;
+            padding-top:4%;
         }
         .container {
             padding-bottom: 4%;
@@ -468,7 +435,7 @@
     </div>
     <!-- NavBar Template -->
     <!-- table -->
-    <div class="container">
+    <div class="container" id="container_tbl">
         <h1 class="text-center">Orders</h1>
         <table id="tbl" class="display" border="1" style="width:100%">
             <thead style="background-color:cornflowerblue">

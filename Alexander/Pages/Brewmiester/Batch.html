@@ -42,18 +42,11 @@
         $(document).ready(function () {
 
             Check_User("Brewmiester");
-            //$(window).on('beforeunload', function (){
-            //    Clear_LocalStorage();
-            //});
-            //$("a").mousedown(function () {
-            //    $(window).unbind();
-            //});
 
             batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
             $("#headerline").html(`Batch # ${batch_id}`);
 
-            // Hide ADD & Edit Divs
-            hideDivs();
+            hideDivs(); // Hide ADD & Edit Divs
 
             // APIs
             ajaxCall('GET', '../../api/Batch_Production', '', GetBatchSuccess, GetBatchError); // check if exist and bring values into tables
@@ -774,14 +767,8 @@
 
         function Close_Edit_Div() {
 
-            $("#editDiv_sample").hide();
-            $("#editDiv_purge").hide();
-            $("#editDiv_harvest").hide();
-            $("#editDiv_ferment").hide();
-            $("#addDiv_sample").hide();
-            $("#addDiv_purge").hide();
-            $("#addDiv_harvest").hide();
-            $("#addDiv_ferment").hide();
+            $("#editDiv_sample, #editDiv_purge, #editDiv_harvest, #editDiv_ferment, #addDiv_sample").hide();
+            $("#addDiv_purge, #addDiv_harvest, #addDiv_ferment").hide();
             
             let tbl_list = ['sample_div', 'purge_div', 'harvest_div', 'fermant_div'];
 
@@ -946,15 +933,8 @@
 
 
         function hideDivs() {
-            $("#editDiv_sample").hide();
-            $("#editDiv_purge").hide();
-            $("#editDiv_harvest").hide();
-            $("#editDiv_ferment").hide();
-            $("#addDiv_sample").hide();
-            $("#addDiv_purge").hide();
-            $("#addDiv_harvest").hide();
-            $("#addDiv_ferment").hide();
-            $("#edit_batch").hide();
+            $("#editDiv_sample, #editDiv_purge, #editDiv_harvest, #editDiv_ferment, #addDiv_sample").hide();
+            $("#addDiv_purge, #addDiv_harvest, #addDiv_ferment, #edit_batch").hide();
         }
 
         function Close_edit_batch() {
@@ -963,8 +943,6 @@
         }
 
     </script>
-
-
 
     <style>
         .container {
@@ -977,16 +955,12 @@
             border: 1px solid black;
             border-collapse: collapse;
         }
-
-        th,
-        td {
+        th,td {
             padding: 5px;
         }
-
         input[type=text] {
             background-color: #f7f6f6;
         }
-
         input.form-control[type=text] {
             background-color: #FFFFFF;
         }

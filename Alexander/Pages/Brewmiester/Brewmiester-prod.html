@@ -157,7 +157,6 @@
 
             console.log('this is batch to post:', batch);
 
-
             ajaxCall('POST', "../../api/Batch", JSON.stringify(batch), PostBatchSucess, PostBatchError);
         }
 
@@ -253,8 +252,7 @@
         }
 
         function toggle_add_visibilty() { // toggle class and remove the form
-            $("#add_new_cook").hide();
-            $("#editDiv").hide();
+            $("#add_new_cook, #editDiv").hide();
             $("#addprodContainer").show();
         }
 
@@ -325,9 +323,7 @@
 
             $(document).on("click", ".editBtn", function () {
 
-                $('#btnDiv').hide();
-                $("#add_new_cook").hide();
-                $("#addprodContainer").hide();
+                $('#btnDiv, #add_new_cook, #addprodContainer').hide();
 
                 populateFields(this.getAttribute('data-btnId')); // fill the form fields according to the selected row
             });
@@ -402,7 +398,6 @@
             }
 
             refresh_table();
-
         }
 
         function DeleteBatchError(err) {

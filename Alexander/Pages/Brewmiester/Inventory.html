@@ -39,9 +39,7 @@
 
             Check_User("Brewmiester");
   
-            $("#addDiv").hide();
-            $('#editDiv').hide();
-            $('#add_prod_Div').hide();
+            $("#addDiv, #editDiv, #add_prod_Div").hide();
             $('#BTN_inventory').on('click', Show_Add_prod_Div); // show add new inventory item DIV
             $('#editForm').on("submit", edit_Inventory_table);
             $('#addForm').on("submit", submit_Inventory_item);
@@ -316,9 +314,7 @@
                 $("#ph2").val(this.getAttribute('data-prod_type'));
 
                 $("#addDiv").show();
-                $("#BTN_inventory_container").hide();
-                $("#add_prod_Div").hide();
-                $("#editDiv").hide();
+                $("#BTN_inventory_container, #add_prod_Div, #editDiv").hide();
 
             });
 
@@ -412,7 +408,6 @@
             console.log(data, "Record Deleted");
 
             refresh_table();
-
         }
 
         function DeleteInventoryError(err) {
@@ -421,7 +416,6 @@
         //****** add invenotry item
 
         // ********************* Button Events
-
 
         function populateFields(product_name, product_date) { // set values in edit DIV
 
@@ -442,15 +436,11 @@
 
         function Show_Add_prod_Div() {
             $('#add_prod_Div').show();
-            $('#addDiv').hide();
-            $('#editDiv').hide();
-            $('#BTN_inventory_container').hide();
+            $('#addDiv, #editDiv, #BTN_inventory_container').hide();
         }
 
         function Close_Div() {
-            $("#addDiv").hide();
-            $("#add_prod_Div").hide();
-            $("#editDiv").hide();
+            $("#addDiv, #add_prod_Div, #editDiv").hide();
             $('#BTN_inventory_container').show();
         }
 
@@ -483,7 +473,7 @@
 
         #BTN_inventory_container {
             width: 50%;
-            /*bottom add new product button*/
+            /*bottom - add new product button*/
         }
         .bolded{
             font-weight: bold;
