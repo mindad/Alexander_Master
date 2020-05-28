@@ -58,7 +58,27 @@ create table BatchAfterProd_2020(
 	Primary key ([batch_id])
 )
 
+create table manager_products_2020(
+	[prodName] nvarchar(50) NOT NULL,
+	[prodID] nvarchar(50) NOT NULL,
+	[beerType] int,
+	[amount] int not null,
+	[min_In_Stock] int,
+	FOREIGN KEY (beerType) REFERENCES BeerInStock_2020(beerType),
+	Primary key ([prodName],[prodID])
 
+)
+
+CREATE TABLE Alert_Manager_2020(
+	[Alert_id] [int] NOT NULL,
+	[type] [nvarchar](50) NOT NULL,
+	[date] [datetime] NULL,
+	[description] [nvarchar](255) NULL,
+	[notes] [nvarchar](255) NULL,
+	[batch_or_product] [nvarchar](50) NULL,
+	FOREIGN KEY ([type]) REFERENCES Alert_Types_2020([type]),
+    PRIMARY KEY ([Alert_id])
+)
 
 *******************************************************  BREWMIESTER TABLES
 
