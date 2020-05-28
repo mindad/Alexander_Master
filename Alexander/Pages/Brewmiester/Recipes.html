@@ -36,7 +36,6 @@
 
             Check_User("Brewmiester");
             
-
             Close_Div();
 
             ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
@@ -46,6 +45,8 @@
             ajaxCall("GET", "../../api/Recipe", "", GetRecipeSucess, GetRecipeError); // get all recipes
 
             $('#addBtn').on("click", OpenAddDiv);
+
+            $('#add_beerType_Btn').on('click', Open_Add_new_beer);
 
             buttonEvents();
 
@@ -322,8 +323,8 @@
 
         function OpenAddDiv() {
             $("#addDiv").show();
-            $("#addBtn").hide();
-            $("#editDiv").hide();
+            $("#addBtn, #editDiv, #add_beerDiv, #add_beerType_Btn").hide();
+
 
             $("#inAddForm").html('');
 
@@ -387,15 +388,15 @@
 
         // Global functions
         function OpenEditDiv() {
-            $("#editDiv").show();
-            $("#appProd").show();
-            $("#addBtn").hide();
-            $("#addDiv").hide();
+            $("#editDiv, #appProd").show();
+            $("#addBtn, #addDiv, #add_beerDiv, #add_beerType_Btn").hide();
         }
         function Close_Div() {
-            $("#addDiv").hide();
-            $("#editDiv").hide();
-            $("#addBtn").show();
+            $("#addDiv, #editDiv, #add_beerDiv").hide();
+            $("#addBtn, #add_beerType_Btn").show();
+        }
+        function Open_Add_new_beer() {
+            $('#add_beerDiv').show();
         }
         // **** Global functions
     </script>
@@ -455,6 +456,7 @@
 
         <div id="btnDiv" class="container">
             <button id="addBtn" class="btn btn-primary btn-block">Add New Recipe</button>
+            <button id="add_beerType_Btn" class="btn btn-secondary btn-block">Add New Beer</button>
         </div>
     </div>
     <!-- table -->
@@ -493,7 +495,7 @@
                     <br>
                     <label>Date</label>
                     <input type="date" name="date" id="addDate" class="form-control" required><br>
-                    
+
                     <div id="inAddForm"></div>
 
                     <div id="btnDiv" class="container">
@@ -503,6 +505,25 @@
             </form>
         </div>
     </div>
-    <!-- Add Product -->
+    <!-- Add Recipe -->
+    <!-- Add Beer -->
+    <div class="container" id="add_beerDiv">
+        <button type="button" class="close close_Btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div id="addBeer">
+            <form id="add_beer_Form">
+                <div class="form-group">
+                    <label>Beer Name</label>
+                    <input type="text" class="form-control" id="beerNameInput" pattern="[a-zA-Z\s]*"/>
+
+                    <div id="btnDiv" class="container">
+                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Add Beer -->
 </body>
 </html>

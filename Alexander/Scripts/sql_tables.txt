@@ -1,3 +1,5 @@
+*********************************************************  BEER GENERAL TABLES
+
 create table BeerInStock_2020(
 	[beerType] nvarchar(50) NOT NULL,
 	[keg_20_amount] smallint,
@@ -6,86 +8,20 @@ create table BeerInStock_2020(
 	Primary key ([beerType])
 )
 
-create table Recipe_2020(
-	[beerType] nvarchar(50) NOT NULL,
-	[creationDate] date,
-	[prods_in_recipe] nvarchar(256),
-	Primary key ([beerType])
-)
-********************
-create table Product_2020(
-	[prodName] nvarchar(65) NOT NULL,
-	[prodType] nvarchar(50) NOT NULL,
-	[prodID] int,
-	[minimum_amount] int not null,
-	[amount] int,
-	Primary key ([prodName],[prodID])
-)
-create table Inventory_Product_2020(
-	[tbl_index] smallint IDENTITY (1, 1) NOT NULL,
-	[prodName] nvarchar(65) NOT NULL,
-	[prodType] nvarchar(50) NOT NULL,
-	[prodID] int,
-	[amount] int,
-	[last_supply_date] datetime,
-	Primary key ([tbl_index]),
-	FOREIGN KEY ([prodName],[prodID]) REFERENCES Product_2020([prodName],[prodID])
-)
 create table Brew_2020(
 	[batch_id] int NOT NULL,
 	[prodItems] nvarchar(256),
 	Primary key ([batch_id])
 )
 
-**********************
-create table label_2020(
-	[prodType] nvarchar(50) NOT NULL,
-	[prodID] int,
-	Primary key ([prodType],[prodID])
-)
-create table box_2020(
-	[prodType] nvarchar(50) NOT NULL,
-	[prodID] int,
-	[boxSize] smallint,
+create table Recipe_2020(
 	[beerType] nvarchar(50) NOT NULL,
-	FOREIGN KEY (BeerType) REFERENCES BeerInStock_2020(BeerType),
-	Primary key ([prodType],[prodID])
+	[creationDate] date,
+	[prods_in_recipe] nvarchar(256),
+	Primary key ([beerType])
 )
 
-
-create table User_2020(
-	[userName] nvarchar(50) NOT NULL,
-	[password] nvarchar(50) NOT NULL,
-	Primary key ([userName])
-)
-create table manager_2020(
-	[userName] nvarchar(50) NOT NULL,
-	[Perrmission] bit NOT NULL,
-	Primary key ([userName])
-)
-
-create table brewmiester_2020(
-	[userName] nvarchar(50) NOT NULL,
-	[Perrmission]bit NOT NULL,
-	Primary key ([userName])
-)
-
-create table Alert_2020(
-	[Alert_id] smallint IDENTITY (1, 1) NOT NULL,
-	[type] nvarchar(50) not null,
-	[date] datetime,
-	[description] nvarchar(255),
-	[notes] nvarchar(255),
-	[batch_or_product] nvarchar(255),
-	[deleted] bit,
-	FOREIGN KEY ([type]) REFERENCES Alert_Types_2020([type]),
-	Primary key ([Alert_id])
-)
-
-create table Alert_Types_2020(
-	[type] nvarchar(50),
-	Primary key ([type])
-)
+*************************************************************  MANAGER TABLES
 
 create table Order_2020(
 	[Order_id] int NOT NULL,
@@ -98,20 +34,12 @@ create table Order_2020(
 	FOREIGN KEY (BeerType) REFERENCES BeerInStock_2020(BeerType),
 	Primary key ([Alert_id])
 )
+
 create table OrderSubmission_2020(
 	[Order_id] int NOT NULL,
-[Alert_id] int NOT NULL,
+	[Alert_id] int NOT NULL,
 	[SupplyDate] datetime,
 	Primary key ([Alert_id],[SupplyDate])
-)
-
-create table Batch_2020(
-	[batch_id] int NOT NULL,
-	[date] date not null,
-	[tank] smallint not null,
-	[wort_volume] real not null,
-	[beer_type] nvarchar(50),
-	Primary key ([batch_id])
 )
 
 create table BatchAfterProd_2020(
@@ -130,6 +58,10 @@ create table BatchAfterProd_2020(
 	Primary key ([batch_id])
 )
 
+
+
+*******************************************************  BREWMIESTER TABLES
+
 create table BatchAtProd_2020(
 	[batch_id] int NOT NULL,
 	[cast_volume] real,
@@ -144,14 +76,57 @@ create table BatchAtProd_2020(
 	FOREIGN KEY (batch_id) REFERENCES Batch_2020(batch_id),
 	Primary key ([batch_id])
 )
-create table WasteAlert_2020(
-	[Alert_id] int NOT NULL,
+
+create table Batch_2020(
+	[batch_id] int NOT NULL,
+	[date] date not null,
+	[tank] smallint not null,
+	[wort_volume] real not null,
+	[beer_type] nvarchar(50),
+	Primary key ([batch_id])
+)
+
+create table Product_2020(
+	[prodName] nvarchar(65) NOT NULL,
+	[prodType] nvarchar(50) NOT NULL,
+	[prodID] int,
+	[minimum_amount] int not null,
+	[amount] int,
+	Primary key ([prodName],[prodID])
+)
+
+
+create table Inventory_Product_2020(
+	[tbl_index] smallint IDENTITY (1, 1) NOT NULL,
+	[prodName] nvarchar(65) NOT NULL,
+	[prodType] nvarchar(50) NOT NULL,
+	[prodID] int,
+	[amount] int,
+	[last_supply_date] datetime,
+	Primary key ([tbl_index]),
+	FOREIGN KEY ([prodName],[prodID]) REFERENCES Product_2020([prodName],[prodID])
+)
+
+
+
+create table Alert_2020(
+	[Alert_id] smallint IDENTITY (1, 1) NOT NULL,
 	[type] nvarchar(50) not null,
 	[date] datetime,
 	[description] nvarchar(255),
 	[notes] nvarchar(255),
+	[batch_or_product] nvarchar(255),
+	[deleted] bit,
+	FOREIGN KEY ([type]) REFERENCES Alert_Types_2020([type]),
 	Primary key ([Alert_id])
 )
+
+create table Alert_Types_2020(
+	[type] nvarchar(50),
+	Primary key ([type])
+)
+
+
 create table Fermantation_2020(
 	[index] smallint IDENTITY (1, 1) NOT NULL ,
 	[batch_id] int NOT NULL,
@@ -196,17 +171,18 @@ create table SampleDetails_2020(
 	Primary key ([index])
 )
 
+*************************************************************** GENERAL TABLES
+create table User_2020(
+	[userName] nvarchar(50) NOT NULL,
+	[password] nvarchar(50) NOT NULL,
+	Primary key ([userName])
+)
+
 create table Tank_2020(
  [tankNumber] int NOT NULL,
 	Primary key ([tankNumber])
 )
 
-CREATE TABLE Waste_Output_2020(
-	[beer_type],
-	[date],
-	[wort_vol],
-
-)
 ########### WASTE TABLE FOR PRODUCTION
 create table waste_2020(
 	[start_period] datetime,
@@ -222,37 +198,51 @@ create table waste_2020(
     [p_value3] real,
 	Primary key ([start_period],[end_period])
 )
-********************
 
-********************* Examples: *********************
 
-CREATE TABLE Beer_2020(
-	[email] nvarchar(255) NOT NULL,
-	[name] nvarchar(255) NOT NULL,
-	[from] nvarchar(255) NOT NULL,
-	[to] nvarchar(255) NOT NULL,
-	[price] real NOT NULL,
-	[arrival] nvarchar(255) NOT NULL,
-	[departure] nvarchar(255) NOT NULL,
-	[airlines] nvarchar(255) NOT NULL,
-	[routes] nvarchar(255) NOT NULL,
-	[flight_id] nvarchar(50) NOT NULL, 
-	Primary key ([email])
+
+
+
+**************************************************************  NOT FOR PRODUCTION:
+CREATE TABLE Waste_Output_2020(
+	[beer_type],
+	[date],
+	[wort_vol],
+)
+
+create table WasteAlert_2020(
+	[Alert_id] int NOT NULL,
+	[type] nvarchar(50) not null,
+	[date] datetime,
+	[description] nvarchar(255),
+	[notes] nvarchar(255),
+	Primary key ([Alert_id])
+)
+
+create table manager_2020(
+	[userName] nvarchar(50) NOT NULL,
+	[Perrmission] bit NOT NULL,
+	Primary key ([userName])
+)
+
+create table brewmiester_2020(
+	[userName] nvarchar(50) NOT NULL,
+	[Perrmission]bit NOT NULL,
+	Primary key ([userName])
 )
 
 
-CREATE TABLE Discount_2020(
-	[index] smallint IDENTITY (1, 1) NOT NULL ,
-	[airlines] nvarchar(255) NOT NULL,
-	[from] nvarchar(255) NOT NULL,
-	[to] nvarchar(255) NOT NULL,
-	[startDate] DATE NOT NULL,
-	[endDate] DATE NOT NULL,
-	[discount] real NOT NULL,
-	Primary key ([index])
+create table label_2020(
+	[prodType] nvarchar(50) NOT NULL,
+	[prodID] int,
+	Primary key ([prodType],[prodID])
 )
 
-
-
-INSERT INTO Discount_2020 ([airlines], [from], [to], [startDate], [endDate], [discount])
-values ('ELAL', 'TEL AVIV', 'NYC', '2020-01-05', '2020-01-10', 10)
+create table box_2020(
+	[prodType] nvarchar(50) NOT NULL,
+	[prodID] int,
+	[boxSize] smallint,
+	[beerType] nvarchar(50) NOT NULL,
+	FOREIGN KEY (BeerType) REFERENCES BeerInStock_2020(BeerType),
+	Primary key ([prodType],[prodID])
+)
