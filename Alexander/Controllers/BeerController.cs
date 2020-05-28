@@ -25,5 +25,10 @@ namespace Alexander.Controllers
             Beer beer = new Beer();
             return beer.get_Tanks();
         }
+
+        public int Post([FromBody]Beer beer)
+        {
+            return beer.insert();
+        }
     }
 }

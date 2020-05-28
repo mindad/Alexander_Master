@@ -56,6 +56,8 @@
 
             $("#addForm").on("submit", AddRecipe);
 
+            $('#addBeer').on('submit', AddBeer);
+
             $("#appProd").on("click", addProds);
 
             $("#submit_edit", "#editForm").submit(f1);
@@ -385,6 +387,24 @@
         }
         // ** Post Recipe
 
+        // BEER API
+        function AddBeer() {
+            Beer = { beerType: $('#beerNameInput').val() }
+
+            ajaxCall("POST", "../../api/Beer", JSON.stringify(Beer), POSTBeerSucess, POSTBeerError);
+
+            return false;
+        }
+
+        function POSTBeerSucess(data) {
+            console.log(data);
+            Close_Div();
+        }
+        function POSTBeerError(err) {
+            console.log(err);
+            Close_Div();
+        }
+        // *** BEER API
 
         // Global functions
         function OpenEditDiv() {
@@ -397,6 +417,7 @@
         }
         function Open_Add_new_beer() {
             $('#add_beerDiv').show();
+            $("#addDiv, #editDiv, #addBtn, #add_beerType_Btn").hide();
         }
         // **** Global functions
     </script>

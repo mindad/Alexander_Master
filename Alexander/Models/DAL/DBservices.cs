@@ -1127,7 +1127,7 @@ namespace Alexander.Models.DAL
 
         /// INSERT  Insert AlertManager END
         /// 
-        public int insertManagerAlert( string beer,string type)
+        public int insertManagerAlert(string beer,string type)
         {
             SqlConnection con;
             SqlCommand cmd;
@@ -1559,6 +1559,88 @@ namespace Alexander.Models.DAL
             }
         }
 
+
+        public int insert(Beer beer)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            int numEffected = 0;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            try
+            {
+                String cStr = BuildInsertCommand(beer);      // helper method to build the insert string
+                cmd = CreateCommand(cStr, con);             // create the command
+                numEffected += cmd.ExecuteNonQuery();       // Execute command
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            return numEffected;
+        }
+
+
+        private String BuildInsertCommand(Beer beer)
+        {
+            String command;
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("Values('{0}', {1}, {2}, {3})", beer.BeerType, beer.Keg20_amount, beer.Keg30_amount, beer.BottleCase_amount);
+            String prefix = "INSERT INTO BeerInStock_2020 ([beerType], [keg_20_amount], [keg_30_amount], [bottle_case_amount])";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        public int Get_Max_prod_id()
+        {
+            SqlConnection con = null;
+            int max = 0;
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String query = "SELECT MAX(prodID) as max FROM manager_products_2020";
+                SqlCommand cmd = new SqlCommand(query, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {
+                    max = (Convert.ToInt32(dr["max"]));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+            return max;
+        }
+
+
         public List<string> GetUniqueBeerTypes()
         {
             List<string> beerType_list = new List<string>();
@@ -1591,6 +1673,7 @@ namespace Alexander.Models.DAL
             return beerType_list;
         }
 
+        
 
         public DBservices SendSQLQuery(string query)
         {

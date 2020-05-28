@@ -66,7 +66,6 @@ create table manager_products_2020(
 	[min_In_Stock] int,
 	FOREIGN KEY (beerType) REFERENCES BeerInStock_2020(beerType),
 	Primary key ([prodName],[prodID])
-
 )
 
 CREATE TABLE Alert_Manager_2020(
