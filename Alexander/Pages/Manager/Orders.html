@@ -352,24 +352,24 @@
                 for (var i = 0; i < num_Beers_in_Order; i++) {
 
                     st += `<div class="row">\
-                                            <div class="col">\
-                                                <label>Beer Type</label>
-                                                <select name="Beer" id="beerSelect${i}" class="form-control">${beertypeArr}</select>
-                                            </div>\
-                                           <div class="col">
-                                                <label>Amount20</label>
-                                                <input type="number" min="0" class="form-control" id="amount20_${i}" />
-                                            </div>
-                                             <div class="col">
-                                                <label>Amount30</label>
-                                                <input type="number" min="0" class="form-control" id="amount30_${i}" />
-                                            </div>
-                                            <div class="col">
-                                                <label>AmountBoxes</label>
-                                                <input type="number" min="0" class="form-control" id="amountBoxes_${i}" />
-                                            </div></div>`;
+                            <div class="col">\
+                                <label>Beer Type</label>
+                                <select name="Beer" id="beerSelect${i}" class="form-control">${beertypeArr}</select>
+                            </div>\
+                            <div class="col">
+                                <label>Kegs 20</label>
+                                <input type="number" min="0" class="form-control" id="amount20_${i}" />
+                            </div>
+                                <div class="col">
+                                <label>Kegs 30</label>
+                                <input type="number" min="0" class="form-control" id="amount30_${i}" />
+                            </div>
+                            <div class="col">
+                                <label>Beer Boxes</label>
+                                <input type="number" min="0" class="form-control" id="amountBoxes_${i}" />
+                            </div></div>`;
                 }
-                //document.getElementById("beerSelect").innerHTML = BeerTypes;
+
                 $("#inAddForm").append(st);
               
             }
