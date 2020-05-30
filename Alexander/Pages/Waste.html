@@ -37,10 +37,10 @@
 
             batch_id = decodeURI(document.location.search).replace(/[^0-9]/g, '');
 
-            ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
-            ajaxCall('GET', `../../api/Waste?get_recent=${true}`, '', GetWasteSuccess, GetWasteError); // get waste reuslts
-            ajaxCall('GET', '../../api/Purge', '', GetPurgeSuccess, GetPurgeError); 
-            ajaxCall('GET', '../../api/Harvest', '', GetHarvestSuccess, GetHarvestError); 
+            ajaxCall('GET', '../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
+            ajaxCall('GET', `../api/Waste?get_recent=${true}`, '', GetWasteSuccess, GetWasteError); // get waste reuslts
+            ajaxCall('GET', '../api/Purge', '', GetPurgeSuccess, GetPurgeError); 
+            ajaxCall('GET', '../api/Harvest', '', GetHarvestSuccess, GetHarvestError); 
 
             setInterval(function () { checkExpiration_Global(); }, 15 * 60 * 1000); // 15 min Interval for user expiration
             
@@ -111,10 +111,10 @@
 
             unbind_a_tag();
 
-            ajaxCall('GET', `../../api/Batch/Beer_avg?beer_name=${beer.BeerType}`, '', GetAVGSuccess, GetAVGError); // AVG wate for beerType
+            ajaxCall('GET', `../api/Batch/Beer_avg?beer_name=${beer.BeerType}`, '', GetAVGSuccess, GetAVGError); // AVG wate for beerType
 
             // GET % waste for each batch with the same Tank and BeerType
-            ajaxCall('GET', `../../api/Waste/SimilarBatch?beer_name=${beer.BeerType}&tank=${beer.Tank}&date=${beer.Date}`, '', GetSimilarSuccess, GetSimilarError);
+            ajaxCall('GET', `../api/Waste/SimilarBatch?beer_name=${beer.BeerType}&tank=${beer.Tank}&date=${beer.Date}`, '', GetSimilarSuccess, GetSimilarError);
         }
         function GetBatchError(err) {
             console.log(err);

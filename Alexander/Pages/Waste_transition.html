@@ -31,7 +31,7 @@
 
             Create_Navbar(); // Check Manager OR Brewmiester
 
-            ajaxCall('GET', '../../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
+            ajaxCall('GET', '../api/Batch', '', GetBatchSuccess, GetBatchError); // Batch Details
 
             $('#checkWastebtn').on('click', function () {
                 $(window).unbind(); /// user authentication
