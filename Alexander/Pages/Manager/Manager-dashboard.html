@@ -50,22 +50,13 @@
 
             ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError); //GET BEER IN STOCK
 
-            //ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError); //GET manager_products
-   
-            //ajaxCall("GET", "../../api/Order", "", GetOrderSucess, GetOrderError); //GET ORDER
+       
 
             ajaxCall("GET", "../../api/AlertsManager", "", GetAlertSucess, GetAlertError); // get Alerts from manager table
 
             $("#beerSelect").on('change', SetOrderChartValues); // Changes Order Chart Depands on Beer Type
 
-            //$('.toast').toast('show'); // Shows toast without event!!! very important!!
-
-            //$('.toast').on('hide.bs.toast', function () { // when trying to delete a toast
-            //   if (confirm('are you sure yow want to delete this alert?')) {
-            //        return;
-            //    }
-            //    return false; // Toast Not Deleted
-            //});
+  
 
             setInterval(function () { checkExpiration_Manager(); }, 15 * 60 * 1000);
 
@@ -99,16 +90,15 @@
                 BottleCaseborderColor[i] = "rgba(153, 102, 255, 1),";
 
             }
-            //console.log("amit is ", kegs20_backgroudColor);
+
 
 
 
             let ctx_rightTop = document.getElementById('myChartSecond').getContext('2d');
-            //let ctx_leftTop = document.getElementById('myChart').getContext('2d');
+   
 
 
-            //create Beers Array
-            //let Beers_arr = [];
+     
             Init_arrays(data, Beers_arr);
 
             // Beer Stock

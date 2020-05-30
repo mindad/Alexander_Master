@@ -44,7 +44,7 @@
 
             buttonEvents();
 
-            //$('#add_new_batchbotteling').on('click', toggle_add_visibilty);
+          
 
             setInterval(function () { checkExpiration_Manager(); }, 15 * 60 * 1000);
         });
@@ -74,8 +74,8 @@
                                 let data_for_tbl1 = "data-btnName='" + data.ProdName + "'";
 
                                 editBtn = "<button type='button' class = 'editBtn btn btn-success'" + data_for_tbl + data_for_tbl1 + "> Edit </button>";
-                                //deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger'" + data_for_tbl + "> Delete </button>";
-                                return editBtn /*+ deleteBtn*/;
+                          
+                                return editBtn;
                             }
                         },
                         { data: "ProdName" },
@@ -119,33 +119,9 @@
 
             });
 
-            //$(document).on("click", ".deleteBtn", function () {
-
-            //    var batch_id = this.getAttribute('data-btnId');
-
-            //    if (confirm("Are You Sure You Want To Delete This Row?")) {
-
-            //        ajaxCall("Delete", "../../api/Batch_Botteling", JSON.stringify(batch_id), DeleteBatch_BottelingSucess, DeleteBatch_BottelingError);
-            //    }
-            //    else {
-            //        console.log("You pressed Cancel!");
-            //    }
-
-            //});
+        
         }
-        //////// DeleteBatch
-        //function DeleteBatch_BottelingSucess(data) {
-        //    console.log(data, "Record Deleted");
-
-        //    location.reload();
-
-        //}
-
-        //function DeleteBatch_BottelingError(err) {
-        //    console.log(err);
-        //}
-
-        // Edit Batch
+      
 
         function populateFields(prodID, ProdName) {
 
