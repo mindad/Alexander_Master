@@ -41,10 +41,7 @@
         FrontLabelbackgroudColor = [];
         FrontLabelborderColor = [];
         var selectedyear;
-
         orders_arr = []; // DO NOT DELETE !!!
-
-
 
         $(document).ready(function () {
 
@@ -66,10 +63,10 @@
             console.log('this is year', selectedyear);
 
             ajaxCall("GET", "../../api/Batch_Botteling/thisyear?year=" + selectedyear + " ", "", GetBatch_BottelingSucess, GetBatch_BottelingError);//get prod עבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה
+
             ajaxCall("GET", "../../api/Batch_Botteling/thisyeartank?year=" + selectedyear + "", "", GetBatch_BottelingSucesstank, GetBatch_BottelingErrortank);//get prod TANK וכמות ייצור שנתית לפי TANK עבור אחוז פחת לפי סוג בירה
 
             ajaxCall("GET", "../../api/Order/thisyear?year=" + selectedyear + "", "", GetOrderyearSucess, GetOrderyearError); //GET ORDER  עבור כמות עזמנות שנתית לפי סוג בירה
-
 
         }
 
@@ -79,17 +76,12 @@
             let years = Array(now - (now - 5)).fill('').map((v, idx) => `<option>${now - idx}</option>`);
             document.getElementById('yearchoosen').innerHTML = `<option>Choose A Year</option>` + years;
         }
-
-
-
-
         //End get production
+
 
         //get production TANK וכמות ייצור שנתית לפי TANK עבור אחוז פחת לפי סוג בירה
         function GetBatch_BottelingSucesstank(data) {
             console.log("batch by year tank", data);
-
-
 
             //beerprod by tank num year
             let ctx_rightTop = document.getElementById('myChartYearByTank').getContext('2d');
@@ -182,12 +174,7 @@
                     }
                 }
             });
-
-
             //End   beerprop chart
-
-
-
 
 
             //beerWaste by tank
@@ -242,31 +229,15 @@
                     }
                 }
             });
-
-
             //End   beer Waste chart by tank
-
-
-
-
         }
-
-
-
 
         function GetBatch_BottelingErrortank(err) {
             console.log(err);
         }
-
-
-
-
         //End get production
 
         //get productionעבור כמות ייצור שנתית לפי סוג בירה ואחוז פחת לפי סוג בירה
-
-
-
         function GetBatch_BottelingSucess(data) {
             console.log('data from Beer_thisyear:', data);
             beerinstock = data;
@@ -377,11 +348,7 @@
             });
 
 
-            //End   beerprop chart
-
-
-
-
+            //*** End   beerprop chart
 
             //beerWaste charte
             let ctx_leftTop1 = document.getElementById('myChartYearWaste').getContext('2d');
@@ -435,14 +402,8 @@
                     }
                 }
             });
-
-
-            //End   beer Waste chart
-
-
-
+            //End beer Waste chart
         }
-
         function GetBatch_BottelingError(err) {
             console.log(err);
         }
@@ -558,25 +519,19 @@
                 }
             });
 
-
-            //End   beerprop chart
-
-
-
+            //End beerprop chart
         }
         function GetOrderyearError(data) {
             console.log('data from Order_2020:', data);
 
         }
-
-        // ** Orders API
+        // **** Orders API
 
         function Init_arrays(data, Beers_arr) {
 
             for (var i = 0; i < data.length; i++) {
                 Beers_arr.push(data[i].BeerType);
             }
-            //console.log(Beers_arr);
             //////////////////////make array backgroud colors dinamicly/////////////////
 
             for (var i = 0; i < data.length; i++) {
@@ -591,23 +546,18 @@
             }
         }
 
-
-
     </script>
 
     <style>
         h4 {
             padding-bottom: 5%;
         }
-
         #selectRow {
             padding-top: 2%;
         }
-
         #headerRow {
             height: 50px;
         }
-
         #printBTN {
             margin-left: auto;
             align-self: center;
@@ -620,7 +570,6 @@
     <div id="loader1" class="centerLoader1"></div>
     <!-- NavBar Template -->
     <div class="header text-center">
-        <!-- <h2>Manager Dashboard</h2> -->
         <nav class="navbar navbar-expand-sm navbar-light border-bottom" style="background-color: #f7f6f6;">
             <a class="navbar-brand" href="#">Home</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -655,7 +604,6 @@
             </div>
             <a class="navbar-brand" href="#">
                 <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
-
             </a>
         </nav>
     </div>
@@ -664,9 +612,7 @@
 
 
     <div class="container">
-      
         <div class="row" id="headerRow">
-
             <select id="yearchoosen"></select>
             <button id="printBTN" onclick="window.print()">Print this page</button>
         </div>
@@ -674,18 +620,15 @@
 
 
           <div class="container" id="charts">
-
               <div class="row" style="text-align:center">
-
                   <div class="col-6">
                       <canvas id="myChartYearProd" class="border border-secondary"></canvas>
                   </div>
                   <div class="col-6">
                       <canvas id="myChartYearWaste" class="border border-secondary"></canvas>
                   </div>
-
               </div>
-              <br>   <br>
+              <br><br>
               <div class="row" style="text-align:center">
 
                   <div class="col-6">
@@ -694,9 +637,8 @@
                   <div class="col-6">
                       <canvas id="myChartYearWasteByTank" class="border border-secondary"></canvas>
                   </div>
-
               </div>
-              <br>   <br>
+              <br><br>
               <div class="row" style="text-align:center">
 
                   <div class="col-3">
@@ -708,10 +650,8 @@
                   <div class="col-3">
 
                   </div>
-
               </div>
               <br>
-
           </div>
 </body>
 

@@ -50,19 +50,14 @@
 
             ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError); //GET BEER IN STOCK
 
-       
-
             ajaxCall("GET", "../../api/AlertsManager", "", GetAlertSucess, GetAlertError); // get Alerts from manager table
 
             $("#beerSelect").on('change', SetOrderChartValues); // Changes Order Chart Depands on Beer Type
-
-  
 
             setInterval(function () { checkExpiration_Manager(); }, 15 * 60 * 1000);
 
             document.querySelector("body").style.visibility = "hidden"; 
             document.querySelector("#loader").style.visibility = "visible"; 
-
         });
 
 
@@ -88,17 +83,11 @@
                 kegs30_backgroudColor[i] = "rgba(54, 162, 235, 0.6),";
                 BottleCasebackgroudColor[i] = "rgba(153, 102, 255, 0.6),";
                 BottleCaseborderColor[i] = "rgba(153, 102, 255, 1),";
-
             }
 
 
-
-
             let ctx_rightTop = document.getElementById('myChartSecond').getContext('2d');
-   
 
-
-     
             Init_arrays(data, Beers_arr);
 
             // Beer Stock
@@ -189,7 +178,6 @@
             });
 
             ajaxCall("GET", "../../api/managerproducts", "", GetmanagerproductsSucess, GetmanagerproductsError); //GET manager_products
-
         }
 
         function GetBeerError(err) {
@@ -201,7 +189,6 @@
             console.log('data from manager_products_2020:', data);
             ////////////////////////////// Labels & Boxes      //////////////////////////////
             let ctx_rightBottom = document.getElementById('myChartBottom').getContext('2d');
-
 
 
             let lbl_back = [];
@@ -258,9 +245,6 @@
             console.log('this is lbl_front:', lbl_front);
             console.log('this is lbl_neck:', lbl_neck);
             console.log('this is box_24:', box_24);
-
-
-
 
 
             var crt_leftBottom = new Chart(ctx_rightBottom, { // labels & boxes
@@ -551,8 +535,6 @@
             for (var i = 0; i < data.length; i++) {
                 Beers_arr.push(data[i].BeerType);
             }
-            //console.log(Beers_arr);
-            //////////////////////make array backgroud colors dinamicly/////////////////
          
             for (var i = 0; i < data.length; i++) {
                 kegs20_backgroudColor[i] = "rgba(255, 99, 132, 0.6)";
@@ -739,21 +721,16 @@
                 return false; // Toast Not Deleted
             });
         }
-
         // ** Alert API
-
-
     </script>
 
     <style>
         h4 {
             padding-bottom: 5%;
         }
-
         #selectRow {
             padding-top: 2%;
         }
-
         #headerRow {
             height: 180px;
         }
@@ -798,14 +775,11 @@
             </div>
             <a class="navbar-brand" href="#">
                 <img src="../Images/Logo_alexander.jpeg" height="68" alt="alexander logo">
-
             </a>
         </nav>
     </div>
     <br>
     <!-- NavBar Template -->
-
-
     <div class="container">
         <!-- toast Div -->
         <div class="row" id="headerRow">
@@ -827,30 +801,23 @@
         </div>
     </div><br>
 
-
     <div class="container">
-
         <div class="row" style="text-align:center">
-
             <div class="col-6">
                 <canvas id="myChartSecond" class="border border-secondary"></canvas>
             </div>
             <div class="col-6">
                 <canvas id="myChartBottom" class="border border-secondary"></canvas>
             </div>
-
         </div>
         <br>
         <div class="row">
             <div class="col-3">
-
             </div>
             <div class="col-6">
                 <canvas id="myChartSecondBottom" class="border border-secondary"></canvas>
                 <div class="row" id="selectRow">
-                    <div class="col-3">
-
-                    </div>
+                    <div class="col-3"></div>
                     <div class="col-4"></div>
                     <div class="col-4">
                         <select class="custom-select bg-primary text-dark" id="beerSelect">

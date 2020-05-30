@@ -40,15 +40,12 @@
             ajaxCall("GET", "../../api/Batch_Botteling", "", GetBatch_BottelingSucess, GetBatch_BottelingError);
             $("#close_editDiv_Btn").on("click", CloseEditDiv) //close edit div
 
-
             buttonEvents();
-
-            //$('#add_new_batchbotteling').on('click', toggle_add_visibilty);
 
             setInterval(function () { checkExpiration_Manager(); }, 15 * 60 * 1000);
         });
-        //Batch_Botteling  API
 
+        //Batch_Botteling  API
         function GetBatch_BottelingSucess(Batch_Botteling_data) {
 
             console.log('this is Batch_Botteling_data:', Batch_Botteling_data);
@@ -113,11 +110,8 @@
                         { data: "Bottels_qty" },
                         {
                             data: "Bottels_qty",
-                            render: function (data, type, row, meta) {
-                                // ADD function *0.33 litter bottle
-
+                            render: function (data, type, row, meta) { // ADD function *0.33 litter bottle
                                 return (data * 0.33).toFixed(2);
-
                             }
                         },
                         {
@@ -126,7 +120,6 @@
                                 return data.Keg20_amount * 20 + data.Keg30_amount * 30 + data.Bottels_qty * 0.33
                             }
                         },
-
                         {
                             data: "Bottels_qty",
                             render: function (data, type, row, meta) {
@@ -143,32 +136,19 @@
                         {
                             data: {},
                             render: function (data, type, row, meta) {
-
-                                return ((data.Wort_volume - data.Keg20_amount * 20 - data.Keg30_amount * 30 - data.Bottels_qty * 0.33)*100 / data.Wort_volume).toFixed(2)
-
+                                return ((data.Wort_volume - data.Keg20_amount * 20 - data.Keg30_amount * 30 - data.Bottels_qty * 0.33) * 100 / data.Wort_volume).toFixed(2);
                             }
                         },
                     ]
                 });
             }
-
             catch (err) {
                 alert(err);
             }
-
         }
 
         function GetBatch_BottelingError(err) {
             console.log(err);
-        }
-
-        function toggle_add_visibilty() {
-            $('.invisible').removeClass();
-        }
-
-        function GetBeerTypes() {
-            console.log('in Beer types');
-            // implement here ajaxcall that gets all beer types from DB
         }
 
 
@@ -203,7 +183,6 @@
             console.log(data, "Record Deleted");
 
             location.reload();
-
         }
 
         function DeleteBatch_BottelingError(err) {
@@ -278,16 +257,11 @@
                 console.log('batch to PUT:', batch);
 
                 ajaxCall("PUT", "../../api/Batch_Botteling", JSON.stringify(batch), Put_success, Put_Error);
-
             }
             else
                 alert("you cant make prod higher then wort vol- Something went wrong check again please");
 
-
             return false;
-
-
-
         }
         // ** Edit Batch
 
@@ -297,34 +271,27 @@
         //close edit div function
         function CloseEditDiv() {
             $("#editDiv").hide();
-
         }
         //End close edit div function
 
     </script>
 
     <style>
-
         body {
             margin: auto;
         }
-
         table {
             text-align: center;
         }
-
         .container {
             padding-bottom: 4%;
         }
-
         .container-fluid {
             width: 90%;
         }
-
         #tbl {
             width: 70%;
         }
-
         #batchID_header_edit {
             text-align: center;
         }
@@ -392,7 +359,6 @@
                     <th>Bottles qty</th>
                     <th>Bottles Litter</th>
                     <th>Total Production</th>
-
                     <th>Boxes qty</th>
                     <th>Waste Litter</th>
                     <th>Waste Precent</th>
@@ -405,7 +371,6 @@
     </div>
     <!-- table -->
     <!--Edit Row In  Table-->
-
     <div class="container" id="editDiv">
         <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -421,9 +386,6 @@
                 <br />
                 <label for="">Bottles_qty</label>
                 <input type="number" class="form-control" id="Bottles_qtyInput_edit" min="0"/>
-                <!--<br />
-                <label for="">Waste_Litter</label>
-                <input type="number" class="form-control" id="WasteInput_edit" />-->
                 <br /><div id="inEditForm"></div>
                 <div id="btnDiv" class="container">
                     <button id="submit_edit" class="btn btn-primary btn-block" type="submit">Submit</button>

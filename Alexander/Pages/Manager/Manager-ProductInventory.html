@@ -96,15 +96,6 @@
             console.log(err);
         }
 
-        function toggle_add_visibilty() {
-            $('.invisible').removeClass();
-        }
-
-        function GetBeerTypes() {
-            console.log('in Beer types');
-            // implement here ajaxcall that gets all beer types from DB
-        }
-
 
         function buttonEvents() {
 
@@ -118,8 +109,6 @@
                 populateFields(this.getAttribute('data-btnId'), this.getAttribute('data-btnName')); // fill the form fields according to the selected row
 
             });
-
-        
         }
       
 
@@ -146,7 +135,6 @@
 
         function submitEdit() {
 
-
             let product = {
                 prodID: $('#ProdID_header_edit').html().replace(/[^0-9]/g, ''), // gets prodID RegEX
                 prodName: $('#ProdName_header_edit').html().replace(/^ProdName:/g, ''), // gets prodName  RegEX
@@ -161,7 +149,6 @@
             ajaxCall("PUT", "../../api/managerproducts", JSON.stringify(product), Put_success, Put_Error);
 
             refresh_table();
-
         }
         // ** Edit Batch
 
@@ -251,11 +238,9 @@
                     <th>beerType</th>
                     <th>amount</th>
                     <th>min_In_Stock</th>
-
                 </tr>
             </thead>
             <tbody></tbody>
-
         </table>
     </div>
     <!-- table -->

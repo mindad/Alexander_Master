@@ -50,10 +50,7 @@
 
             buttonEvents();
 
-            //$('#add_new_batchbotteling').on('click', toggle_add_visibilty);
-
             setInterval(function () { checkExpiration_Manager(); }, 15 * 60 * 1000);
-
         });
 
 
@@ -276,9 +273,6 @@
         }
         // ** Edit Batch
 
-
-
-
         function Put_success(data) {
           
             return false;
@@ -289,9 +283,6 @@
             alert("Edit Failed !");
         }
 
-
-
-
         //close edit div function
         function CloseEditDiv() {
             $("#editDiv").hide();
@@ -299,8 +290,6 @@
         }
 
         //End close edit div function
-
-
 
         function OpenAddDiv() {
             $("#addDiv").show();
@@ -336,9 +325,7 @@
                 }
 
                 $("#inAddForm").append(st);
-              
             }
-
             else {
                 $("#inAddForm").html('');
                 $("#addDiv").hide();
@@ -346,7 +333,7 @@
                 $("#inAddForm").html('');
                 $("#container_tbl").show();
                 alert("Please enter a valid number of Orders !");
-                }
+            }
         }
 
         //hide/show divs
@@ -364,12 +351,10 @@
     </script>
 
     <style>
-
         table {
             text-align: center;
             margin-right: 200px;
         }
-
         #addprod {
             text-align: center;
             margin: auto;
@@ -382,7 +367,6 @@
         .container {
             padding-bottom: 4%;
         }
-
         #OrderID_header_edit, #BeerTypeName_header_edit {
             text-align: center;
         }
