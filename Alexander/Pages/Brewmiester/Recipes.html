@@ -39,27 +39,19 @@
             Close_Div();
 
             ajaxCall("GET", "../../api/Beer", "", GetBeerSucess, GetBeerError);
-
             ajaxCall("GET", "../../api/Product", "", GetProductSucess, GetProductError);
-
             ajaxCall("GET", "../../api/Recipe", "", GetRecipeSucess, GetRecipeError); // get all recipes
 
             $('#addBtn').on("click", OpenAddDiv);
-
             $('#add_beerType_Btn').on('click', Open_Add_new_beer);
 
             buttonEvents();
 
             $(".close_Btn").on("click", Close_Div); // Exit button for Add & Edit Divs
-
             $("#editForm").on("submit", EditRecipe);
-
             $("#addForm").on("submit", AddRecipe);
-
             $('#addBeer').on('submit', AddBeer);
-
             $("#appProd").on("click", addProds);
-
             $("#submit_edit", "#editForm").submit(f1);
 
             setInterval(function () { checkExpiration_Brewmiester(); }, 15 * 60 * 1000); // 15 min Interval for user expiration
@@ -230,27 +222,7 @@
             console.log(err.responseText);
             alert("Unable To Delete Recipe");
         }
-
-
-        // Beer API
-        function GetBeerSucess(data) {
-            console.log(data);
-            populate_BeerSelect(data);
-        }
-        function GetBeerError(err) {
-            console.log(err);
-        }
-
-
-        function populate_BeerSelect(BeerArr) {
-
-            let BeerTypes = "";
-
-            BeerTypes = BeerArr.sort().map(beer => `<option>${beer.BeerType}</option>`); // sets beerType arr values
-
-            document.getElementById("beerSelect").innerHTML = BeerTypes;
-        }
-        // ** Beer API
+        /// **** RECIPE API
 
         // Product API
         function GetProductSucess(data) {
@@ -281,8 +253,8 @@
                     for (var j = 0; j < RecipeArr[i].Products_in_recipe.length; j++) {
 
                         st += `<label>${RecipeArr[i].Products_in_recipe[j].ProductName}</label>\
-                                       <input type="number" min="0" value="${RecipeArr[i].Products_in_recipe[j].Amount}"\
-                                       class="form-control" id="${RecipeArr[i].Products_in_recipe[j].ProductName}"/><br>`
+                               <input type="number" min="0" value="${RecipeArr[i].Products_in_recipe[j].Amount}"\
+                               class="form-control" id="${RecipeArr[i].Products_in_recipe[j].ProductName}"/><br>`
                     }
                     break;
                 }
@@ -301,12 +273,10 @@
             if (n_of_products && n_of_products < 20) {
                 for (var i = 0; i < n_of_products; i++) {
 
-                    st += `<div class="row">\
-                            <div class="col">\
+                    st += `<div class="row"><div class="col">\
                                 <label>Product Name</label>
                                 <select name="prd" id="new_prod${i}" class="form-control"></select>
-                            </div>\
-                            <div class="col">
+                            </div><div class="col">\
                                 <label>Amount</label>
                                 <input type="number" min="0" class="form-control" id="new_prod_amount${i}" required/>
                             </div></div>`;
@@ -388,10 +358,33 @@
         // ** Post Recipe
 
         // BEER API
-        function AddBeer() {
-            Beer = { beerType: $('#beerNameInput').val() }
+        function GetBeerSucess(data) {
+            console.log(data);
+            populate_BeerSelect(data);
+        }
+        function GetBeerError(err) {
+            console.log(err);
+        }
 
-            ajaxCall("POST", "../../api/Beer", JSON.stringify(Beer), POSTBeerSucess, POSTBeerError);
+
+        function populate_BeerSelect(BeerArr) {
+
+            let BeerTypes = "";
+
+            BeerTypes = BeerArr.sort().map(beer => `<option>${beer.BeerType}</option>`); // sets beerType arr values
+
+            document.getElementById("beerSelect").innerHTML = BeerTypes;
+            document.getElementById("delete_beer_slct").innerHTML = BeerTypes;
+        }
+
+
+        function AddBeer() {
+            let Beer = { beerType: $('#beerNameInput').val() }
+
+            if (confirm(`You Are About To Add ${Beer.beerType}\n\nPlease Confirm`)) {
+
+                ajaxCall("POST", "../../api/Beer", JSON.stringify(Beer), POSTBeerSucess, POSTBeerError);
+            }
 
             return false;
         }
@@ -537,7 +530,7 @@
             <form id="add_beer_Form">
                 <div class="form-group">
                     <label>Beer Name</label>
-                    <input type="text" class="form-control" id="beerNameInput" pattern="[a-zA-Z\s]*"/>
+                    <input type="text" class="form-control" id="beerNameInput" pattern="[a-zA-Z\s]*" />
 
                     <div id="btnDiv" class="container">
                         <button type="submit" class="btn btn-primary btn-block">Submit</button>

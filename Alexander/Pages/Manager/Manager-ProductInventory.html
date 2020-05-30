@@ -48,8 +48,8 @@
 
             setInterval(function () { checkExpiration_Manager(); }, 15 * 60 * 1000);
         });
-        //Batch_Botteling  API
 
+        //Batch_Botteling  API
         function GetmanagerproductsSucess(data) {
 
             console.log('this is Batch_Botteling_data:', data);
@@ -62,12 +62,11 @@
                     buttons: ['excel', 'pdf', 'print'],
                     data: data,
                     pageLength: 7,
+                    columnDefs: [{ className: "bolded", targets: 4 }],
                     columns: [
                         {
                             dom: 'Bfrtip',
-                            buttons: [
-                                'excel', 'pdf', 'print'
-                            ],
+                            buttons: ['excel', 'pdf', 'print'],
                             data: {},
                             render: function (data, type, row, meta) {
 
@@ -81,13 +80,9 @@
                         },
                         { data: "ProdName" },
                         { data: "ProdID" },
-
-
                         { data: "BeerType" },
-
                         { data: "Amount" },
-                        { data: "Min_in_stock" },
-
+                        { data: "Min_in_stock" }
                     ]
                 });
             }
@@ -95,7 +90,6 @@
             catch (err) {
                 alert(err);
             }
-
         }
 
         function GetmanagerproductsError(err) {
@@ -206,36 +200,22 @@
             alert("Edit Failed !");
         }
 
-
-
-        //function f1() {
-        //    return false;
-        //}
-        //function refresh_table() {
-        //    location.reload();
-        //}
-
         //close edit div function
         function CloseEditDiv() {
             $("#editDiv").hide();
             $("#notes_input").val("");
         }
-
         //End close edit div function
-
     </script>
 
     <style>
-
         table {
             text-align: center;
             margin-right: 200px;
         }
-
         .container {
             padding-bottom: 4%;
         }
-
         #ProdID_header_edit, #ProdName_header_edit {
             text-align: center;
         }
@@ -244,7 +224,6 @@
 <body>
     <!-- NavBar Template -->
     <div class="header text-center">
-        <!-- <h2>Manager Dashboard</h2> -->
         <nav class="navbar navbar-expand-sm navbar-light border-bottom" style="background-color: #f7f6f6;">
             <a class="navbar-brand" href="Manager-dashboard.html">Home</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -305,7 +284,6 @@
     </div>
     <!-- table -->
     <!--Edit Row In  Table-->
-
     <div class="container" id="editDiv">
         <button id="close_editDiv_Btn" type="button" class="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -327,8 +305,6 @@
             </div>
         </form>
     </div>
-
-
     <!--Edit Row In  Table-->
 </body>
 </html>

@@ -42,3 +42,9 @@ table {
     margin: auto;
 }
 /*loading progress*/
+.recipe_btns{
+    padding:3%;
+}
+.bolded {
+    font-weight: bold;
+}

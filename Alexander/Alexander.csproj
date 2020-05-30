@@ -184,12 +184,10 @@
     <Compile Include="Models\Batch_Botteling.cs" />
     <Compile Include="Models\Batch_Production.cs" />
     <Compile Include="Models\Beer.cs" />
-    <Compile Include="Models\Box.cs" />
     <Compile Include="Models\Brew.cs" />
     <Compile Include="Models\DAL\DBservices.cs" />
     <Compile Include="Models\Fermentation.cs" />
     <Compile Include="Models\Harvest.cs" />
-    <Compile Include="Models\Label.cs" />
     <Compile Include="Models\managerproducts.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Product.cs" />
